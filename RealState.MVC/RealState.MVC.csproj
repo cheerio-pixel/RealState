@@ -1,9 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealState.Api\RealState.Api.csproj" />
+    <ProjectReference Include="..\RealState.Application\RealState.Application.csproj" />
+    <ProjectReference Include="..\RealState.Domain\RealState.Domain.csproj" />
+    <ProjectReference Include="..\RealState.Infrastructure.Persistence\RealState.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
 
 </Project>
