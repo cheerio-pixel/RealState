@@ -1,3 +1,5 @@
+using RealState.Domain.Common;
+
 namespace RealState.Application.Interfaces.Repositories
 {
     public interface IGenericRepositories<TEntity, TKey>
@@ -12,5 +14,5 @@ namespace RealState.Application.Interfaces.Repositories
 
     public interface IGenericRepositories<TEntity>
     : IGenericRepositories<TEntity, Guid>
-    where TEntity : Entity<TKey>;
+    where TEntity : Entity<Guid>;
 }
