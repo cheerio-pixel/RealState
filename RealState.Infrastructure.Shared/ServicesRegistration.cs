@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.AspNetCore.Http;
+using RealState.Application.Interfaces.Services;
 using RealState.Domain.Settings;
+using RealState.Infrastructure.Shared.Services;
 
 namespace RealState.Infrastructure.Shared
 {
@@ -13,7 +15,14 @@ namespace RealState.Infrastructure.Shared
             services.Configure<EmailSettings>(provider => configuration.GetSection("EmailSettings").Bind(provider));
             #endregion
 
-            #region
+            #region services
+            services.AddSingleton<IUriServices>(provider =>
+            {
+                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accesor.HttpContext.Request;
+                var origin = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriServices(origin);
+            });
             #endregion
         }
     }
