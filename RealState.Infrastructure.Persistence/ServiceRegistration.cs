@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using RealState.Application.Interfaces.Repositories;
 using RealState.Infrastructure.Persistence.Context;
+using RealState.Infrastructure.Persistence.Repositories;
 
 namespace RealState.Infrastructure.Persistence
 {
@@ -11,7 +14,9 @@ namespace RealState.Infrastructure.Persistence
         {
             services.AddDbContext<MainContext>(options =>
                            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                           b => b.MigrationsAssembly(typeof(MainContext).Assembly.FullName)));
+                               b => b.MigrationsAssembly(typeof(MainContext).Assembly.FullName)));
+
+            services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         }
     }
 }
