@@ -2,17 +2,17 @@ using RealState.Domain.Common;
 
 namespace RealState.Application.Interfaces.Repositories
 {
-    public interface IGenericRepositories<TEntity, TKey>
+    public interface IGenericRepository<TEntity, TKey>
     where TEntity : Entity<TKey>
     {
         public Task<TEntity?> GetById(TKey key);
-        public Task<ICollection<TEntity>> GetAll();
-        public Task<TEntity> Update(TEntity entity);
+        public Task<List<TEntity>> GetAll();
+        public Task<TEntity?> Update(TEntity entity);
         public Task<TEntity> Create(TEntity entity);
         public Task Delete(TKey key);
     }
 
-    public interface IGenericRepositories<TEntity>
-    : IGenericRepositories<TEntity, Guid>
+    public interface IGenericRepository<TEntity>
+    : IGenericRepository<TEntity, Guid>
     where TEntity : Entity<Guid>;
 }

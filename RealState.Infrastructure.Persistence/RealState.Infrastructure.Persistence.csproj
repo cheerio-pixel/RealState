@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RealState.Domain\RealState.Domain.csproj" />
+    <ProjectReference Include="..\RealState.Application\RealState.Application.csproj" />
   </ItemGroup>
 
 </Project>
