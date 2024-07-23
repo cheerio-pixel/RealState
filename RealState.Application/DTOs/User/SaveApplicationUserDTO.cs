@@ -1,4 +1,6 @@
-﻿namespace RealState.Application.DTOs.User
+﻿using RealState.Application.DTOs.Role;
+
+namespace RealState.Application.DTOs.User
 {
     public class SaveApplicationUserDTO
     {
@@ -16,10 +18,12 @@
 
         public string IdentifierCard { get; set; } = null!;
 
-        public string PhoneNumber { get; set; } = null!;
+        public string? PhoneNumber { get; set; }
 
         public string Password { get; set; } = null!;
 
         public string ConfirmPassword { get; set; } = null!;
+
+        public List<ApplicationRoleDTO> Roles { get; set; } = [];
     }
 }
