@@ -9,7 +9,7 @@ namespace RealState.Application.Interfaces.Repositories
 
         public Task<bool> DeleteAsync(string userId);
 
-        public Task<ApplicationUserDTO> Get(string userId);
+        public Task<ApplicationUserDTO?> Get(string userId);
 
         public IEnumerable<ApplicationUserDTO> Get();
 
