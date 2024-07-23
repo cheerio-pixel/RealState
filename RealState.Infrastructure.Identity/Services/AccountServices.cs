@@ -144,7 +144,13 @@ namespace RealState.Infrastructure.Identity.Services
                 Body = $"Please reset your password here: {url}"
             };
 
-            await _emailServices.SendAsync(email);
+            var result = await _emailServices.SendAsync(email);
+            if(!result)
+                return new()
+                {
+                    Success = false,
+                    Error = "There was a problem while sending the email"
+                };
             return new() { Success = true };
         }
 
@@ -208,7 +214,13 @@ namespace RealState.Infrastructure.Identity.Services
                 Subject = "Confirm Your Account",
                 Body = $"Please, confirm your account here {url}"
             };
-            await _emailServices.SendAsync(email);
+            var resultOfSendEmail = await _emailServices.SendAsync(email);
+            if (!resultOfSendEmail)
+                return new()
+                {
+                    Success = false,
+                    Error = "There was a problem while sending the email"
+                };
             #endregion
 
             var userDto = _mapper.Map<ApplicationUserDTO>(user);

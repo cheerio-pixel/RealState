@@ -12,7 +12,7 @@ namespace RealState.Infrastructure.Shared.Services
     {
         private readonly EmailSettings _emailSettings = emailSettings.Value;
 
-        public async Task SendAsync(EmailRequestDTO request)
+        public async Task<bool> SendAsync(EmailRequestDTO request)
         {
             #region create email
             var email = new MimeMessage();
@@ -32,10 +32,11 @@ namespace RealState.Infrastructure.Shared.Services
                 await client.AuthenticateAsync(_emailSettings.SmtpUser, _emailSettings.SmtpPassword);
                 await client.SendAsync(email);
                 await client.DisconnectAsync(true);
+                return true;
             }
             catch (Exception)
             {
-                throw;
+                return false;
             }
             #endregion
         }

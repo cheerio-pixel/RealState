@@ -4,6 +4,6 @@ namespace RealState.Application.Interfaces.Services
 {
     public interface IEmailServices
     {
-        public Task SendAsync(EmailRequestDTO request);
+        public Task<bool> SendAsync(EmailRequestDTO request);
     }
 }
