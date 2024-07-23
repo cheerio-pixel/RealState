@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-
 using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Seeds
