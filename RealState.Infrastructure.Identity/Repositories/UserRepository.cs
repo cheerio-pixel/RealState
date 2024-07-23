@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.DTOs.User;
@@ -10,10 +11,27 @@ using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Repositories
 {
-    public class UserRepository(IdentityContext context, IMapper mapper) : IUserRepository
+    public class UserRepository
+        (
+        IdentityContext context,
+        IMapper mapper,
+        UserManager<ApplicationUser> userManager
+        )
+        : IUserRepository
     {
         private readonly IdentityContext _context = context;
         private readonly IMapper _mapper = mapper;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+
+        public async Task<bool> AddRolesAsync(ApplicationUserDTO userDto, List<string> roles)
+        {
+            var user = _mapper.Map<ApplicationUser>(userDto);
+
+            var result = await _userManager.AddToRolesAsync(user, roles).ConfigureAwait(false);
+            if (!result.Succeeded)
+                return false;
+            return true;
+        }
 
         public async Task<bool> DeleteAsync(string userId)
         {
@@ -46,7 +64,6 @@ namespace RealState.Infrastructure.Identity.Repositories
         {
             return _mapper.Map<IEnumerable<ApplicationUserDTO>>(FilterQuery(filters).AsEnumerable());
         }
-
 
         public async Task<ApplicationUserDTO> GetWithInclude(string userId, List<string> properties)
         {
@@ -82,6 +99,16 @@ namespace RealState.Infrastructure.Identity.Repositories
             }
 
             return _mapper.Map<IEnumerable<ApplicationUserDTO>>(query.AsEnumerable());
+        }
+
+        public async Task<bool> RemoveRolesAsync(ApplicationUserDTO userDto, List<string> roles)
+        {
+            var user = _mapper.Map<ApplicationUser>(userDto);
+
+            var result = await _userManager.RemoveFromRolesAsync(user, roles).ConfigureAwait(false);
+            if (!result.Succeeded)
+                return false;
+            return true;
         }
 
         public async Task<bool> UpdateAsync(SaveApplicationUserDTO userDto)
@@ -123,9 +150,8 @@ namespace RealState.Infrastructure.Identity.Repositories
                 query = query.Where(u => u.PhoneNumber.Contains(filters.PhoneNumber));
 
             if (filters.Role is not null)
-                query = query.Where(u => _context.UserRoles.Where(ur => ur.UserId == u.Id)
-                                                          .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r)
-                                                          .Any(r => r.Name == filters.Role.ToString()));
+                query = query.Include(x => x.Roles)
+                             .Where(u => u.Roles.Select(r => r.Name).Contains(filters.Role.ToString()));
 
             return query;
         }
