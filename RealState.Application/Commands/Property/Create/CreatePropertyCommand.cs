@@ -1,5 +1,3 @@
-﻿using AutoMapper;
-using MediatR;
 using RealState.Application.Dtos;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;

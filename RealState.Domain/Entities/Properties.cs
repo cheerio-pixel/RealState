@@ -9,6 +9,7 @@ namespace RealState.Domain.Entities
         public decimal Price { get; set; }
         public int Rooms { get; set; }
         public int Bathrooms { get; set; }
+        public string Code { get; set; } = null!;
         public decimal Meters { get; set; }
         public List<string> Pictures { get; set; } = null!;
         public Guid PropertyTypeId { get; set; }

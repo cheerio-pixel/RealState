@@ -50,6 +50,10 @@ namespace RealState.Infrastructure.Persistence.Migrations
                     b.Property<int>("Bathrooms")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
