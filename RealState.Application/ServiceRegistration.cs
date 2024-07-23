@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using RealState.Application.Behaviours;
+using RealState.Application.Interfaces.Services;
+using RealState.Application.Services;
 
 namespace RealState.Application
 {
@@ -19,6 +21,7 @@ namespace RealState.Application
 
             services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
+            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>));
         }
     }
 }
