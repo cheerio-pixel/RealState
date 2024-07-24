@@ -26,10 +26,9 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
             builder.Property(p => p.Bathrooms)
                 .IsRequired();
 
-            builder.HasOne(p => p.Upgrades)
-                .WithMany(p => p.Properties)
-                .HasForeignKey(p => p.UpgradeId)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(p => p.PropertiesUpgrades).WithOne(p => p.Properties)
+                .HasForeignKey(p => p.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(p => p.PropertyTypes)
                 .WithMany(p => p.Properties)
@@ -39,9 +38,9 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
             builder.HasOne(p => p.SalesTypes)
                 .WithMany(p => p.Properties)
                 .HasForeignKey(p => p.SalesTypeId)
-                .OnDelete(DeleteBehavior.NoAction);  
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }
-    
+
 }

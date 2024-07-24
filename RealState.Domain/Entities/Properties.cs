@@ -16,8 +16,9 @@ namespace RealState.Domain.Entities
         public PropertyTypes PropertyTypes { get; set; } = null!;
         public Guid SalesTypeId { get; set; }
         public SalesTypes SalesTypes { get; set; } = null!;
-        public Guid UpgradeId { get; set; }
-        public Upgrades Upgrades { get; set; } = null!;
+
+        /*Navigation Properties*/
+        public ICollection<PropertiesUpgrade> PropertiesUpgrades { get; set; } = null!;
         public ICollection<Favorite> Favorites { get; set; } = null!;
     }
 }
