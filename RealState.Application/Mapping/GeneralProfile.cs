@@ -13,6 +13,7 @@ namespace RealState.Application.Mapping
             CreateMap<PropertyTypeViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeSaveViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeSaveViewModel>().ReverseMap();
+            CreateMap<PropertyTypeListItemDTO, PropertyTypeListItemViewModel>().ReverseMap();
         }
     }
 }
