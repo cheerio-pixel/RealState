@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
+using RealState.Domain.Settings;
 using RealState.Infrastructure.Identity.Context;
 using RealState.Infrastructure.Identity.Entities;
 using RealState.Infrastructure.Identity.Repositories;
@@ -22,14 +23,16 @@ namespace RealState.Infrastructure.Identity
     {
         public static void AddIdentityLayer(this IServiceCollection services, IConfiguration configuration)
         {
+            #region Identity
             services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
                 configuration.GetConnectionString("ConnectionStrings"),
-                m=>m.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)
+                m => m.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)
                 ));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
+            #endregion
 
             #region services
             services.AddTransient<IAccountServices, AccountServices>();
@@ -38,6 +41,11 @@ namespace RealState.Infrastructure.Identity
             #region repositories
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
+            #endregion
+
+            #region Json Web Token
+            //settings
+            services.Configure<JWTSettings>(provider => configuration.GetSection("JwtSettings").Bind(provider));
             #endregion
         }
 
