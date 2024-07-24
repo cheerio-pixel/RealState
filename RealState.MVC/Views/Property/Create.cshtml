@@ -9,14 +9,21 @@
         <div class="title">
             <h1>Create Property</h1>
         </div>
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <!--Section 1-->
             <div class="form-section" id="section-1">
                 <div class="group">
+                    <label for="Name">Name</label>
+                   <input type="text" asp-for="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="group">
                     <label for="saleType">Sale Type</label>
-                    <select id="saleType" name="SaleType" asp-for="SalesTypeId">
+                    <select asp-for="SalesTypeId">
                         <option selected>Choose...</option>
-                        <option>...</option>
+                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
+                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
+                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
                     </select>
                     <span asp-validation-for="SalesTypeId" class="text-danger"></span>
                 </div>
@@ -55,24 +62,33 @@
             <!--Section 2-->
             <div class="form-section" id="section-2" style="display:none;">
                 <!-- Contenido de la Sección 2 -->
+                  <div class="group">
+                    <label for="saleType">Property Type</label>
+                    <select asp-for="PropertyTypeId">
+                        <option selected>Choose...</option>
+                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
+                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
+                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                    </select>
+                    <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
+                </div>
                 <div class="upgrades-container">
                     <div class="group">
-                        <label for="propertyType">Property Type</label>
-                        <select id="propertyType" name="PropertyType">
+                        <label for="Updagre">Upgrade Type</label>
+                        <select asp-for="UpgradeId" multiple>
                             <option value="" disabled selected>Choose...</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
-                            <option value="option4">Option 4</option>
+                            <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
+                            <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
+                            <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+
                         </select>
-                        <button id="addPropertyType" type="button" class="btn-tag">Add</button>
                     </div>
-                    <div class="selection-container" id="selectedTags">
-                        <!--Container of selections Items-->
-                    </div>
+                  <span asp-validation-for="UpgradeId" class="text-danger"></span>
                 </div>
-                <div class="file-container">
-                    <input type="file" id="file-input" accept="image/png, image/gif, image/jpeg" multiple />
+                <div class="file-container" id="">
+                    <input type="file" id="file-input" accept="image/png, image/gif, image/jpeg" multiple asp-for="Pictures" />
+                    <span asp-validation-for="Pictures" class="text-danger"></span>
+
                     <label for="file-input"><i class="fa-solid fa-upload"></i> Upload Images</label>
                     <p id="num-files">No files selected</p>
                     <div id="file-preview"></div>
@@ -95,7 +111,7 @@
 
 
 <script>
-    $(document).ready(function () {
+       $(document).ready(function () {
         $("#next").click(function () {
             $("#section-1").hide();
             $("#section-2").show();
@@ -111,95 +127,27 @@
             $("#next").show();
             $("button[type='submit']").hide();
         });
-
-
     });
 
-  document.getElementById('addPropertyType').addEventListener('click', function() {
-    var select = document.getElementById('propertyType');
-    var selectedOption = select.options[select.selectedIndex];
+    $("#file-input").change(function () {
+        var files = $(this)[0].files;
+        var numFiles = files.length;
+        var preview = $("#file-preview");
 
-    if (selectedOption.value) {
-        // Verificar si el tag ya existe antes de agregarlo
-        if (!isTagAlreadyAdded(selectedOption.value)) {
-            addTag(selectedOption.value, selectedOption.text);
-            select.value = ""; // Reset the select element
-        } else {
-            alert("This property type has already been added.");
+        preview.empty();
+        $("#num-files").text(numFiles + " files selected");
+
+        for (var i = 0; i < numFiles; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = $("<img>").attr("src", e.target.result);
+                preview.append(img);
+            };
+
+            reader.readAsDataURL(file);
         }
-    }
-});
+    });
 
-function isTagAlreadyAdded(value) {
-    var tags = document.querySelectorAll('.tag');
-    return Array.from(tags).some(tag => tag.dataset.value === value);
-}
-
-function addTag(value, text) {
-    var tagContainer = document.getElementById('selectedTags');
-
-    var tag = document.createElement('div');
-    tag.className = 'tag';
-    tag.dataset.value = value;
-
-    var tagContent = document.createTextNode(text);
-    tag.appendChild(tagContent);
-
-    var removeButton = document.createElement('span');
-    removeButton.className = 'remove';
-    removeButton.innerHTML = '&times;';
-    removeButton.onclick = function() {
-        tagContainer.removeChild(tag);
-        updateHiddenInput(); // Update hidden input after removal
-    };
-
-    tag.appendChild(removeButton);
-    tagContainer.appendChild(tag);
-
-    updateHiddenInput();
-}
-
-function updateHiddenInput() {
-    var tags = document.querySelectorAll('.tag');
-    var values = Array.from(tags).map(tag => tag.dataset.value);
-
-    var hiddenInput = document.getElementById('propertyTypes');
-    if (!hiddenInput) {
-        hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'PropertyTypes';
-        hiddenInput.id = 'propertyTypes';
-        document.querySelector('.upgrades-container').appendChild(hiddenInput);
-    }
-
-    hiddenInput.value = values.join(',');
-}
-
-
-document.getElementById('file-input').addEventListener('change', function() {
-    var files = this.files;
-    var preview = document.getElementById('file-preview');
-    var numFiles = document.getElementById('num-files');
-
-    preview.innerHTML = '';
-    if(files.length > 4){
-        alert("You can't add, more than 4 pictures.");
-        files = null;
-        return;
-    }
-    numFiles.textContent = files.length + ' files selected';
-
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var reader = new FileReader();
-
-        reader.onload = function(e) {
-            var img = document.createElement('img');
-            img.src = e.target.result;
-            preview.appendChild(img);
-        };
-
-        reader.readAsDataURL(file);
-    }
-});
 </script>

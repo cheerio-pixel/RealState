@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
-
 using RealState.Application.Commands.Property.Create;
-using RealState.Application.Dtos;
 using RealState.Application.ViewModel.Property;
 
 namespace RealState.MVC.Controllers
