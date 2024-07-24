@@ -7,8 +7,8 @@
 
 <form asp-action="Index" method="get" id="searchForm" class="mb-4">
     <div class="form-group">
-        <label asp-for="Filters.Name">Search by Name:</label>
-        <input asp-for="Filters.Name" class="form-control" id="nameSearch" />
+        <label for="Name">Search by Name:</label>
+        <input name="Name" class="form-control" id="nameSearch" />
         <span class="text-danger" id="nameSearchError"></span>
     </div>
     <button type="submit" class="btn btn-primary mt-2">Search</button>
@@ -55,10 +55,10 @@
         document.getElementById('searchForm').addEventListener('submit', function (e) {
             var nameInput = document.getElementById('nameSearch');
             var nameError = document.getElementById('nameSearchError');
-            
+
             // Clear previous error
             nameError.textContent = '';
-            
+
             // Validate name input
             if (nameInput.value.trim().length > 50) {
                 e.preventDefault();
@@ -96,29 +96,89 @@
             renderPagination();
         }
 
-        function renderPagination() {
-            const pageCount = Math.ceil(propertyTypes.length / itemsPerPage);
-            const paginationElement = document.getElementById('pagination');
-            paginationElement.innerHTML = '';
+     function renderPagination() {
+         const pageCount = Math.ceil(propertyTypes.length / itemsPerPage);
+         const paginationElement = document.getElementById('pagination');
+         paginationElement.innerHTML = '';
 
-            for (let i = 1; i <= pageCount; i++) {
-                const li = document.createElement('li');
-                li.classList.add('page-item');
-                if (i === currentPage) {
-                    li.classList.add('active');
-                }
-                const a = document.createElement('a');
-                a.classList.add('page-link');
-                a.href = '#';
-                a.textContent = i;
-                a.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = i;
-                    renderPropertyTypes(currentPage);
-                });
-                li.appendChild(a);
-                paginationElement.appendChild(li);
-            }
+         const maxPagesToShow = 5;
+         let startPage = currentPage - Math.floor(maxPagesToShow / 2);
+         let endPage = currentPage + Math.floor(maxPagesToShow / 2);
+
+         if (startPage < 1) {
+             startPage = 1;
+             endPage = Math.min(pageCount, maxPagesToShow);
+        }
+
+         if (endPage > pageCount) {
+             endPage = pageCount;
+             startPage = Math.max(1, pageCount - maxPagesToShow + 1);
+        }
+
+         if (startPage > 1) {
+             const firstPageLi = document.createElement('li');
+             firstPageLi.classList.add('page-item');
+             const firstPageA = document.createElement('a');
+             firstPageA.classList.add('page-link');
+             firstPageA.href = '#';
+             firstPageA.textContent = '1';
+             firstPageA.addEventListener('click', (e) => {
+                 e.preventDefault();
+                 currentPage = 1;
+                 renderPropertyTypes(currentPage);
+        });
+             firstPageLi.appendChild(firstPageA);
+             paginationElement.appendChild(firstPageLi);
+
+             if (startPage > 2) {
+                 const dotsLi = document.createElement('li');
+                 dotsLi.classList.add('page-item');
+                 dotsLi.innerHTML = '<span class="page-link">...</span>';
+                 paginationElement.appendChild(dotsLi);
+        }
+        }
+
+         for (let i = startPage; i <= endPage; i++) {
+             const li = document.createElement('li');
+             li.classList.add('page-item');
+             if (i === currentPage) {
+                 li.classList.add('active');
+        }
+             const a = document.createElement('a');
+             a.classList.add('page-link');
+             a.href = '#';
+             a.textContent = i;
+             a.addEventListener('click', (e) => {
+                 e.preventDefault();
+                 currentPage = i;
+                 renderPropertyTypes(currentPage);
+        });
+             li.appendChild(a);
+             paginationElement.appendChild(li);
+        }
+
+         if (endPage < pageCount) {
+             if (endPage < pageCount - 1) {
+                 const dotsLi = document.createElement('li');
+                 dotsLi.classList.add('page-item');
+                 dotsLi.innerHTML = '<span class="page-link">...</span>';
+                 paginationElement.appendChild(dotsLi);
+        }
+
+             const lastPageLi = document.createElement('li');
+             lastPageLi.classList.add('page-item');
+             const lastPageA = document.createElement('a');
+             lastPageA.classList.add('page-link');
+             lastPageA.href = '#';
+             lastPageA.textContent = pageCount;
+             lastPageA.addEventListener('click', (e) => {
+                 e.preventDefault();
+                 currentPage = pageCount;
+                 renderPropertyTypes(currentPage);
+        });
+             lastPageLi.appendChild(lastPageA);
+             paginationElement.appendChild(lastPageLi);
+        }
         }
 
         // Delete confirmation
