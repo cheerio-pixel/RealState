@@ -23,6 +23,7 @@ namespace RealState.Infrastructure.Shared
                 var origin = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriServices(origin);
             });
+            services.AddTransient<IEmailServices, EmailServices>();
             #endregion
         }
     }

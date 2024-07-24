@@ -7,8 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using RealState.Application.Interfaces.Repositories;
+using RealState.Application.Interfaces.Services;
+using RealState.Infrastructure.Identity.Context;
 using RealState.Infrastructure.Identity.Entities;
+using RealState.Infrastructure.Identity.Repositories;
 using RealState.Infrastructure.Identity.Seeds;
+using RealState.Infrastructure.Identity.Services;
 
 
 namespace RealState.Infrastructure.Identity
@@ -21,6 +26,19 @@ namespace RealState.Infrastructure.Identity
                 configuration.GetConnectionString("ConnectionStrings"),
                 m=>m.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)
                 ));
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
+
+            #region services
+            services.AddTransient<IAccountServices, AccountServices>();
+            #endregion
+
+            #region repositories
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            #endregion
         }
 
         public static async Task RunSeedsAsync(this IApplicationBuilder app)
