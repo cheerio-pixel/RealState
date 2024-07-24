@@ -47,6 +47,11 @@ namespace RealState.Application.Extras.ResultObject
         {
             return Task.FromResult(result);
         }
+
+        public static implicit operator Result<T>(string error)
+        {
+            return ErrorType.Any.Because(error);
+        }
     }
 
     public static class Result
@@ -54,7 +59,7 @@ namespace RealState.Application.Extras.ResultObject
         public static Result<T> FromNullable<T>(T? n)
         where T : class
         {
-            return n ?? (Result<T>)new AppError("", "NULL");
+            return n ?? (Result<T>)ErrorType.Any.Because("NULL");
         }
 
         public static T? ToNullable<T>(this Result<T> self)
