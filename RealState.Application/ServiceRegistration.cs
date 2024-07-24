@@ -19,6 +19,7 @@ namespace RealState.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+            services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
             services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
             services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
