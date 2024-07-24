@@ -8,7 +8,7 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
     internal class SalesTypesConfiguration : IEntityTypeConfiguration<SalesTypes>
     {
         public void Configure(EntityTypeBuilder<SalesTypes> builder)
-        {   
+        {
             builder.Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(50);

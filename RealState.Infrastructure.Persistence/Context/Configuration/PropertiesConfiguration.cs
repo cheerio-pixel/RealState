@@ -39,9 +39,9 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
             builder.HasOne(p => p.SalesTypes)
                 .WithMany(p => p.Properties)
                 .HasForeignKey(p => p.SalesTypeId)
-                .OnDelete(DeleteBehavior.NoAction);  
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }
-    
+
 }
