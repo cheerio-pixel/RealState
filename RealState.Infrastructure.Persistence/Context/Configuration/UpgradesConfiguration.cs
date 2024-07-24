@@ -23,7 +23,7 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
                 .HasForeignKey(p => p.UpgradeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
-    
-    
+
+
     }
 }
