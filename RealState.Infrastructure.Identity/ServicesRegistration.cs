@@ -1,12 +1,10 @@
 ﻿using System.Net;
-using System.Reflection;
 using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +21,6 @@ using RealState.Infrastructure.Identity.Repositories;
 using RealState.Infrastructure.Identity.Seeds;
 using RealState.Infrastructure.Identity.Services;
 
-
 namespace RealState.Infrastructure.Identity
 {
     public static class ServicesRegistration
@@ -31,10 +28,13 @@ namespace RealState.Infrastructure.Identity
         public static void AddIdentityLayer(this IServiceCollection services, IConfiguration configuration)
         {
             #region Identity
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
-                configuration.GetConnectionString("ConnectionStrings"),
-                m => m.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)
-                ));
+            var sqlIdentityConnection = configuration.GetConnectionString("IdentityConnection")
+                                        ?? throw new InvalidOperationException("The connection string is missing from the configuration.");
+
+            services.AddDbContext<IdentityContext>(options => options.UseSqlServer(
+                sqlIdentityConnection,
+                m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName)
+            ));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<IdentityContext>()
@@ -63,8 +63,8 @@ namespace RealState.Infrastructure.Identity
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = false;
-                options.TokenValidationParameters = new TokenValidationParameters() 
-                { 
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
@@ -72,7 +72,7 @@ namespace RealState.Infrastructure.Identity
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = configuration["JwtSettings:Issuer"],
                     ValidAudience = configuration["JwtSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"])) 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]))
                 };
                 options.Events = new JwtBearerEvents()
                 {
@@ -88,14 +88,14 @@ namespace RealState.Infrastructure.Identity
                     {
                         x.HandleResponse();
                         x.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                        x.Response.ContentType= "application/json";
-                        var response = new { Success = false, Error = "You are not authenticared" };
+                        x.Response.ContentType = "application/json";
+                        var response = new { Success = false, Error = "You are not authenticated" };
                         return x.Response.WriteAsync(JsonConvert.SerializeObject(response));
                     },
                     OnForbidden = (x) =>
                     {
-                        x.Response.StatusCode= (int)HttpStatusCode.Forbidden;
-                        x.Response.ContentType= "application/json";
+                        x.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        x.Response.ContentType = "application/json";
                         var response = new { Success = false, Error = "You are not authorized" };
                         return x.Response.WriteAsync(JsonConvert.SerializeObject(response));
                     }
@@ -116,7 +116,6 @@ namespace RealState.Infrastructure.Identity
             await DefaultUsers.CreateAdminSeed(userManager);
             await DefaultUsers.CreateClientSeed(userManager);
             await DefaultUsers.CreateStateAgentSeed(userManager);
-
         }
     }
 }

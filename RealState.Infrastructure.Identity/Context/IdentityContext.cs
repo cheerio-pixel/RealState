@@ -7,8 +7,12 @@ using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Context
 {
-    public class IdentityContext(DbContextOptions options) : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
+    public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
+        public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
