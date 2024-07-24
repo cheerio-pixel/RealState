@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
+
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 using RealState.Application.DTOs.Role;
 using RealState.Application.Interfaces.Repositories;
-using RealState.Infrastructure.Identity.Context;
 using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Repositories
 {
     public class RoleRepository
         (
-        IdentityContext context,
         IMapper mapper,
         RoleManager<ApplicationRole> roleManager
         )
         : IRoleRepository
     {
-        private readonly IdentityContext _context = context;
         private readonly IMapper _mapper = mapper;
         private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
 
@@ -39,19 +39,19 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<ApplicationRoleDTO?> Get(string roleId)
         {
-            var role = await _context.Roles.FindAsync(roleId);
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x=>x.Id == roleId);
             return _mapper.Map<ApplicationRoleDTO>(role);
         }
 
         public IEnumerable<ApplicationRoleDTO> Get()
         {
-            var roles = _context.Roles.AsEnumerable();
+            var roles = _roleManager.Roles.AsEnumerable();
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 
         public async Task<bool> UpdateAsync(ApplicationRoleDTO roleDto)
         {
-            var role = await _context.Roles.FindAsync(roleDto.Id);
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x=>x.Id == roleDto.Id);
             _mapper.Map(roleDto, role);
             var result = await _roleManager.UpdateAsync(role);
             if (!result.Succeeded)

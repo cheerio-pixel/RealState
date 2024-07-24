@@ -6,20 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using RealState.Application.DTOs.User;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.QueryFilters.User;
-using RealState.Infrastructure.Identity.Context;
 using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Repositories
 {
     public class UserRepository
         (
-        IdentityContext context,
         IMapper mapper,
         UserManager<ApplicationUser> userManager
         )
         : IUserRepository
     {
-        private readonly IdentityContext _context = context;
         private readonly IMapper _mapper = mapper;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -33,30 +30,24 @@ namespace RealState.Infrastructure.Identity.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(string userId)
+        public async Task<bool> DeleteAsync(ApplicationUserDTO userDto)
         {
-            var user = await _context.Users.FindAsync(userId);
-            _context.Users.Remove(user);
-            try
-            {
-                var result = await _context.SaveChangesAsync();
-                return result > 0;
-            }
-            catch (Exception)
-            {
+            var user = _mapper.Map<ApplicationUser>(userDto);
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
                 return false;
-            }
+            return true;
         }
 
         public async Task<ApplicationUserDTO?> Get(string userId)
         {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Id == userId);
             return _mapper.Map<ApplicationUserDTO?>(user);
         }
 
         public IEnumerable<ApplicationUserDTO> Get()
         {
-            var user = _context.Users.AsEnumerable();
+            var user = _userManager.Users.AsEnumerable();
             return _mapper.Map<IEnumerable<ApplicationUserDTO>>(user);
         }
 
@@ -67,7 +58,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<ApplicationUserDTO> GetWithInclude(string userId, List<string> properties)
         {
-            var query = _context.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable();
 
             foreach (var item in properties)
             {
@@ -79,7 +70,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(List<string> properties)
         {
-            var query = _context.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable();
 
             foreach (var item in properties)
             {
@@ -113,23 +104,17 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<bool> UpdateAsync(SaveApplicationUserDTO userDto)
         {
-            var user = await _context.Users.FindAsync(userDto.Id);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
             _mapper.Map(userDto, user);
-            _context.Users.Update(user);
-            try
-            {
-                var result = await _context.SaveChangesAsync();
-                return result > 0;
-            }
-            catch (Exception)
-            {
+            var result = await _userManager.UpdateAsync(user);
+            if(!result.Succeeded)
                 return false;
-            }
+            return true;
         }
 
         private IQueryable<ApplicationUser> FilterQuery(UserQueryFilter filters)
         {
-            var query = _context.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable();
 
             if (filters.FirstName is not null)
                 query = query.Where(u => u.FirstName.Contains(filters.FirstName));
