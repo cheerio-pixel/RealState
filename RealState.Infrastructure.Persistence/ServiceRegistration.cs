@@ -17,6 +17,7 @@ namespace RealState.Infrastructure.Persistence
                                b => b.MigrationsAssembly(typeof(MainContext).Assembly.FullName)));
 
             services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
         }
     }
 }

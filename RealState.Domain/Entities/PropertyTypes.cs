@@ -1,5 +1,4 @@
 ﻿
-
 using RealState.Domain.Common;
 
 namespace RealState.Domain.Entities

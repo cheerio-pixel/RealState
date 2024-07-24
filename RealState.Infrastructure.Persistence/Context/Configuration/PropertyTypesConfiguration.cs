@@ -9,7 +9,7 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
     {
         public void Configure(EntityTypeBuilder<PropertyTypes> builder)
         {
-           
+
             builder.Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(50);

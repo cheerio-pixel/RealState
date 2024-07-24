@@ -13,15 +13,17 @@ namespace RealState.Application
 {
     public static class ServiceRegistration
     {
-        public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceRegistration).Assembly));
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+            services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
             services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
-            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>));
+            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
+                    .AddTransient<IPropertyTypeService, PropertyTypeService>();
         }
     }
 }
