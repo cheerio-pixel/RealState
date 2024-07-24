@@ -4,8 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
 builder.Services.AddApplicationServices();
+
+
+
 builder.Services.AddInfrastructureServices(builder.Configuration);
 var app = builder.Build();
 

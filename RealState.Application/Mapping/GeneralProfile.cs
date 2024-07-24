@@ -12,7 +12,7 @@ namespace RealState.Application.Mapping
         {
             #region Property
             CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
-            CreateMap<PropertyViewModel, Properties>().ReverseMap();
+            CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
             #endregion
         }
     }

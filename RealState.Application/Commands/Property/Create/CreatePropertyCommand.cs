@@ -1,3 +1,5 @@
+using AutoMapper;
+using MediatR;
 using RealState.Application.Dtos;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
@@ -23,16 +25,10 @@ namespace RealState.Application.Commands.Property.Create
 
     }
 
-    public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyCommand, TResult<PropertyViewModel>>
+    public class CreatePropertyCommandHandler(IPropertyRepository propertyRepository, IMapper mapper) : IRequestHandler<CreatePropertyCommand, TResult<PropertyViewModel>>
     {
-        private readonly IPropertyRepository _propertyRepository;
-        private readonly IMapper _mapper;
-
-        public CreatePropertyCommandHandler(IPropertyRepository propertyRepository, IMapper mapper)
-        {
-            _propertyRepository = propertyRepository;
-            _mapper = mapper;
-        }
+        private readonly IPropertyRepository _propertyRepository = propertyRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<TResult<PropertyViewModel>> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
         {

@@ -1,9 +1,13 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+
+using FluentValidation;
 
 using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using RealState.Application.Behaviours;
-using RealState.Application.Commands.Property.Create;
+
 
 namespace RealState.Application
 {
@@ -12,12 +16,24 @@ namespace RealState.Application
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            // Registrar MediatR
 
-            services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
-            services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
+            services.AddValidatorsFromAssemblies([Assembly.GetExecutingAssembly()]);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+                config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+
+
+
 
             #region CommandValidators
-            services.AddTransient<IValidator<CreatePropertyCommand>, CreatePropertyCommandValidator>();
+
             #endregion
 
         }

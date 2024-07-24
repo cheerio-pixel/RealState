@@ -1,0 +1,205 @@
+﻿@using RealState.Application.ViewModel.Property
+@model PropertyViewModel
+@{
+    Layout = "~/Views/Shared/_layoutproperty.cshtml";
+}
+
+<main class="section-production">
+    <section>
+        <div class="title">
+            <h1>Create Property</h1>
+        </div>
+        <form asp-action="Create" method="post">
+            <!--Section 1-->
+            <div class="form-section" id="section-1">
+                <div class="group">
+                    <label for="saleType">Sale Type</label>
+                    <select id="saleType" name="SaleType" asp-for="SalesTypeId">
+                        <option selected>Choose...</option>
+                        <option>...</option>
+                    </select>
+                    <span asp-validation-for="SalesTypeId" class="text-danger"></span>
+                </div>
+
+                <div class="group">
+                    <label for="propertyPrice">Property Price</label>
+                    <input type="number" id="propertyPrice" asp-for="Price" placeholder="2,500,000.00" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="Description" rows="4" cols="60" asp-for="Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="group">
+                    <label for="area">Area</label>
+                    <input type="number" asp-for="Meters" placeholder="200.5" />
+                    <span asp-validation-for="Meters" class="text-danger"></span>
+                </div>
+
+                <div class="group">
+                    <label for="rooms">Rooms</label>
+                    <input type="number" id="rooms" name="Rooms" placeholder="5" asp-for="Rooms" />
+                    <span asp-validation-for="Rooms" class="text-danger"></span>
+                </div>
+
+                <div class="group">
+                    <label for="bathrooms">Bathrooms</label>
+                    <input type="number" id="bathrooms" asp-for="Bathrooms" name="Bathrooms" placeholder="5" />
+                    <span asp-validation-for="Bathrooms" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Section 2-->
+            <div class="form-section" id="section-2" style="display:none;">
+                <!-- Contenido de la Sección 2 -->
+                <div class="upgrades-container">
+                    <div class="group">
+                        <label for="propertyType">Property Type</label>
+                        <select id="propertyType" name="PropertyType">
+                            <option value="" disabled selected>Choose...</option>
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                            <option value="option3">Option 3</option>
+                            <option value="option4">Option 4</option>
+                        </select>
+                        <button id="addPropertyType" type="button" class="btn-tag">Add</button>
+                    </div>
+                    <div class="selection-container" id="selectedTags">
+                        <!--Container of selections Items-->
+                    </div>
+                </div>
+                <div class="file-container">
+                    <input type="file" id="file-input" accept="image/png, image/gif, image/jpeg" multiple />
+                    <label for="file-input"><i class="fa-solid fa-upload"></i> Upload Images</label>
+                    <p id="num-files">No files selected</p>
+                    <div id="file-preview"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" id="next" class="btn btn-primary">Next</button>
+                <button type="button" id="previous" class="btn btn-primary" style="display:none;">Previous</button>
+                <button type="submit" class="btn btn-primary" style="display:none;">Save</button>
+            </div>
+        </form>
+    </section>
+
+    <aside>
+        <img src="~/pictures/building1.jpg" alt="Building Image" />
+    </aside>
+</main>
+
+
+<script>
+    $(document).ready(function () {
+        $("#next").click(function () {
+            $("#section-1").hide();
+            $("#section-2").show();
+            $("#next").hide();
+            $("#previous").show();
+            $("button[type='submit']").show();
+        });
+
+        $("#previous").click(function () {
+            $("#section-2").hide();
+            $("#section-1").show();
+            $("#previous").hide();
+            $("#next").show();
+            $("button[type='submit']").hide();
+        });
+
+
+    });
+
+  document.getElementById('addPropertyType').addEventListener('click', function() {
+    var select = document.getElementById('propertyType');
+    var selectedOption = select.options[select.selectedIndex];
+
+    if (selectedOption.value) {
+        // Verificar si el tag ya existe antes de agregarlo
+        if (!isTagAlreadyAdded(selectedOption.value)) {
+            addTag(selectedOption.value, selectedOption.text);
+            select.value = ""; // Reset the select element
+        } else {
+            alert("This property type has already been added.");
+        }
+    }
+});
+
+function isTagAlreadyAdded(value) {
+    var tags = document.querySelectorAll('.tag');
+    return Array.from(tags).some(tag => tag.dataset.value === value);
+}
+
+function addTag(value, text) {
+    var tagContainer = document.getElementById('selectedTags');
+
+    var tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.dataset.value = value;
+
+    var tagContent = document.createTextNode(text);
+    tag.appendChild(tagContent);
+
+    var removeButton = document.createElement('span');
+    removeButton.className = 'remove';
+    removeButton.innerHTML = '&times;';
+    removeButton.onclick = function() {
+        tagContainer.removeChild(tag);
+        updateHiddenInput(); // Update hidden input after removal
+    };
+
+    tag.appendChild(removeButton);
+    tagContainer.appendChild(tag);
+
+    updateHiddenInput();
+}
+
+function updateHiddenInput() {
+    var tags = document.querySelectorAll('.tag');
+    var values = Array.from(tags).map(tag => tag.dataset.value);
+
+    var hiddenInput = document.getElementById('propertyTypes');
+    if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'PropertyTypes';
+        hiddenInput.id = 'propertyTypes';
+        document.querySelector('.upgrades-container').appendChild(hiddenInput);
+    }
+
+    hiddenInput.value = values.join(',');
+}
+
+
+document.getElementById('file-input').addEventListener('change', function() {
+    var files = this.files;
+    var preview = document.getElementById('file-preview');
+    var numFiles = document.getElementById('num-files');
+
+    preview.innerHTML = '';
+    if(files.length > 4){
+        alert("You can't add, more than 4 pictures.");
+        files = null;
+        return;
+    }
+    numFiles.textContent = files.length + ' files selected';
+
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            var img = document.createElement('img');
+            img.src = e.target.result;
+            preview.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+    }
+});
+</script>
