@@ -13,7 +13,7 @@ namespace RealState.Application
 {
     public static class ServiceRegistration
     {
-        public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceRegistration).Assembly));
 
