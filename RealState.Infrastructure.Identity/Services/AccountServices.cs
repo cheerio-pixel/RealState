@@ -1,8 +1,16 @@
-﻿using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
+
 using AutoMapper;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
@@ -12,6 +20,7 @@ using RealState.Application.DTOs.EmailServices;
 using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
 using RealState.Application.Interfaces.Services;
+using RealState.Domain.Settings;
 using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Services
@@ -23,7 +32,8 @@ namespace RealState.Infrastructure.Identity.Services
         SignInManager<ApplicationUser> signInManager,
         IMapper mapper,
         IUriServices uriServices,
-        IEmailServices emailServices
+        IEmailServices emailServices,
+        IOptions<JWTSettings> jwtSettings
         ) 
         : IAccountServices
     {
@@ -33,6 +43,7 @@ namespace RealState.Infrastructure.Identity.Services
         private readonly IMapper _mapper = mapper;
         private readonly IUriServices _uriServices = uriServices;
         private readonly IEmailServices _emailServices = emailServices;
+        private readonly JWTSettings _jwtSettings = jwtSettings.Value;
 
         public async Task<AuthenticationResponseDTO> AuthenticationAsync(AuthenticationRequestDTO request)
         {
@@ -75,10 +86,14 @@ namespace RealState.Infrastructure.Identity.Services
             var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             userDTO.Roles = roles.ToList().ConvertAll(x => new ApplicationRoleDTO(x));
 
-            return new() 
-            { 
+            var token = await GenerateJWTokenAsync(user);
+
+            return new()
+            {
                 CurrentUser = userDTO,
-                Success = true
+                Success = true,
+                JWToken = token,
+                RefreshToken = GenerateRefreshToken().Token
             };
         }
 
@@ -264,6 +279,66 @@ namespace RealState.Infrastructure.Identity.Services
             string patron = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}";
             var regex = new Regex(patron);
             return regex.IsMatch(account);
+        }
+        
+        private async Task<string> GenerateJWTokenAsync(ApplicationUser user)
+        {
+            #region Header
+            var symmetricSecretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var signinCredentials = new SigningCredentials(symmetricSecretKey, SecurityAlgorithms.HmacSha256);
+            var header = new JwtHeader(signinCredentials);
+            #endregion
+
+            #region Claims
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = roles.Select(x => new Claim("Roles", x));
+
+            var tokenClaims = new[]
+            {
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("userId", user.Id)
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
+            #endregion
+
+            #region Payload
+            var payload = new JwtPayload
+                (
+                issuer: _jwtSettings.Issuer,
+                audience:  _jwtSettings.Audience,
+                claims: tokenClaims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes)
+                );
+            #endregion
+
+            #region Token
+            var token = new JwtSecurityToken(header, payload);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+            #endregion
+        }
+
+        public RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken()
+            {
+                Token = RandomTokenString(),
+                Expires = DateTime.UtcNow.AddDays(7),
+                Created = DateTime.UtcNow
+            };
+        }
+
+        public string RandomTokenString()
+        {
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var ramdonBytes = new byte[40];
+            rngCryptoServiceProvider.GetBytes(ramdonBytes);
+
+            return BitConverter.ToString(ramdonBytes).Replace("_", "");
         }
         #endregion
     }

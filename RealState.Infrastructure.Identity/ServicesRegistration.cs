@@ -1,11 +1,18 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Reflection;
+using System.Text;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+
+using Newtonsoft.Json;
 
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
@@ -46,6 +53,54 @@ namespace RealState.Infrastructure.Identity
             #region Json Web Token
             //settings
             services.Configure<JWTSettings>(provider => configuration.GetSection("JwtSettings").Bind(provider));
+
+            //configuration of jwt
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = false;
+                options.TokenValidationParameters = new TokenValidationParameters() 
+                { 
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"])) 
+                };
+                options.Events = new JwtBearerEvents()
+                {
+                    OnAuthenticationFailed = (x) =>
+                    {
+                        x.NoResult();
+                        x.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        x.Response.ContentType = "text/plain";
+                        return x.Response.WriteAsync(x.Exception.ToString());
+                    },
+
+                    OnChallenge = (x) =>
+                    {
+                        x.HandleResponse();
+                        x.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        x.Response.ContentType= "application/json";
+                        var response = new { Success = false, Error = "You are not authenticared" };
+                        return x.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                    },
+                    OnForbidden = (x) =>
+                    {
+                        x.Response.StatusCode= (int)HttpStatusCode.Forbidden;
+                        x.Response.ContentType= "application/json";
+                        var response = new { Success = false, Error = "You are not authorized" };
+                        return x.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                    }
+                };
+            });
             #endregion
         }
 

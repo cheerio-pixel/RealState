@@ -1,4 +1,6 @@
-﻿using RealState.Application.DTOs.User;
+﻿using System.Text.Json.Serialization;
+
+using RealState.Application.DTOs.User;
 
 namespace RealState.Application.DTOs.Account.Authentication
 {
@@ -9,5 +11,10 @@ namespace RealState.Application.DTOs.Account.Authentication
         public bool Success { get; set; }
 
         public string? Error { get; set; }
+
+        public string JWToken { get; set; } = null!;
+
+        [JsonIgnore]
+        public string RefreshToken { get; set; } = null!;
     }
 }
