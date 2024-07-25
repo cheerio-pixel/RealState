@@ -4,6 +4,7 @@
     {
         Admin,
         Client,
-        StateAgent
+        StateAgent,
+        Developer
     }
 }

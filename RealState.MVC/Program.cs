@@ -1,6 +1,8 @@
 using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
 using RealState.Infrastructure.Identity;
+using RealState.Application;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
