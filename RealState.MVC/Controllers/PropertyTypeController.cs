@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters.PropertyType;
 using RealState.Application.ViewModel.PropertyType;
@@ -42,25 +43,32 @@ namespace RealState.MVC.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateEdit(PropertyTypeSaveViewModel model)
+        public virtual async Task<IActionResult> CreateEdit(PropertyTypeSaveViewModel model)
         {
             if (ModelState.IsValid)
             {
-                if (model.Id is null || model.Id.Value == Guid.Empty)
+                Result<Unit> result;
+                if (model.Id is null || model.Id == Guid.Empty)
                 {
-                    await _propertyTypeService.Add(model);
+                    result = await _propertyTypeService.Add(model).Map(_ => Unit.T);
                 }
                 else
                 {
-                    await _propertyTypeService.Update(model, model.Id.Value);
+                    result = await _propertyTypeService.Update(model, model.Id.Value);
                 }
-                return RedirectToAction(
-                    "Index",
-                    "PropertyType"
+                if (result.IsFailure)
+                {
+                    ModelState.AggregateErrors(result.Errors);
+                }
+                return result.Match<IActionResult>(
+                    success: u => RedirectToAction("Index", "PropertyType"),
+                    failure: s => View(model)
                 );
             }
-            return View();
+            return RedirectToAction("CreateEdit", "PropertyType", new
+            {
+                id = model.Id
+            });
         }
 
         public virtual async Task<IActionResult> Delete(Guid? id)

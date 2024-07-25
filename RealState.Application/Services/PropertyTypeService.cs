@@ -1,6 +1,8 @@
 using AutoMapper;
 
 using RealState.Application.DTOs.PropertyType;
+using RealState.Application.Enums;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters.PropertyType;
@@ -21,6 +23,16 @@ namespace RealState.Application.Services
         {
             _propertyTypeRepository = propertyTypeRepository;
             _mapper = mapper;
+        }
+
+        protected override async IAsyncEnumerable<AppError> Validate(PropertyTypeSaveViewModel vm, bool isUpdate)
+        {
+            if (await _propertyTypeRepository.DoesPropertyTypeNameExists(vm.Name, vm.Id))
+            {
+                yield return ErrorType.Conflict
+                                      .Because("Property type name already exists.")
+                                      .On(nameof(vm.Name));
+            }
         }
 
         public async Task<List<PropertyTypeListItemViewModel>> SearchPropertyType(PropertyTypeQueryFilter filter)

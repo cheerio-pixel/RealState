@@ -1,3 +1,4 @@
+using RealState.Application.Extras.ResultObject;
 using RealState.Domain.Common;
 
 namespace RealState.Application.Interfaces.Services
@@ -7,9 +8,9 @@ namespace RealState.Application.Interfaces.Services
     where TViewModel : class
     where TEntity : Entity<TKey>
     {
-        Task Update(TSaveViewModel vm, TKey id);
+        Task<Result<Unit>> Update(TSaveViewModel vm, TKey id);
 
-        Task<TSaveViewModel> Add(TSaveViewModel vm);
+        Task<Result<TSaveViewModel>> Add(TSaveViewModel vm);
 
         Task Delete(TKey id);
 
