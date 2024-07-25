@@ -12,6 +12,7 @@ namespace RealState.Infrastructure.Persistence.Context
         public DbSet<Properties> Properties { get; set; }
         public DbSet<Upgrades> Upgrades { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<PropertiesUpgrades> PropertiesUpgrades { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

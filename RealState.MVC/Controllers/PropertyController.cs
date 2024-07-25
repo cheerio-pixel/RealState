@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
-using RealState.Application.Commands.Property.Create;
+
+using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Property;
 
 namespace RealState.MVC.Controllers
 {
 
-    public class PropertyController(IMediator mediator, IMapper mapper) : Controller
+    public class PropertyController(IMediator mediator, IMapper mapper, IPropertyService propertyService) : Controller
     {
         private readonly IMediator _mediator = mediator;
+        private readonly IPropertyService _propertyService = propertyService;
         private readonly IMapper _mapper = mapper;
         public IActionResult Index()
         {
@@ -20,26 +24,38 @@ namespace RealState.MVC.Controllers
         {
             return View();
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            ViewBag.Id = id;
+            var property = await _propertyService.GetByIdSaveViewModel(id);
+            return View("create", property);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Create(PropertyViewModel vm)
+        public async Task<IActionResult> Create(PropertSaveViewModel vm)
         {
 
-            var command = _mapper.Map<CreatePropertyCommand>(vm);
-         //   TResult<PropertyViewModel> result = await _mediator.Send(command);
-         var result = new CreatePropertyCommandValidator().Validate(command);
-
-            if (result.IsValid)
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                return View(vm);
             }
 
-            foreach(var error in result.Errors)
+            var result = await _propertyService.Add(vm);
+
+            return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(PropertSaveViewModel vm)
+        {
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                return View(vm);
             }
-            return View();
-            
+
+            var result = await _propertyService.Update(vm, vm.Id);
+
+            return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
         }
     }
 }
