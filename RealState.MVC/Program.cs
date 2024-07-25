@@ -1,12 +1,19 @@
-using RealState.Application;
 using RealState.Infrastructure.Persistence;
+using RealState.Infrastructure.Shared;
+using RealState.Infrastructure.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddIdentityLayer(builder.Configuration);
+builder.Services.AddSharedLayer(builder.Configuration);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
+
+await app.RunSeedsAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
