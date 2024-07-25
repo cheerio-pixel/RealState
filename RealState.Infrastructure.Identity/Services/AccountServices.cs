@@ -16,6 +16,7 @@ using RealState.Application.DTOs.Account.ResetPassword;
 using RealState.Application.DTOs.EmailServices;
 using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
 using RealState.Domain.Settings;
 using RealState.Infrastructure.Identity.Entities;
@@ -203,7 +204,16 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            #region Send email to confirm account
+            var userDto = _mapper.Map<ApplicationUserDTO>(user);
+
+            #region verify send email to confirm account
+            if (!saveUser.Roles.Select(x => x.Name).Contains(RoleTypes.Client.ToString()))
+                return new()
+                {
+                    NewUser = userDto,
+                    Success = true,
+                };
+
             var resultOfSendEmail = await SendConfirmAccountEmal(user);
             if (!resultOfSendEmail)
                 return new()
@@ -213,7 +223,6 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            var userDto = _mapper.Map<ApplicationUserDTO>(user);
             return new()
             {
                 NewUser = userDto,
