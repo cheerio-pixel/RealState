@@ -28,6 +28,12 @@ namespace RealState.Application.Services
             var propertyCreated = await _propertyRepository.Create(property);
             return _mapper.Map<PropertSaveViewModel>(propertyCreated);
         }
-       
+
+        public async Task<Result<PropertyViewModel>> GetByIdWithPictures(Guid id)
+        {
+            var property = await _propertyRepository.GetByIdWithPictures(id);
+            return _mapper.Map<PropertyViewModel>(property);
+        }
+
     }
 }

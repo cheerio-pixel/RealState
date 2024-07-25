@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 
+using RealState.Application.ViewModel.Pictures;
+
 namespace RealState.Application.ViewModel.Property
 {
     public class PropertyViewModel
@@ -12,7 +14,7 @@ namespace RealState.Application.ViewModel.Property
         public int Bathrooms { get; set; }
         public string Code { get; set; } = null!;
         public int Meters { get; set; }
-        public List<IFormFile> Pictures { get; set; } = [];
+       public List<PicturesViewModel> Pictures { get; set; } = [];
         public Guid PropertyTypeId { get; set; }
         public Guid SalesTypeId { get; set; }
         public List<Guid> UpgradeId { get; set; } = [];
