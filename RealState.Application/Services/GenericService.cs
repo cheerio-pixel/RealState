@@ -1,5 +1,6 @@
 using AutoMapper;
 
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Domain.Common;
@@ -20,15 +21,24 @@ namespace RealState.Application.Services
             _genericRepository = genericRepository;
             _mapper = mapper;
         }
-
-        public virtual async Task<TSaveViewModel> Add(TSaveViewModel vm)
+#pragma warning disable CS1998
+        protected virtual async IAsyncEnumerable<AppError> Validate(TSaveViewModel vm, bool isUpdate)
+#pragma warning restore CS1998
         {
-            TEntity data = _mapper.Map<TEntity>(vm);
-            await _genericRepository.Create(data);
-            vm = _mapper.Map<TSaveViewModel>(data);
-            // var viewModelIdProperty = vm.GetType().GetProperty("Id");
-            // viewModelIdProperty?.SetValue(vm, data.GetType().GetProperty("Id"));
-            return vm;
+            yield break;
+        }
+
+        public virtual async Task<Result<TSaveViewModel>> Add(TSaveViewModel vm)
+        {
+            Result<Unit> result = await Validate(vm, false).ToResult();
+            if (result.IsSuccess)
+            {
+                TEntity data = _mapper.Map<TEntity>(vm);
+                await _genericRepository.Create(data);
+                vm = _mapper.Map<TSaveViewModel>(data);
+                return vm;
+            }
+            return result.Map(_ => vm);
         }
 
         public virtual async Task Delete(TKey id)
@@ -52,11 +62,16 @@ namespace RealState.Application.Services
             return null;
         }
 
-        public virtual async Task Update(TSaveViewModel vm, TKey id)
+        public virtual async Task<Result<Unit>> Update(TSaveViewModel vm, TKey id)
         {
-            TEntity entity = _mapper.Map<TEntity>(vm);
-            entity.Id = id;
-            await _genericRepository.Update(entity);
+            Result<Unit> result = await Validate(vm, true).ToResult();
+            if (result.IsSuccess)
+            {
+                TEntity entity = _mapper.Map<TEntity>(vm);
+                entity.Id = id;
+                await _genericRepository.Update(entity);
+            }
+            return result;
         }
     }
 

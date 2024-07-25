@@ -18,6 +18,11 @@ namespace RealState.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
+        public async Task<bool> DoesPropertyTypeNameExists(string name, Guid? idToExclude)
+        {
+            return await _context.PropertyTypes.AnyAsync(t => t.Name == name && t.Id != idToExclude);
+        }
+
         public async Task<List<PropertyTypeListItemDTO>> ListPropertyTypes(PropertyTypeQueryFilter filter)
         {
             IQueryable<PropertyTypes> propertyTypeses = _context.PropertyTypes.AsQueryable();
