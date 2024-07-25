@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 using RealState.Application.Enums;
 
+using static RealState.Application.Extras.ResultObject.FunctionHelper;
+
 namespace RealState.Application.Extras.ResultObject
 {
     public abstract record class Result<T>
@@ -18,6 +20,15 @@ namespace RealState.Application.Extras.ResultObject
         public abstract Task<Result<T>> MapError(Func<AppError, Task<AppError>> errorFunc);
 
         public abstract Task<Result<T>> Peek(Action<T> action);
+
+        public Result<O> ApplyRight<O>(Result<O> other)
+        => Swap(Id<O>).Apply(other);
+
+        public Result<T> ApplyLeft<O>(Result<O> other)
+        => FunctionHelper.Lift<T, O, T>((t, o) => t, this, other);
+
+        public Result<A> Swap<A>(A a)
+        => Map(Const<T, A>(a));
 
         public abstract bool IsSuccess { get; }
         public abstract bool IsFailure { get; }
@@ -122,6 +133,34 @@ namespace RealState.Application.Extras.ResultObject
                     failure: otherFs => Fail<R>(fs.Concat(otherFs))
                 )
             );
+        }
+
+        public static Result<T> Join<T>(Result<Result<T>> self)
+        => self.FlatMap(x => x);
+
+
+        public static Result<IEnumerable<T>> Sequence<T>(this IEnumerable<Result<T>> fold)
+        => Traverse(FunctionHelper.Id, fold);
+
+        public static Result<IEnumerable<T>> Traverse<A, T>(this Func<A, Result<T>> f, IEnumerable<A> fold)
+        {
+            return
+            fold.Aggregate(
+                Ok(Enumerable.Empty<T>()),
+                (acc, it) => FunctionHelper.Lift(Append, acc, f(it))
+            );
+
+            static IEnumerable<R> Append<R>(IEnumerable<R> list, R r)
+            => list.Append(r);
+            // return fold.Aggregate(
+            //     Ok(Enumerable.Empty<T>()),
+            //     (acc, it) => Append(acc, f(it))
+            // );
+
+            // static Result<IEnumerable<T>> Append(Result<IEnumerable<T>> enumerable, Result<T> result)
+            // => from t in result
+            //    from ele in enumerable
+            //    select ele.Append(t);
         }
 
         public static async Task<Result<U>> Map<T, U>(this Task<Result<T>> self, Func<T, U> mapper)

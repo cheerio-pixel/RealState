@@ -10,6 +10,13 @@ namespace RealState.Application.Extras.ResultObject
         public static Result<R> Map<A, R>(this Func<A, R> f, Result<A> resultA)
         => resultA.Map(f);
 
+        public static Result<R> Lift<A, B, R>(this Func<A, B, R> self,
+                                              Result<A> resultA,
+                                              Result<B> resultB)
+        => self.Curry()
+               .Map(resultA)
+               .Apply(resultB);
+
         public static Result<R> Lift<A, B, C, R>(this Func<A, B, C, R> self,
                                                  Result<A> resultA,
                                                  Result<B> resultB,
@@ -19,5 +26,10 @@ namespace RealState.Application.Extras.ResultObject
                .Apply(resultB)
                .Apply(resultC);
 
+        public static T Id<T>(T t)
+        => t;
+
+        public static Func<A, T> Const<A, T>(T t)
+        => a => t;
     }
 }
