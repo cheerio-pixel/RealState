@@ -23,7 +23,8 @@ namespace RealState.Application
             services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
             services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
-                    .AddTransient<IPropertyTypeService, PropertyTypeService>();
+                    .AddTransient<IPropertyTypeService, PropertyTypeService>()
+                    .AddTransient<IAccountServices, AccountServices>();
         }
     }
 }
