@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 using RealState.Application.DTOs.Role;
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Infrastructure.Identity.Entities;
 
@@ -46,6 +45,26 @@ namespace RealState.Infrastructure.Identity.Repositories
         public IEnumerable<ApplicationRoleDTO> Get()
         {
             var roles = _roleManager.Roles.AsEnumerable();
+            return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
+        }
+
+        public IEnumerable<ApplicationRoleDTO> GetBasicRoles()
+        {
+            string[] basicRoleNames = { RoleTypes.Client.ToString(), RoleTypes.StateAgent.ToString() };
+
+            var roles = _roleManager.Roles.Where(x => basicRoleNames.Contains(x.Name))
+                                          .AsEnumerable();
+
+            return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
+        }
+
+        public IEnumerable<ApplicationRoleDTO> GetManagementRoles()
+        {
+            string[] managementRoleNames = { RoleTypes.Admin.ToString(), RoleTypes.Developer.ToString() };
+
+            var roles = _roleManager.Roles.Where(x => managementRoleNames.Contains(x.Name))
+                                          .AsEnumerable();
+
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 

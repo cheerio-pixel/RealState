@@ -13,5 +13,9 @@ namespace RealState.Application.Interfaces.Repositories
         public Task<ApplicationRoleDTO?> Get(string roleId);
 
         public IEnumerable<ApplicationRoleDTO> Get();
+
+        public IEnumerable<ApplicationRoleDTO> GetBasicRoles();
+
+        public IEnumerable<ApplicationRoleDTO> GetManagementRoles();
     }
 }
