@@ -1,9 +1,13 @@
-﻿namespace RealState.Application.ViewModel.Account
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RealState.Application.ViewModel.Account
 {
     public class ConfirmAccountViewModel
     {
-        public required Guid UserId { get; set; }
+        [Required(ErrorMessage = "User ID is required.")]
+        public string UserId { get; set; } = string.Empty;
 
-        public required string Token { get; set; }
+        [Required(ErrorMessage = "Token is required.")]
+        public string Token { get; set; } = string.Empty;
     }
 }
