@@ -18,6 +18,7 @@ namespace RealState.Infrastructure.Persistence
             #region Repositories
             services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             services.AddTransient<IPropertyRepository, PropertyRepository>();
+            services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
             #endregion
         }
     }

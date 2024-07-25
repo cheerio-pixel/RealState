@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 using RealState.Application.Behaviours;
+using RealState.Application.Interfaces.Services;
+using RealState.Application.Services;
 
 
 namespace RealState.Application
@@ -29,12 +31,18 @@ namespace RealState.Application
                 config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
-
-
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceRegistration).Assembly));
 
             #region CommandValidators
 
             #endregion
+            services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
+            services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
+
+            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>));
+            services.AddTransient<IPropertyTypeService, PropertyTypeService>();
+
+            // services.AddTransient<IPropertyTypeService, PropertyTypeService>();
 
         }
     }
