@@ -8,6 +8,7 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Common
 {
+    // Only works with id types that are structs
     public abstract class CrudController
     <TSaveViewModel, TViewModel, TEntity, TKey, TService>
     : Controller
@@ -18,17 +19,14 @@ namespace RealState.MVC.Common
     where TService : IGenericService<TSaveViewModel, TViewModel, TEntity, TKey>
     {
         private readonly TService _service;
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly string _managerEndpoint;
         private readonly string _controllerName;
 
         protected CrudController(TService service,
-                              IHttpContextAccessor contextAccessor,
                               string controllerName,
                               string managerEndpoint = "Index")
         {
             _service = service;
-            _contextAccessor = contextAccessor;
             _managerEndpoint = managerEndpoint;
             _controllerName = controllerName;
         }
