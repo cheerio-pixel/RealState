@@ -14,6 +14,8 @@ namespace RealState.Infrastructure.Persistence.Context
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<PropertiesUpgrades> PropertiesUpgrades { get; set; }
 
+        public DbSet<Pictures> Pictures { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MainContext).Assembly);

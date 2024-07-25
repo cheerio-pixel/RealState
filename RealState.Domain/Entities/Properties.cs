@@ -11,11 +11,12 @@ namespace RealState.Domain.Entities
         public int Bathrooms { get; set; }
         public string Code { get; set; } = null!;
         public decimal Meters { get; set; }
-        public List<string> Pictures { get; set; } = null!;
         public Guid PropertyTypeId { get; set; }
         public PropertyTypes PropertyTypes { get; set; } = null!;
         public Guid SalesTypeId { get; set; }
         public SalesTypes SalesTypes { get; set; } = null!;
+
+        public List<Pictures> Pictures { get; set; } = null!;
 
         //Navigation Properties
         public ICollection<PropertiesUpgrades> PropertiesUpgrades { get; set; } = null!;

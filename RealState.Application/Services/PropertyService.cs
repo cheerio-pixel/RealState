@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-
-using MediatR;
-
-
-using RealState.Application.Dtos;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
@@ -33,12 +28,6 @@ namespace RealState.Application.Services
             var propertyCreated = await _propertyRepository.Create(property);
             return _mapper.Map<PropertSaveViewModel>(propertyCreated);
         }
-        public async Task<Result<PropertSaveViewModel>> AddPictures(List<string> paths, Guid id)
-        {
-            foreach (var path in paths)
-            {
-                await _propertyRepository.AddPicture(picture);
-            }
-        }
+       
     }
 }
