@@ -42,7 +42,7 @@ namespace RealState.Infrastructure.Identity
             #endregion
 
             #region services
-            services.AddTransient<IAccountServices, AccountServices>();
+            services.AddTransient<IIdentityServices, IdentityServices>();
             #endregion
 
             #region repositories

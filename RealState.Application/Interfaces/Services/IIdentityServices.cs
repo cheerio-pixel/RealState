@@ -7,7 +7,7 @@ using RealState.Application.DTOs.User;
 
 namespace RealState.Application.Interfaces.Services
 {
-    public interface IAccountServices
+    public interface IIdentityServices
     {
         public Task<AuthenticationResponseDTO> AuthenticationAsync(AuthenticationRequestDTO request);
 
