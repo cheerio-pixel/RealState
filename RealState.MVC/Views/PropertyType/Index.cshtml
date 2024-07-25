@@ -12,6 +12,9 @@
         <span class="text-danger" id="nameSearchError"></span>
     </div>
     <button type="submit" class="btn btn-primary mt-2">Search</button>
+    <a class="btn btn-success mt-2" asp-action="CreateEdit">
+        New
+    </a>
 </form>
 
 <table class="table table-striped table-hover">
@@ -85,8 +88,8 @@
                         <td>${item.description}</td>
                         <td>${item.numberOfProperties}</td>
                         <td>
-                            <a href="/PropertyType/Edit/${item.id}" class="btn btn-primary btn-sm">Edit</a>
-                            <button class="btn btn-danger btn-sm" onclick="showDeleteConfirmation(${item.id})">Delete</button>
+                            <a href="/PropertyType/CreateEdit/${item.id}" class="btn btn-primary btn-sm">Edit</a>
+                            <button class="btn btn-danger btn-sm" onclick="showDeleteConfirmation('${item.id}')">Delete</button>
                         </td>
                     </tr>
                 `;
@@ -183,6 +186,7 @@
 
         // Delete confirmation
         function showDeleteConfirmation(id) {
+            console.log(id);
             const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
             const confirmDeleteButton = document.getElementById('confirmDeleteButton');
             confirmDeleteButton.href = `/PropertyType/Delete/${id}`;
