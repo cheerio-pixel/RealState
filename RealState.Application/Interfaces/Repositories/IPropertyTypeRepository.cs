@@ -8,5 +8,6 @@ namespace RealState.Application.Interfaces.Repositories
     : IGenericRepository<PropertyTypes>
     {
         Task<List<PropertyTypeListItemDTO>> ListPropertyTypes(PropertyTypeQueryFilter filter);
+        Task<bool> DoesPropertyTypeNameExists(string name, Guid? idToExclude);
     }
 }
