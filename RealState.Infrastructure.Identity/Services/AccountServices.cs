@@ -3,14 +3,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using AutoMapper;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
@@ -19,6 +16,7 @@ using RealState.Application.DTOs.Account.ResetPassword;
 using RealState.Application.DTOs.EmailServices;
 using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
 using RealState.Domain.Settings;
 using RealState.Infrastructure.Identity.Entities;
@@ -148,19 +146,8 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            var url = _uriServices.GetUrl(code, user.Id, "ResetPassword");
-            var email = new EmailRequestDTO() 
-            { 
-                To = user.Email,
-                Subject = "Reset your account",
-                Body = $"Please reset your password here: {url}"
-            };
-
-            var result = await _emailServices.SendAsync(email);
-            if(!result)
+            var resultOfSendEmail = await SendResetPasswordEmail(user);
+            if (!resultOfSendEmail)
                 return new()
                 {
                     Success = false,
@@ -217,19 +204,17 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            #region Send email to confirm account
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var userDto = _mapper.Map<ApplicationUserDTO>(user);
 
-            var url = _uriServices.GetUrl(code, user.Id, "ConfirmAccount");
+            #region verify send email to confirm account
+            if (!saveUser.Roles.Select(x => x.Name).Contains(RoleTypes.Client.ToString()))
+                return new()
+                {
+                    NewUser = userDto,
+                    Success = true,
+                };
 
-            var email = new EmailRequestDTO()
-            {
-                To = user.Email,
-                Subject = "Confirm Your Account",
-                Body = $"Please, confirm your account here {url}"
-            };
-            var resultOfSendEmail = await _emailServices.SendAsync(email);
+            var resultOfSendEmail = await SendConfirmAccountEmal(user);
             if (!resultOfSendEmail)
                 return new()
                 {
@@ -238,7 +223,6 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            var userDto = _mapper.Map<ApplicationUserDTO>(user);
             return new()
             {
                 NewUser = userDto,
@@ -274,6 +258,40 @@ namespace RealState.Infrastructure.Identity.Services
         }
 
         #region Private
+        private async Task<bool> SendResetPasswordEmail(ApplicationUser user)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var url = _uriServices.GetUrl(code, user.Id, "ResetPassword");
+            var email = new EmailRequestDTO()
+            {
+                To = user.Email,
+                Subject = "Reset your account",
+                Body = $"Please reset your password here: {url}"
+            };
+
+            var result = await _emailServices.SendAsync(email);
+            return result;
+        }
+
+        private async Task<bool> SendConfirmAccountEmal(ApplicationUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var url = _uriServices.GetUrl(code, user.Id, "ConfirmAccount");
+
+            var email = new EmailRequestDTO()
+            {
+                To = user.Email,
+                Subject = "Confirm Your Account",
+                Body = $"Please, confirm your account here {url}"
+            };
+            var result = await _emailServices.SendAsync(email);
+            return result;
+        }
+
         private bool IsEmailAccount(string account)
         {
             string patron = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}";
