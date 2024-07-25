@@ -43,6 +43,7 @@ namespace RealState.MVC.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public virtual async Task<IActionResult> CreateEdit(PropertyTypeSaveViewModel model)
         {
             if (ModelState.IsValid)
