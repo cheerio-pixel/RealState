@@ -7,20 +7,14 @@ using RealState.Domain.Common;
 
 namespace RealState.Application.Services
 {
-    public class GenericService<TSaveViewModel, TViewModel, TEntity, TKey>
+    public class GenericService<TSaveViewModel, TViewModel, TEntity, TKey>(IGenericRepository<TEntity, TKey> genericRepository, IMapper mapper)
     : IGenericService<TSaveViewModel, TViewModel, TEntity, TKey>
     where TSaveViewModel : class
     where TViewModel : class
     where TEntity : Entity<TKey>
     {
-        private readonly IGenericRepository<TEntity, TKey> _genericRepository;
-        private readonly IMapper _mapper;
-
-        public GenericService(IGenericRepository<TEntity, TKey> genericRepository, IMapper mapper)
-        {
-            _genericRepository = genericRepository;
-            _mapper = mapper;
-        }
+        private readonly IGenericRepository<TEntity, TKey> _genericRepository = genericRepository;
+        private readonly IMapper _mapper = mapper;
 #pragma warning disable CS1998
         protected virtual async IAsyncEnumerable<AppError> Validate(TSaveViewModel vm, bool isUpdate)
 #pragma warning restore CS1998

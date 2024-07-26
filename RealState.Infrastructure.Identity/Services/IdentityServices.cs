@@ -352,7 +352,7 @@ namespace RealState.Infrastructure.Identity.Services
 
         public string RandomTokenString()
         {
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            using var rngCryptoServiceProvider = RandomNumberGenerator.Create();
             var ramdonBytes = new byte[40];
             rngCryptoServiceProvider.GetBytes(ramdonBytes);
 

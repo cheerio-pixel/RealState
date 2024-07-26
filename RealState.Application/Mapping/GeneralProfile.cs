@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
@@ -9,9 +9,12 @@ using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.PropertyType;
+using RealState.Application.Commands.Property.Create;
+using RealState.Application.ViewModel.Property;
 using RealState.Application.ViewModel.Role;
 using RealState.Application.ViewModel.User;
 using RealState.Domain.Entities;
+using RealState.Application.ViewModel.Pictures;
 
 namespace RealState.Application.Mapping
 {
@@ -19,6 +22,16 @@ namespace RealState.Application.Mapping
     {
         public GeneralProfile()
         {
+            #region Property
+            CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
+            CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
+            #endregion
+
+            #region Picture
+            CreateMap<Pictures, PicturesViewModel>().ReverseMap();
+            CreateMap<Pictures, PicturesSaveViewModel>().ReverseMap();
+            #endregion
+
             CreateMap<PropertyTypeViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeSaveViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeSaveViewModel>().ReverseMap();

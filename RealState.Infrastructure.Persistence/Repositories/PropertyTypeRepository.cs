@@ -33,8 +33,10 @@ namespace RealState.Infrastructure.Persistence.Repositories
             }
 
             return await propertyTypeses
+                         .AsNoTracking()
                          .Select(pt => new PropertyTypeListItemDTO()
                          {
+                             Id = pt.Id,
                              Name = pt.Name,
                              Description = pt.Description,
                              NumberOfProperties = pt.Properties.Count

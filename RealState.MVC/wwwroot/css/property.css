@@ -1,0 +1,205 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    background: #BEE4F4;
+}
+h1 {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+.body {
+    min-height: 130vh;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 101dvh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.section-production {
+    width: 100%;
+    max-width: 90%;
+    
+    height: 130dvh; /* Usa la altura del viewport */
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    box-shadow: 5px 10px 18px #888888;
+    border-radius: 10px;
+    padding: 30px;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .section-production {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+        height: auto; /* Permite que la altura se ajuste al contenido en pantallas más pequeñas */
+        max-height: none; /* Remueve la limitación de altura en pantallas pequeñas */
+    }
+}
+
+.section-production section {
+    width: 50%;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-production form {
+    padding: 10px;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-production section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.section-production form .group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.section-production aside {
+    width: 50%;
+    height: 100%;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+    .section-production aside img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+.upgrades-container {
+    width: 100%;
+    min-width: 500px;
+    max-width: 600px; /* Ajusta según sea necesario */
+    min-height: 160px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho y alto */
+}
+
+
+.btn-tag {
+    width: 70px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px auto;
+}
+
+.selection-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    max-width: 100%;
+    gap: 10px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+    .tag .remove {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+.file-container {
+    background-color: white;
+    width: 100%;
+    position: relative;
+    margin: 50px auto;
+    border-radius: 7px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.05);
+}
+
+input[type = file] {
+    display: none;
+}
+
+.file-container label {
+    display: block;
+    position: relative;
+    background-color: #007bff;
+    border-radius: 7px;
+    color: white;
+    font-size: 1.25em;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.num-files {
+    text-align: center;
+    margin: 20px 0 30px 0;
+}
+
+#file-preview {
+    width: 100%;
+    border: 1px solid black;
+    position: relative;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#file-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.upgrades-container select {
+
+    width: 100%;
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 5px;
+}

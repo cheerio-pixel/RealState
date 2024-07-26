@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace RealState.Application.ViewModel.PropertyType
 {
     public class PropertyTypeSaveViewModel
+    : BaseSaveViewModel
     {
-        public Guid? Id { get; set; }
         [Required(ErrorMessage = "The Name of this property is necessary.")]
         [MaxLength(50, ErrorMessage = "The name cannot be longer than 50 characters.")]
         public string Name { get; set; } = string.Empty;
