@@ -42,12 +42,8 @@ namespace RealState.Application
             services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
                     .AddTransient<IPropertyTypeService, PropertyTypeService>()
                     .AddTransient<IAccountServices, AccountServices>()
-                    .AddTransient<IRoleServices, RoleServices>();
-            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>));
-            services.AddTransient<IPropertyTypeService, PropertyTypeService>();
-            services.AddTransient<IPropertyService, PropertyService>(); 
-            // services.AddTransient<IPropertyTypeService, PropertyTypeService>();
-
+                    .AddTransient<IRoleServices, RoleServices>()
+                    .AddTransient<IPropertyService, PropertyService>();
         }
     }
 }
