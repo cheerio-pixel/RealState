@@ -23,7 +23,7 @@ using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Services
 {
-    public class AccountServices
+    public class IdentityServices
         (
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
@@ -33,7 +33,7 @@ namespace RealState.Infrastructure.Identity.Services
         IEmailServices emailServices,
         IOptions<JWTSettings> jwtSettings
         ) 
-        : IAccountServices
+        : IIdentityServices
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
