@@ -1,0 +1,68 @@
+﻿@using RealState.Application.ViewModel.Account
+@model UserSaveViewModel
+
+
+<form id="registerForm" asp-controller="Authentication" asp-action="Register" method="post" enctype="multipart/form-data">
+	<h2>Join</h2>
+	<hr />
+	<div class="row">
+		<div class="col-md-4">
+
+			@Html.ValidationSummary(true)
+			<div class="form-floating mb-3">
+				<input asp-for="FirstName" class="form-control" type="text" />
+				<label asp-for="FirstName" class="form-label">First Name</label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input asp-for="LastName" class="form-control" type="text" />
+				<label asp-for="LastName" class="form-label">Last Name</label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input asp-for="PhoneNumber" class="form-control" type="text" />
+				<label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input asp-for="File" type="file" />
+			</div>
+
+			<div class="form-floating mb-3">
+				<input asp-for="UserName" class="form-control" type="text" />
+				<label asp-for="UserName" class="form-label">UserName</label>
+			</div>
+		</div>
+
+		<div class="col-md-4 col-md-offset-2">
+			<section>
+				<div class="form-floating mb-3">
+					<input asp-for="Email" class="form-control" type="email" />
+					<label asp-for="Email" class="form-label">Email</label>
+				</div>
+
+				<div class="form-floating mb-3">
+					<input asp-for="Password" class="form-control"  placeholder="password" type="password" />
+					<label asp-for="Password" class="form-label" for="Input_Password">Password</label>
+				</div>
+
+				<div class="form-floating mb-3">
+					<input asp-for="ConfirmPassword" class="form-control" placeholder="password" type="password" />
+					<label asp-for="ConfirmPassword" class="form-label" for="Input_Password">Password</label>
+				</div>
+
+				<div class="form-floating mb-3">
+					<select asp-for="RolesId" class="form-control">
+						<option selected>Open this select menu</option>
+					</select>
+				</div>
+
+				<div>
+					<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+				</div>
+			</section>
+		</div>
+	</div>
+</form>
+
+
