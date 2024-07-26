@@ -19,7 +19,9 @@ namespace RealState.Infrastructure.Identity.Mappings
 
             CreateMap<ApplicationUser, SaveApplicationUserDTO>()
                 .ForMember(des => des.ConfirmPassword, opt => opt.Ignore())
-               .ReverseMap();
+                .ForMember(des => des.Active, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(des => des.EmailConfirmed, opt => opt.MapFrom(org => org.Active));
             #endregion
 
             #region Role

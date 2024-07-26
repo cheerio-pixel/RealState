@@ -48,7 +48,7 @@ namespace RealState.Application.Mapping
 
             #region User
             CreateMap<UserSaveViewModel, SaveApplicationUserDTO>().ReverseMap();
-
+            CreateMap<ApplicationUserDTO, SaveApplicationUserDTO>().ReverseMap();
             #endregion
 
             #region Role
