@@ -10,9 +10,12 @@ namespace RealState.MVC.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IAccountServices _accountServices;
-        public AuthenticationController(IAccountServices accountServices)
+        private readonly IRoleServices _roleServices;
+
+        public AuthenticationController(IAccountServices accountServices, IRoleServices roleServices)
         {
             _accountServices = accountServices;
+            _roleServices = roleServices;
         }
 
         public IActionResult SignIn()
@@ -34,13 +37,20 @@ namespace RealState.MVC.Controllers
         }
 
         public IActionResult Register()
-            => View();
+        {
+            ViewData["Roles"] = _roleServices.GetBasicRoles().Value;
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Register(UserSaveViewModel user)
         {
-            if (!ModelState.IsValid) return View(user);
+            ViewData["Roles"] = _roleServices.GetBasicRoles().Value;
 
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
             var result = await _accountServices.RegisterAsync(user);
             if (result.IsFailure)
             {
