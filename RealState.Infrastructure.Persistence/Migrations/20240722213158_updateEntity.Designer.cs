@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RealState.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using RealState.Infrastructure.Persistence.Context;
 namespace RealState.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20240722213158_updateEntity")]
+    partial class updateEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,27 +42,6 @@ namespace RealState.Infrastructure.Persistence.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Favorites");
-                });
-
-            modelBuilder.Entity("RealState.Domain.Entities.Pictures", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Picture")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("RealState.Domain.Entities.Properties", b =>
@@ -88,6 +70,10 @@ namespace RealState.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Pictures")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -100,34 +86,18 @@ namespace RealState.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("SalesTypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UpgradeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyTypeId");
 
                     b.HasIndex("SalesTypeId");
 
-                    b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("RealState.Domain.Entities.PropertiesUpgrades", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UpgradeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
                     b.HasIndex("UpgradeId");
 
-                    b.ToTable("PropertiesUpgrades");
+                    b.ToTable("Properties");
                 });
 
             modelBuilder.Entity("RealState.Domain.Entities.PropertyTypes", b =>
@@ -204,17 +174,6 @@ namespace RealState.Infrastructure.Persistence.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("RealState.Domain.Entities.Pictures", b =>
-                {
-                    b.HasOne("RealState.Domain.Entities.Properties", "Property")
-                        .WithMany("Pictures")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-                });
-
             modelBuilder.Entity("RealState.Domain.Entities.Properties", b =>
                 {
                     b.HasOne("RealState.Domain.Entities.PropertyTypes", "PropertyTypes")
@@ -229,37 +188,22 @@ namespace RealState.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PropertyTypes");
-
-                    b.Navigation("SalesTypes");
-                });
-
-            modelBuilder.Entity("RealState.Domain.Entities.PropertiesUpgrades", b =>
-                {
-                    b.HasOne("RealState.Domain.Entities.Properties", "Property")
-                        .WithMany("PropertiesUpgrades")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RealState.Domain.Entities.Upgrades", "Upgrade")
-                        .WithMany("PropertiesUpgrades")
+                    b.HasOne("RealState.Domain.Entities.Upgrades", "Upgrades")
+                        .WithMany("Properties")
                         .HasForeignKey("UpgradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Property");
+                    b.Navigation("PropertyTypes");
 
-                    b.Navigation("Upgrade");
+                    b.Navigation("SalesTypes");
+
+                    b.Navigation("Upgrades");
                 });
 
             modelBuilder.Entity("RealState.Domain.Entities.Properties", b =>
                 {
                     b.Navigation("Favorites");
-
-                    b.Navigation("Pictures");
-
-                    b.Navigation("PropertiesUpgrades");
                 });
 
             modelBuilder.Entity("RealState.Domain.Entities.PropertyTypes", b =>
@@ -274,7 +218,7 @@ namespace RealState.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("RealState.Domain.Entities.Upgrades", b =>
                 {
-                    b.Navigation("PropertiesUpgrades");
+                    b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
         }

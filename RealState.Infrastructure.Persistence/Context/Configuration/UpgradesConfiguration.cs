@@ -18,10 +18,9 @@ namespace RealState.Infrastructure.Persistence.Context.Configuration
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.HasMany(p => p.Properties)
-                .WithOne(p => p.Upgrades)
-                .HasForeignKey(p => p.UpgradeId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.PropertiesUpgrades)
+                .WithOne(x => x.Upgrade)
+                .HasForeignKey(x => x.UpgradeId);
         }
 
 
