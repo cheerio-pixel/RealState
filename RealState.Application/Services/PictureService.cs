@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
@@ -13,12 +14,16 @@ namespace RealState.Application.Services
         private readonly IMapper _mapper = mapper;
         public async Task<Result<PicturesSaveViewModel>> AddPictures(PicturesSaveViewModel vm)
         {
-            foreach (var picture in vm.Pictures)
-            {
-                var pictureEntity = _mapper.Map<Pictures>(picture);
-                await _pictureRepository.Create(pictureEntity);
-            }
 
+            var picturesEntity = _mapper.Map<List<Pictures>>(vm.Pictures);
+            
+            var task = picturesEntity.Select(async picture =>
+            {
+                picture.PropertyId = vm.PropertyId;
+                await _pictureRepository.Create(picture);
+            });
+
+            await Task.WhenAll(task);
             return vm;
         }
     }
