@@ -134,6 +134,9 @@ namespace RealState.Infrastructure.Identity.Repositories
             if (filters.PhoneNumber is not null)
                 query = query.Where(u => u.PhoneNumber.Contains(filters.PhoneNumber));
 
+            if (filters.Active is not null)
+                query = query.Where(u => u.EmailConfirmed == filters.Active);
+
             if (filters.Role is not null)
                 query = query.Include(x => x.Roles)
                              .Where(u => u.Roles.Select(r => r.Name).Contains(filters.Role.ToString()));
