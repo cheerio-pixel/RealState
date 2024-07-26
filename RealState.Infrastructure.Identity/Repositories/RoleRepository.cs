@@ -68,6 +68,13 @@ namespace RealState.Infrastructure.Identity.Repositories
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 
+        public IEnumerable<ApplicationRoleDTO> GetRolesById(List<string> Ids)
+        {
+            var roles = _roleManager.Roles.Where(x=>Ids.Contains(x.Id))
+                                          .AsEnumerable();
+            return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
+        }
+
         public async Task<bool> UpdateAsync(ApplicationRoleDTO roleDto)
         {
             var role = await _roleManager.Roles.FirstOrDefaultAsync(x=>x.Id == roleDto.Id);
