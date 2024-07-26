@@ -86,8 +86,6 @@ namespace RealState.Application.Services
 
         public async Task<Result<Unit>> UpdateAsync(string userId, UserSaveViewModel userViewModel)
         {
-            //id, user name, email, identifier, valido
-
             #region Validations
             var userById = await _userRepository.Get(userId);
             if (userById is null)
@@ -105,9 +103,9 @@ namespace RealState.Application.Services
             if (userByIdentifierCard is not null && userByIdentifierCard.Id != userId)
                 return ErrorType.Any.Because($"This identifier Card: {userViewModel.IdentifierCard} is already taken");
 
-            //var IsActive = userById.Ativide;
-            //if (IsActive)
-            //    return ErrorType.Any.Because($"This user isn`t active");
+            var IsActive = userById.Active;
+            if (IsActive)
+                return ErrorType.Any.Because($"This user isn`t active");
             #endregion
 
             var saveUser = _mapper.Map<SaveApplicationUserDTO>(userViewModel);
