@@ -5,9 +5,12 @@ using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
 using RealState.Application.DTOs.Account.ResetPassword;
 using RealState.Application.DTOs.PropertyType;
+using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.PropertyType;
+using RealState.Application.ViewModel.Role;
+using RealState.Application.ViewModel.User;
 using RealState.Domain.Entities;
 
 namespace RealState.Application.Mapping
@@ -26,6 +29,8 @@ namespace RealState.Application.Mapping
             CreateMap<UserSaveViewModel, SaveApplicationUserDTO>().ReverseMap();
             CreateMap<ResetPasswordViewModel, ResetPasswordRequestDTO>().ReverseMap();
             CreateMap<LoginViewModel, AuthenticationRequestDTO>().ReverseMap();
+
+            CreateMap<RoleViewModel, ApplicationRoleDTO>().ReverseMap();
         }
     }
 }

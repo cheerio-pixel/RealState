@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
@@ -8,6 +9,7 @@ using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Account;
+using RealState.Application.ViewModel.User;
 
 namespace RealState.Application.Services
 {

@@ -2,6 +2,7 @@
 
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Account;
+using RealState.Application.ViewModel.User;
 using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers

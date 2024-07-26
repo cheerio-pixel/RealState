@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Http;
 
-namespace RealState.Application.ViewModel.Account
+namespace RealState.Application.ViewModel.User
 {
     public class UserSaveViewModel
     {

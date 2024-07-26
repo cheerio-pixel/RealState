@@ -1,6 +1,7 @@
 ﻿using RealState.Application.DTOs.User;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.ViewModel.Account;
+using RealState.Application.ViewModel.User;
 
 namespace RealState.Application.Interfaces.Services
 {

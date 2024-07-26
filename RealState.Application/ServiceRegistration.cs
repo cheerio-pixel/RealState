@@ -2,7 +2,6 @@
 
 using MediatR;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using RealState.Application.Behaviours;
@@ -24,7 +23,8 @@ namespace RealState.Application
 
             services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
                     .AddTransient<IPropertyTypeService, PropertyTypeService>()
-                    .AddTransient<IAccountServices, AccountServices>();
+                    .AddTransient<IAccountServices, AccountServices>()
+                    .AddTransient<IRoleServices, RoleServices>();
         }
     }
 }
