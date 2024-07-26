@@ -1,6 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Queries\**" />
+    <EmbeddedResource Remove="Queries\**" />
+    <None Remove="Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RealState.Domain\RealState.Domain.csproj" />
   </ItemGroup>
 
@@ -21,10 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RealState.Domain\RealState.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>

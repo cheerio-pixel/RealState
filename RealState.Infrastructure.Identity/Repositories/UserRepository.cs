@@ -20,11 +20,11 @@ namespace RealState.Infrastructure.Identity.Repositories
         private readonly IMapper _mapper = mapper;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-        public async Task<bool> AddRolesAsync(ApplicationUserDTO userDto, List<string> roles)
+        public async Task<bool> AddRolesAsync(ApplicationUserDTO userDto, List<string> roleNames)
         {
             var user = _mapper.Map<ApplicationUser>(userDto);
 
-            var result = await _userManager.AddToRolesAsync(user, roles).ConfigureAwait(false);
+            var result = await _userManager.AddToRolesAsync(user, roleNames).ConfigureAwait(false);
             if (!result.Succeeded)
                 return false;
             return true;
@@ -92,11 +92,11 @@ namespace RealState.Infrastructure.Identity.Repositories
             return _mapper.Map<IEnumerable<ApplicationUserDTO>>(query.AsEnumerable());
         }
 
-        public async Task<bool> RemoveRolesAsync(ApplicationUserDTO userDto, List<string> roles)
+        public async Task<bool> RemoveRolesAsync(ApplicationUserDTO userDto, List<string> roleNames)
         {
             var user = _mapper.Map<ApplicationUser>(userDto);
 
-            var result = await _userManager.RemoveFromRolesAsync(user, roles).ConfigureAwait(false);
+            var result = await _userManager.RemoveFromRolesAsync(user, roleNames).ConfigureAwait(false);
             if (!result.Succeeded)
                 return false;
             return true;
