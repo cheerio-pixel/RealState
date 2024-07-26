@@ -33,6 +33,22 @@ namespace RealState.Application.Services
             return Unit.T;
         }
 
+        public async Task<Result<Unit>> ChangeActiveStatus(string userId, bool status)
+        {
+            var user = await _userRepository.Get(userId);
+            if (user is null)
+                return ErrorType.Any.Because($"There isn`t any user with this id: {userId}");
+
+            user.Active = status;
+
+            var saveUser = _mapper.Map<SaveApplicationUserDTO>(user);
+            var result = await _userRepository.UpdateAsync(saveUser);
+            if (!result)
+                return ErrorType.Any.Because($"There is a problem updating user");
+
+            return Unit.T;
+        }
+
         public async Task<Result<Unit>> DeleteAsync(string userId)
         {
             var user = await _userRepository.Get(userId);
