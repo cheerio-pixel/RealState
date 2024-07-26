@@ -24,8 +24,7 @@ namespace RealState.Application.ViewModel.User
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = null!;
 
-        [Url(ErrorMessage = "Invalid URL.")]
-        public string Picture { get; set; } = null!;
+        public string? Picture { get; set; }
 
         [Required(ErrorMessage = "Identifier card is required.")]
         [StringLength(20, ErrorMessage = "Identifier card can't be longer than 20 characters.")]

@@ -7,16 +7,18 @@ using RealState.Application.DTOs.Account.ResetPassword;
 using RealState.Application.DTOs.User;
 using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
+using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.User;
 
 namespace RealState.Application.Services
 {
-    public class AccountServices(IIdentityServices identityServices, IMapper mapper) : IAccountServices
+    public class AccountServices(IIdentityServices identityServices, IMapper mapper, IRoleRepository roleRepository) : IAccountServices
     {
         private readonly IIdentityServices _identityServices = identityServices;
         private readonly IMapper _mapper = mapper;
+        private readonly IRoleRepository _roleRepository = roleRepository;
 
         public async Task<Result<Unit>> ConfirmAccountAsync(ConfirmAccountViewModel confirmAccount)
         {
@@ -40,7 +42,9 @@ namespace RealState.Application.Services
 
         public async Task<Result<ApplicationUserDTO>> RegisterAsync(UserSaveViewModel saveUser)
         {
+            var roles  = _roleRepository.GetRolesById(saveUser.RolesId);
             var request = _mapper.Map<SaveApplicationUserDTO>(saveUser);
+            request.Roles = roles.ToList();
             var result = await _identityServices.RegisterAsync(request);
             if (!result.Success)
                 return ErrorType.Conflict.Because(result.Error);
