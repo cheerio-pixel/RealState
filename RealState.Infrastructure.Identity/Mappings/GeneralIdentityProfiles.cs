@@ -12,6 +12,7 @@ namespace RealState.Infrastructure.Identity.Mappings
         {
             #region User
             CreateMap<ApplicationUser, ApplicationUserDTO>()
+                .ForMember(des => des.Active, opt => opt.MapFrom(org => org.EmailConfirmed))
                 .ReverseMap();
 
             CreateMap<ApplicationUser, SaveApplicationUserDTO>()
