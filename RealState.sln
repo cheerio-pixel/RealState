@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealState.Application", "Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealState.Api", "RealState.Api\RealState.Api.csproj", "{BC46FD08-907B-44D2-A18C-C914428A2566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealState.Infrastructure.Shared", "RealState.Infrastructure.Shared\RealState.Infrastructure.Shared.csproj", "{A0865827-7936-4A31-9ADC-FD154B0CC661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealState.Infrastructure.Shared", "RealState.Infrastructure.Shared\RealState.Infrastructure.Shared.csproj", "{A0865827-7936-4A31-9ADC-FD154B0CC661}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealState.Infrastructure.Identity", "RealState.Infrastructure.Identity\RealState.Infrastructure.Identity.csproj", "{1262A0A2-9D97-473E-9875-A81A73352B73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealState.Infrastructure.Identity", "RealState.Infrastructure.Identity\RealState.Infrastructure.Identity.csproj", "{1262A0A2-9D97-473E-9875-A81A73352B73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

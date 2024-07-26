@@ -1,13 +1,14 @@
 ﻿@using RealState.Application.ViewModel.Property
 @model PropertSaveViewModel
 @{
-    Guid id = ViewBag.Id;
+    Guid? id = ViewBag.Id;
     Layout = "~/Views/Shared/_layoutproperty.cshtml";
 }
 
 <main class="section-production">
     <section>
         <div class="title">
+
             <h1>Create Property</h1>
         </div>
         <form asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
@@ -155,5 +156,6 @@
             reader.readAsDataURL(file);
         }
     });
+
 
 </script>
