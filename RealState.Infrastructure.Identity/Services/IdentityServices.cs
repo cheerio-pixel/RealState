@@ -194,7 +194,7 @@ namespace RealState.Infrastructure.Identity.Services
 
             #region Create user
             var user = _mapper.Map<ApplicationUser>(saveUser);
-
+            user.Roles.Clear();
             var result = await _userManager.CreateAsync(user, saveUser.Password);
             if (!result.Succeeded)
                 return new()
