@@ -17,6 +17,7 @@ using RealState.Application.DTOs.EmailServices;
 using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.User;
 using RealState.Application.Enums;
+using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Domain.Settings;
 using RealState.Infrastructure.Identity.Entities;
@@ -24,16 +25,17 @@ using RealState.Infrastructure.Identity.Entities;
 namespace RealState.Infrastructure.Identity.Services
 {
     public class IdentityServices
-        (
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
-        SignInManager<ApplicationUser> signInManager,
-        IMapper mapper,
-        IUriServices uriServices,
-        IEmailServices emailServices,
-        IOptions<JWTSettings> jwtSettings
-        ) 
-        : IIdentityServices
+       (
+       UserManager<ApplicationUser> userManager,
+       RoleManager<ApplicationRole> roleManager,
+       SignInManager<ApplicationUser> signInManager,
+       IMapper mapper,
+       IUriServices uriServices,
+       IEmailServices emailServices,
+       IOptions<JWTSettings> jwtSettings,
+       IRoleRepository roleRepository
+       )
+       : IIdentityServices
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
@@ -41,6 +43,7 @@ namespace RealState.Infrastructure.Identity.Services
         private readonly IMapper _mapper = mapper;
         private readonly IUriServices _uriServices = uriServices;
         private readonly IEmailServices _emailServices = emailServices;
+        private readonly IRoleRepository _roleRepository = roleRepository;
         private readonly JWTSettings _jwtSettings = jwtSettings.Value;
 
         public async Task<AuthenticationResponseDTO> AuthenticationAsync(AuthenticationRequestDTO request)
@@ -182,6 +185,11 @@ namespace RealState.Infrastructure.Identity.Services
                     Success = false,
                     Error = $"The IdentifierCard: {saveUser.IdentifierCard} is already taken"
                 };
+            //verify if user is a manager or not
+            var managerRolesName = _roleRepository.GetManagementRoles().Select(x=>x.Name).ToList();
+            var isUserManager = saveUser.Roles.Where(x=> managerRolesName.Contains(x.Name)).Count() > 0;
+            if (isUserManager)
+                saveUser.Active = true;
             #endregion
 
             #region Create user
