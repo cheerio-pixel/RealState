@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+
+using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.Services;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.Helpers;
@@ -33,8 +36,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(login);
             }
-
-            return View(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Register()
@@ -121,6 +123,18 @@ namespace RealState.MVC.Controllers
                 return View(ResetPasswordVm);
             }
             return View(nameof(SignIn));
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await _accountServices.SignOutAsync();
+            return View(nameof(Index));
+        }
+
+        public IActionResult AccessDenied()
+        {
+            
+            return View();
         }
     }
 }

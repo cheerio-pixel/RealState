@@ -46,16 +46,6 @@ namespace RealState.Infrastructure.Identity
                options.Lockout.MaxFailedAccessAttempts = 3;
                options.Lockout.AllowedForNewUsers = true;
            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-                options.LoginPath = "/Authentication/Index";
-                options.AccessDeniedPath = "/Authentication/AccessDenied";
-                options.SlidingExpiration = true;
-            });
             #endregion
 
             #region services
