@@ -103,5 +103,24 @@ namespace RealState.MVC.Controllers
             }
             return View(nameof(SignIn));
         }
+
+        public IActionResult ResetPassword(string Token, string UserId) => View(new ResetPasswordViewModel() { Token = Token, UserId = UserId});
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel ResetPasswordVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ResetPasswordVm);
+            }
+
+            var result = await _accountServices.ResetPasswordAsync(ResetPasswordVm);
+            if (result.IsFailure)
+            {
+                ModelState.AggregateErrors(result.Errors);
+                return View(ResetPasswordVm);
+            }
+            return View(nameof(SignIn));
+        }
     }
 }
