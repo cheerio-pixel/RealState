@@ -32,18 +32,28 @@ namespace RealState.Application.Mapping
             CreateMap<Pictures, PicturesSaveViewModel>().ReverseMap();
             #endregion
 
+            #region Property Type ViewModel
             CreateMap<PropertyTypeViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeSaveViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeSaveViewModel>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeListItemViewModel>().ReverseMap();
+            #endregion
 
+            #region Account
             CreateMap<ConfirmAccountViewModel, ConfirmAccountRequestDTO>().ReverseMap();
             CreateMap<ForgotPasswordViewModel, ForgotPasswordRequestDTO>().ReverseMap();
-            CreateMap<UserSaveViewModel, SaveApplicationUserDTO>().ReverseMap();
             CreateMap<ResetPasswordViewModel, ResetPasswordRequestDTO>().ReverseMap();
             CreateMap<LoginViewModel, AuthenticationRequestDTO>().ReverseMap();
+            #endregion
 
+            #region User
+            CreateMap<UserSaveViewModel, SaveApplicationUserDTO>().ReverseMap();
+            CreateMap<ApplicationUserDTO, SaveApplicationUserDTO>().ReverseMap();
+            #endregion
+
+            #region Role
             CreateMap<RoleViewModel, ApplicationRoleDTO>().ReverseMap();
+            #endregion
         }
     }
 }
