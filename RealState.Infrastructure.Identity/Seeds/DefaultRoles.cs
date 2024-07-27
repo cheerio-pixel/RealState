@@ -37,6 +37,16 @@ namespace RealState.Infrastructure.Identity.Seeds
                     NormalizedName = RoleTypes.StateAgent.ToString().ToUpper()
                 });
             #endregion
+
+            #region Developer
+            var developerExists = await roleManager.RoleExistsAsync(RoleTypes.Developer.ToString());
+            if (!developerExists)
+                await roleManager.CreateAsync(new()
+                {
+                    Name = RoleTypes.Developer.ToString(),
+                    NormalizedName = RoleTypes.Developer.ToString().ToUpper()
+                });
+            #endregion
         }
     }
 }
