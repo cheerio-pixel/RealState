@@ -8,12 +8,12 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AccountController : Controller
     {
         private readonly IAccountServices _accountServices;
         private readonly IRoleServices _roleServices;
 
-        public AuthenticationController(IAccountServices accountServices, IRoleServices roleServices)
+        public AccountController(IAccountServices accountServices, IRoleServices roleServices)
         {
             _accountServices = accountServices;
             _roleServices = roleServices;
@@ -63,6 +63,26 @@ namespace RealState.MVC.Controllers
             }
 
             return View(nameof(SignIn));
+        }
+
+        public async Task<IActionResult> ConfirmAccount(ConfirmAccountViewModel confimAccountVw)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewData["Success"] = false;
+                return View(confimAccountVw); 
+            }
+
+            var result = await _accountServices.ConfirmAccountAsync(confimAccountVw);
+            if (result.IsFailure)
+            {
+                ViewData["Success"] = false;
+                ModelState.AggregateErrors(result.Errors);
+                return View(confimAccountVw);
+            }
+
+            ViewData["Success"] = true;
+            return View();
         }
     }
 }
