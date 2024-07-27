@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.Interfaces.Repositories;
@@ -16,6 +18,24 @@ namespace RealState.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
+
+        /// <summary>
+        /// Checks that a property from entity exists
+        /// </summary>
+        protected async Task<bool> PropertyExistsWithValue<T>(Expression<Func<TEntity, T>> getter, T value, TKey keyToExclude)
+        {
+            ParameterExpression parameter = getter.Parameters[0];
+            MemberExpression getId = Expression.MakeMemberAccess(parameter, typeof(Entity).GetMember("Id")[0]);
+            Expression<Func<TEntity, bool>> lambdaExpression =
+                Expression.Lambda<Func<TEntity, bool>>(
+            Expression.AndAlso(
+                Expression.Equal(getter.Body, Expression.Constant(value)),
+                Expression.NotEqual(getId, Expression.Constant(keyToExclude))
+            ), parameter
+                    );
+            return await _context.Set<TEntity>().AnyAsync(lambdaExpression);
+        }
+
         public virtual async Task<TEntity> Create(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);

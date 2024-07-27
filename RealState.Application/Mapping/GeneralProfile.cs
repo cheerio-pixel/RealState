@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 
-using RealState.Application.DTOs.PropertyType;
-using RealState.Application.ViewModel.PropertyType;
 using RealState.Application.Commands.Property.Create;
-using RealState.Application.ViewModel.Property;
-using RealState.Domain.Entities;
+using RealState.Application.DTOs.PropertyType;
+using RealState.Application.DTOs.SalesType;
 using RealState.Application.ViewModel.Pictures;
+using RealState.Application.ViewModel.Property;
+using RealState.Application.ViewModel.PropertyType;
+using RealState.Application.ViewModel.SalesType;
+using RealState.Application.ViewModel.Upgrades;
+using RealState.Domain.Entities;
 
 namespace RealState.Application.Mapping
 {
@@ -27,6 +30,13 @@ namespace RealState.Application.Mapping
             CreateMap<PropertyTypeSaveViewModel, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeSaveViewModel>().ReverseMap();
             CreateMap<PropertyTypeListItemDTO, PropertyTypeListItemViewModel>().ReverseMap();
+
+            CreateMap<UpgradesViewModel, Upgrades>().ReverseMap();
+            CreateMap<UpgradesSaveViewModel, Upgrades>().ReverseMap();
+
+            CreateMap<SalesTypeViewModel, SalesTypes>().ReverseMap();
+            CreateMap<SalesTypeSaveViewModel, SalesTypes>().ReverseMap();
+            CreateMap<SalesTypeListItemViewModel, SalesTypesListItemDTO>().ReverseMap();
         }
     }
 }
