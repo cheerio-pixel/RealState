@@ -35,7 +35,6 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PropertSaveViewModel vm)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(vm);
