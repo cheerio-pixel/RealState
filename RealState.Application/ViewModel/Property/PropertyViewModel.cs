@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 using RealState.Application.ViewModel.Pictures;
+using RealState.Application.ViewModel.PropertyType;
 
 namespace RealState.Application.ViewModel.Property
 {
@@ -14,8 +15,8 @@ namespace RealState.Application.ViewModel.Property
         public int Bathrooms { get; set; }
         public string Code { get; set; } = null!;
         public int Meters { get; set; }
-       public List<PicturesViewModel> Pictures { get; set; } = [];
-        public Guid PropertyTypeId { get; set; }
+        public List<PicturesViewModel> Pictures { get; set; } = [];
+        public PropertyTypeViewModel Property { get; set; } = null!;
         public Guid SalesTypeId { get; set; }
         public List<Guid> UpgradeId { get; set; } = [];
     }

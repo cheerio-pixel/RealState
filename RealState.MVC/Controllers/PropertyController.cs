@@ -56,5 +56,21 @@ namespace RealState.MVC.Controllers
 
             return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _propertyService.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Index");
+            }
+
+
+        }
     }
 }

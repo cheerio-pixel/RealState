@@ -20,6 +20,8 @@ namespace RealState.Application.DTOs.User
 
         public string PhoneNumber { get; set; } = null!;
 
+        public bool Active { get; set; }
+
         public ICollection<ApplicationRoleDTO> Roles { get; set; } = [];
     }
 }
