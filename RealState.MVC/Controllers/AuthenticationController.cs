@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.User;
@@ -51,6 +52,9 @@ namespace RealState.MVC.Controllers
             {
                 return View(user);
             }
+
+            var picture = PictureHelper.UploadFile(user.File, user.UserName, "Users");
+            user.Picture = picture;
             var result = await _accountServices.RegisterAsync(user);
             if (result.IsFailure)
             {
