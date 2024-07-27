@@ -84,5 +84,24 @@ namespace RealState.MVC.Controllers
             ViewData["Success"] = true;
             return View();
         }
+
+        public IActionResult ForgotPassword() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPasswordVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPasswordVm);
+            }
+
+            var result = await _accountServices.ForgotPasswordAsync(forgotPasswordVm);
+            if (result.IsFailure)
+            {
+                ModelState.AggregateErrors(result.Errors);
+                return View(forgotPasswordVm);
+            }
+            return View(nameof(SignIn));
+        }
     }
 }
