@@ -5,6 +5,6 @@ namespace RealState.Application.Interfaces.Services
 {
     public interface IPictureService
     {
-        Task<Result<PicturesSaveViewModel>> AddPictures(PicturesSaveViewModel vm);
+        Task<Result<List<PicturesSaveViewModel>>> AddPictures(List<PicturesSaveViewModel> vm);
     }
 }

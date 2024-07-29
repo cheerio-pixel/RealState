@@ -1,15 +1,28 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RealState.Application.Extras.ResultObject;
+using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.Property;
 
 namespace RealState.MVC.Controllers;
 
-public class AgentController(IMediator mediator, IPropertyService propertyService, IMapper mapper) : Controller
+public class AgentController(IMediator mediator, IPropertyService propertyService
+    , IMapper mapper,
+    IUpgradesService upgradesService,
+    ISalesTypesService salesTypesService,
+    IPropertyTypeService propertyTypeService,
+    IPictureService pictureService) : Controller
 {
     private readonly IMediator _mediator = mediator;
     private readonly IPropertyService _propertyService = propertyService;
+    private readonly IUpgradesService _upgradesService = upgradesService;
+    private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
+    private readonly ISalesTypesService _salesTypeService = salesTypesService;
+    private readonly IPictureService _pictureService = pictureService;
+    
     private readonly IMapper _mapper = mapper;
 
     public IActionResult Index()
@@ -17,14 +30,17 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         return View();
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
+        ViewBag.SalesTypes = await _salesTypeService.GetAllViewModel();
+        ViewBag.Upgrades = await _upgradesService.GetAllViewModel();
         return View();
     }
 
     public IActionResult Profile()
     {
-        
+
         return View();
     }
 
@@ -40,29 +56,46 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     [HttpPost]
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
-
+        List<PicturesSaveViewModel> pictures = [];
+        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
         if (!ModelState.IsValid)
         {
             return View(vm);
         }
 
-        var result = await _propertyService.Add(vm);
+        Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
+        if (!result.IsSuccess)
+        {
+            return View(vm);
+        }
 
-        return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
+
+        foreach (var picture in vm.Pictures)
+        {
+            pictures.Add(new PicturesSaveViewModel
+            {
+                Picture = PictureHelper.UploadFile(picture, vm.Id.ToString(), "Properties"),
+                PropertyId = result.Value.Id
+            });
+        }
+
+        var pictureResult = await _pictureService.AddPictures(pictures);
+        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("Index");
     }
 
     [HttpPost]
     public async Task<IActionResult> Update(PropertSaveViewModel vm)
     {
+
+        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
         if (!ModelState.IsValid)
         {
             return View(vm);
         }
-
         var result = await _propertyService.Update(vm, vm.Id);
-
         return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
@@ -77,9 +110,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
             Console.WriteLine(ex.Message);
             return RedirectToAction("Index");
         }
-
-
     }
-    
+
 
 }

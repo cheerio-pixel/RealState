@@ -15,6 +15,7 @@ namespace RealState.Domain.Entities
         public PropertyTypes PropertyTypes { get; set; } = null!;
         public Guid SalesTypeId { get; set; }
         public SalesTypes SalesTypes { get; set; } = null!;
+        public Guid AgentId { get; set; }
 
         public List<Pictures> Pictures { get; set; } = null!;
 

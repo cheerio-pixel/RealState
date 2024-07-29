@@ -3,6 +3,9 @@
 @{
     Guid? id = ViewBag.Id;
     Layout = "~/Views/Shared/_layoutproperty.cshtml";
+    List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertyTypes;
+    List<SalesTypeViewModel> salesTypes = ViewBag.SalesTypes;
+    List<UpgradesViewModel> upgrades = ViewBag.Upgrades;
 }
 
 <main class="section-production">
@@ -15,7 +18,7 @@
             <!--Section 1-->
             @if (id != null)
             {
-                <input type="hidden" asp-for="Id" value="@id" />
+                        <input type="hidden" asp-for="Id" value="@id" />
             }
             <!-- Resto del formulario -->
             <div class="form-section" id="section-1">
@@ -28,9 +31,15 @@
                     <label for="saleType">Sale Type</label>
                     <select asp-for="SalesTypeId">
                         <option selected>Choose...</option>
-                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                        @{
+                            if (salesTypes != null)
+                            {
+                                foreach (var item in salesTypes)
+                                {
+                                                         <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        }
                     </select>
                     <span asp-validation-for="SalesTypeId" class="text-danger"></span>
                 </div>
@@ -73,9 +82,15 @@
                     <label for="saleType">Property Type</label>
                     <select asp-for="PropertyTypeId">
                         <option selected>Choose...</option>
-                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                        @{
+                            if (propertyTypes != null)
+                            {
+                                foreach (var item in propertyTypes)
+                                {
+                                                        <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        }
                     </select>
                     <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
                 </div>
@@ -84,9 +99,15 @@
                         <label for="Updagre">Upgrade Type</label>
                         <select asp-for="UpgradeId" multiple>
                             <option value="" disabled selected>Choose...</option>
-                            <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                            <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                            <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                            @{
+                                if (upgrades != null)
+                                {
+                                    foreach (var item in upgrades)
+                                    {
+                                                    <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            }
 
                         </select>
                     </div>

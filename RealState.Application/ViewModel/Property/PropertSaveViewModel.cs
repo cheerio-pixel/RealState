@@ -17,7 +17,7 @@ namespace RealState.Application.ViewModel.Property
         public int Rooms { get; set; }
         [Required(ErrorMessage = "Bathrooms is required")]
         public int Bathrooms { get; set; }
-        public string Code { get; set; } = null!;
+        public string Code { get; set; } = string.Empty;
         [Required(ErrorMessage = "Meters is required")]
         public decimal Meters { get; set; }
         public List<IFormFile> Pictures { get; set; } = [];
@@ -27,6 +27,8 @@ namespace RealState.Application.ViewModel.Property
         public Guid SalesTypeId { get; set; }
         [Required(ErrorMessage = "UpgradeId is required")]
         public List<Guid> UpgradeId { get; set; } = [];
+
+        public Guid AgentId { get; set; }
 
 
     }
