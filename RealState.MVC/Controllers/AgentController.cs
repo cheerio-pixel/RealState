@@ -5,6 +5,7 @@ using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Pictures;
+using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
 
 namespace RealState.MVC.Controllers;
@@ -14,7 +15,8 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     IUpgradesService upgradesService,
     ISalesTypesService salesTypesService,
     IPropertyTypeService propertyTypeService,
-    IPictureService pictureService) : Controller
+    IPictureService pictureService,
+    IPropertyUpgradeService propertyUpgradeService) : Controller
 {
     private readonly IMediator _mediator = mediator;
     private readonly IPropertyService _propertyService = propertyService;
@@ -22,7 +24,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
     private readonly ISalesTypesService _salesTypeService = salesTypesService;
     private readonly IPictureService _pictureService = pictureService;
-    
+    private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
     private readonly IMapper _mapper = mapper;
 
     public IActionResult Index()
@@ -62,6 +64,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         {
             return View(vm);
         }
+        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm); 
 
         Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
         if (!result.IsSuccess)
@@ -70,17 +73,20 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         }
 
 
+
         foreach (var picture in vm.Pictures)
         {
             pictures.Add(new PicturesSaveViewModel
             {
-                Picture = PictureHelper.UploadFile(picture, vm.Id.ToString(), "Properties"),
+                Picture = PictureHelper.UploadFile(picture, result.Value.Id.ToString(), "Properties"),
                 PropertyId = result.Value.Id
             });
         }
-
+        proupd.PropertyId = result.Value.Id;
+        var upgradeResult = await _propertyUpgradeService.Add(proupd);
         var pictureResult = await _pictureService.AddPictures(pictures);
-        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("Index");
+        
+        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("index", "AgentController");
     }
 
     [HttpPost]

@@ -14,13 +14,13 @@ namespace RealState.Application.Services
         private readonly IMapper _mapper = mapper;
         public async Task<Result<List<PicturesSaveViewModel>>> AddPictures(List<PicturesSaveViewModel> vm)
         {
-            var task = vm.Select(async picture =>
+
+            foreach (var picture in vm)
             {
                 var pictureEntity = _mapper.Map<Pictures>(picture);
                 await _pictureRepository.Create(pictureEntity);
-            });
+            }
 
-            await Task.WhenAll(task);
             return vm;
         }
     }

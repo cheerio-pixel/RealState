@@ -12,7 +12,7 @@ namespace RealState.Infrastructure.Persistence.Repositories
 
         public async Task<bool> IsCodeUnique(string code)
         {
-            return !await _properties.AnyAsync(x => x.Code != code);
+            return !await _properties.AnyAsync(x => x.Code == code);
         }
 
         public async Task<Properties?> GetByIdWithPictures(Guid id)
