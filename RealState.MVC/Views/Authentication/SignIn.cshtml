@@ -1,0 +1,51 @@
+﻿@using RealState.Application.ViewModel.Account
+@model LoginViewModel
+
+<div class="row">
+	<div class="col-md-4">
+		<form id="registerForm" asp-controller="Authentication" asp-action="SignIn" method="post">
+			<h2>Sign In</h2>
+			<hr />
+			@Html.ValidationSummary(true)
+			<div class="form-floating mb-3">
+				<input asp-for="Account" class="form-control" aria-required="true" type="text" />
+				<label asp-for="Account" class="form-label">Account</label>
+				<span asp-validation-for="Account" class="text-danger"></span>
+			</div>
+
+			<div class="form-floating mb-3">
+				<input asp-for="Password" class="form-control" aria-required="true" placeholder="password" type="password" />
+				<label asp-for="Password" class="form-label" for="Input_Password">Password</label>
+				<span asp-validation-for="Password" class="text-danger field-validation-valid" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+			</div>
+
+			<div>
+				<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+			</div>
+
+			<div>
+				<p>
+					<a id="forgot-password" href="/Identity/Account/ForgotPassword">Forgot your password?</a>
+				</p>
+				<p>
+					<a href="/Identity/Account/Register?returnUrl=%2F">Register as a new user</a>
+				</p>
+				<p>
+					<a id="resend-confirmation" href="/Identity/Account/ResendEmailConfirmation">Resend email confirmation</a>
+				</p>
+			</div>
+		</form>
+	</div>
+
+	<div class="col-md-6 col-md-offset-2">
+		<section>
+			<h3>Real State</h3>
+			<hr />
+			<div>
+				<p>
+					<!-- text -->
+				</p>
+			</div>
+		</section>
+	</div>
+</div>

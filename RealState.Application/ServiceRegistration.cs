@@ -39,11 +39,13 @@ namespace RealState.Application
             services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
             services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
-            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>));
-            services.AddTransient<IPropertyTypeService, PropertyTypeService>();
-            services.AddTransient<IPropertyService, PropertyService>(); 
-            // services.AddTransient<IPropertyTypeService, PropertyTypeService>();
-
+            services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
+                    .AddTransient<IPropertyTypeService, PropertyTypeService>()
+                    .AddTransient<ISalesTypesService, SalesTypesService>()
+                    .AddTransient<IUpgradesService, UpgradesService>()
+                    .AddTransient<IAccountServices, AccountServices>()
+                    .AddTransient<IRoleServices, RoleServices>()
+                    .AddTransient<IPropertyService, PropertyService>();
         }
     }
 }

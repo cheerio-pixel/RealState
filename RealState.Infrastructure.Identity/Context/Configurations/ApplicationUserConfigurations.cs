@@ -19,6 +19,8 @@ namespace RealState.Infrastructure.Identity.Context.Configurations
             builder.Property(x => x.LastName);
             builder.Property(x => x.Picture);
             builder.Property(x => x.IdentifierCard);
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
 
             builder.HasMany(x => x.Roles)
                 .WithMany(f => f.Users)

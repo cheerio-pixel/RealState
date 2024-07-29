@@ -16,6 +16,8 @@ namespace RealState.Application.QueryFilters.User
 
         public string? PhoneNumber { get; set; }
 
+        public bool? Active { get; set; }
+
         public RoleTypes? Role { get; set; }
     }
 }

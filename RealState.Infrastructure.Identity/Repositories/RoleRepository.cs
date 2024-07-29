@@ -44,7 +44,8 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationRoleDTO> Get()
         {
-            var roles = _roleManager.Roles.AsEnumerable();
+            var roles = _roleManager.Roles.AsNoTracking()
+                                          .AsEnumerable();
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 
@@ -53,6 +54,7 @@ namespace RealState.Infrastructure.Identity.Repositories
             string[] basicRoleNames = { RoleTypes.Client.ToString(), RoleTypes.StateAgent.ToString() };
 
             var roles = _roleManager.Roles.Where(x => basicRoleNames.Contains(x.Name))
+                                          .AsNoTracking()
                                           .AsEnumerable();
 
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
@@ -63,8 +65,17 @@ namespace RealState.Infrastructure.Identity.Repositories
             string[] managementRoleNames = { RoleTypes.Admin.ToString(), RoleTypes.Developer.ToString() };
 
             var roles = _roleManager.Roles.Where(x => managementRoleNames.Contains(x.Name))
+                                          .AsNoTracking()
                                           .AsEnumerable();
 
+            return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
+        }
+
+        public IEnumerable<ApplicationRoleDTO> GetRolesById(List<string> Ids)
+        {
+            var roles = _roleManager.Roles.Where(x=>Ids.Contains(x.Id))
+                                          .AsNoTracking() 
+                                          .AsEnumerable();
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 
