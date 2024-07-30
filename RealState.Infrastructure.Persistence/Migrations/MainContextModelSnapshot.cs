@@ -68,6 +68,9 @@ namespace RealState.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AgentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Bathrooms")
                         .HasColumnType("int");
 

@@ -2,7 +2,8 @@
 {
     public class PicturesSaveViewModel
     {
-        public List<string> Pictures { get; set; } = [];
+        public Guid Id { get; set; }
+        public string Picture { get; set; } = null!;
         public Guid PropertyId { get; set; }
     }
 }

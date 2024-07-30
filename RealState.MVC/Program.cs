@@ -4,6 +4,10 @@ using RealState.Application;
 using RealState.Infrastructure.Identity;
 using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
+using RealState.Infrastructure.Identity;
+using RealState.Application;
+using RealState.MVC.ActionFilter;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +36,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Authentication/AccessDenied";
         options.SlidingExpiration = true;
     });
+
+builder.Services.AddScoped<SetAttributesViewBag>();
+
 
 var app = builder.Build();
 

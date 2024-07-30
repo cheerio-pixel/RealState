@@ -14,12 +14,15 @@ namespace RealState.Infrastructure.Persistence
             services.AddDbContext<MainContext>(options =>
                            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                                b => b.MigrationsAssembly(typeof(MainContext).Assembly.FullName)));
-            
+
             #region Repositories
             services.AddTransient(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             services.AddTransient<IPropertyRepository, PropertyRepository>();
             services.AddTransient<IPropertyTypeRepository, PropertyTypeRepository>();
+            services.AddTransient<ISalesTypeRepository, SalesTypeRepository>();
+            services.AddTransient<IUpgradesRepository, UpgradesRepository>();
             services.AddTransient<IPictureRepository, PictureRepository>();
+            services.AddTransient<IPropertyUpgradeRepository, PropertyUpgradeRepository>();
             #endregion
         }
     }

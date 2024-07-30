@@ -27,6 +27,11 @@ namespace RealState.MVC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Update(Guid id)
         {
+            if(id == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
             ViewBag.Id = id;
             var property = await _propertyService.GetByIdSaveViewModel(id);
             return View("create", property);
@@ -35,7 +40,6 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PropertSaveViewModel vm)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(vm);
@@ -53,7 +57,10 @@ namespace RealState.MVC.Controllers
                 return View(vm);
             }
 
+
+
             var result = await _propertyService.Update(vm, vm.Id);
+
 
             return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
         }

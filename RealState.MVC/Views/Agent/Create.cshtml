@@ -3,19 +3,29 @@
 @{
     Guid? id = ViewBag.Id;
     Layout = "~/Views/Shared/_layoutproperty.cshtml";
+    List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertyTypes;
+    List<SalesTypeViewModel> salesTypes = ViewBag.SalesTypes;
+    List<UpgradesViewModel> upgrades = ViewBag.Upgrades;
 }
 
 <main class="section-production">
     <section>
         <div class="title">
-
-            <h1>Create Property</h1>
+            @if(id != null)
+            {
+                <h1>Edit Property</h1>
+            }
+            else
+            {
+                <h1>Create Property</h1>
+            })
+           
         </div>
         <form asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
             <!--Section 1-->
             @if (id != null)
             {
-                <input type="hidden" asp-for="Id" value="@id" />
+                                <input type="hidden" asp-for="Id" value="@id" />
             }
             <!-- Resto del formulario -->
             <div class="form-section" id="section-1">
@@ -26,11 +36,24 @@
                 </div>
                 <div class="group">
                     <label for="saleType">Sale Type</label>
-                    <select asp-for="SalesTypeId">
+                    <select id="SalesTypeId" asp-for="SalesTypeId">
                         <option selected>Choose...</option>
-                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                        @{
+                            if (salesTypes != null)
+                            {
+                                foreach (var item in salesTypes)
+                                {
+                                    if(item.Id == Model.SalesTypeId)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            }
+                        }
                     </select>
                     <span asp-validation-for="SalesTypeId" class="text-danger"></span>
                 </div>
@@ -70,23 +93,49 @@
             <div class="form-section" id="section-2" style="display:none;">
                 <!-- Contenido de la Sección 2 -->
                   <div class="group">
-                    <label for="saleType">Property Type</label>
-                    <select asp-for="PropertyTypeId">
+                    <label >Property Type</label>
+                    <select id="PropertyTypeId" asp-for="PropertyTypeId">
                         <option selected>Choose...</option>
-                       <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                       <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                       <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                        @{
+                            if (propertyTypes != null)
+                            {
+                                foreach (var item in propertyTypes)
+                                {
+                                    if(item.Id == Model.PropertyTypeId)
+                                    {
+                                        <option value ="@item.Id" selected>@item.Name</option>
+                                    }else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            }
+                        }
                     </select>
                     <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
                 </div>
                 <div class="upgrades-container">
                     <div class="group">
                         <label for="Updagre">Upgrade Type</label>
-                        <select asp-for="UpgradeId" multiple>
+                        <select id="UpgradeId" asp-for="UpgradeId" multiple>
                             <option value="" disabled selected>Choose...</option>
-                            <option value="b4d6e6e8-18d5-4e9a-bf95-12d8c852d953">Option 1</option>
-                            <option value="e8c9a4b6-0d2c-4a97-bd1e-77f1d9ff9d98">Option 2</option>
-                            <option value="9b75b7c4-75b8-4f0d-9b07-6f8fa2296e8b">Option 3</option>
+                            @{
+                                if (upgrades != null)
+                                {
+                                    foreach (var item in upgrades)
+                                    {
+                                        if (Model.UpgradeId.Any(x => x == item.Id))
+                                        {
+                                            <option value="@item.Id" selected>@item.Name
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            }
 
                         </select>
                     </div>
@@ -97,13 +146,27 @@
                     <span asp-validation-for="Pictures" class="text-danger"></span>
 
                     <label for="file-input"><i class="fa-solid fa-upload"></i> Upload Images</label>
-                    <p id="num-files">No files selected</p>
-                    <div id="file-preview"></div>
+                    @if(Model.PicturesUrl == null)
+                    {
+                        <p id="num-files">No files selected</p>
+                    }
+                    else
+                    {
+                        <p id="num-files">@Model.PicturesUrl.Count files selected</p>
+                               <div id="file-preview">
+                            @foreach (var item in Model.PicturesUrl)
+                            {
+                                <img src="@item" />
+                            }
+                        </div>
+                    }
+                 
                 </div>
             </div>
 
             <!-- Navigation Buttons -->
             <div class="form-navigation">
+                <a href="/agent/index" class= "btn btn-primary" id="btn-out">Back</a>
                 <button type="button" id="next" class="btn btn-primary">Next</button>
                 <button type="button" id="previous" class="btn btn-primary" style="display:none;">Previous</button>
                 <button type="submit" class="btn btn-primary" style="display:none;">Save</button>
@@ -120,6 +183,7 @@
 <script>
        $(document).ready(function () {
         $("#next").click(function () {
+            $("#btn-out").hide();
             $("#section-1").hide();
             $("#section-2").show();
             $("#next").hide();
@@ -128,6 +192,7 @@
         });
 
         $("#previous").click(function () {
+            $("#btn-out").show();
             $("#section-2").hide();
             $("#section-1").show();
             $("#previous").hide();
@@ -156,6 +221,8 @@
             reader.readAsDataURL(file);
         }
     });
+
+
 
 
 </script>

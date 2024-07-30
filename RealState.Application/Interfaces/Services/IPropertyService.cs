@@ -7,5 +7,6 @@ namespace RealState.Application.Interfaces.Services
     public interface IPropertyService : IGenericService<PropertSaveViewModel, PropertyViewModel, Properties>
     {
         Task<Result<PropertyViewModel>> GetByIdWithPictures(Guid id);
+        Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId);
     }
 }
