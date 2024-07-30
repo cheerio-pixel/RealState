@@ -11,8 +11,15 @@
 <main class="section-production">
     <section>
         <div class="title">
-
-            <h1>Create Property</h1>
+            @if(id != null)
+            {
+                <h1>Edit Property</h1>
+            }
+            else
+            {
+                <h1>Create Property</h1>
+            })
+           
         </div>
         <form asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
             <!--Section 1-->

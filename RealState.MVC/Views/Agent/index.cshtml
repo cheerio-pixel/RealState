@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_layoutproperty.cshtml";
+    List<PropertyViewModel> properties = ViewBag.Properties;
 }
 
 
@@ -9,57 +10,62 @@
     <a href="/agent/Create" class="create-card">
         <i class="fa fa-plus"></i> 
     </a>
+    @{
+        if (properties.Count > 0)
+        {
+            foreach (var property in properties)
+            {
+                                                       <div class="card-house">
+                                        <div class="header-house">    
+                                                     <img src="@property.Pictures[0].Picture" alt="house" />
+                                                    </div>
+                                                                 <div class="description-house">
+                                                        <div class="title">
+                                                            <h2>@property.Name</h2>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <li><a class="dropdown-item" href="update/@property.Id">Update</a></li>
+                                                                    <li>
+                                                                                                                 <form id="form-delete-@property.Id" method="post" asp-action="Delete">
+                                                                                                                 <input type="hidden" name="id" value="@property.Id" />
+                                            <button type="button" class="dropdown-item" onclick="confirmDelete('@property.Id')">Delete</button>
+                                        </form>
+                                                    </li>
 
+                                                                </ul>
+                                                                                </div>
+                                                        </div>
+                                                        <div class="description">
+                                                            <p>@property.Description</p>
+                                                        </div>
 
+                                                        <div class="characteristics">
+                                                            <div class="tag-house">
+                                                                <i class="fa-solid fa-bed"></i>
+                                                                <p>@property.Rooms</p>
+                                                            </div>
+                                                            <div class="tag-house">
+                                                                <i class="fa-solid fa-bath"></i>
+                                                                <p>@property.Bathrooms</p>
+                                                            </div>
+                                                            <div class="tag-house">
+                                                                <i class="fa-solid fa-ruler"></i>
+                                                                <p>@property.Meters m2</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="price">
+                                                        <p>@property.Price.ToString("C")</p>
+                                                    </div>
+                                                </div>
 
-     <div class="card-house">
-    <div class="header-house">
-        <img src="https://i.pinimg.com/originals/b1/15/18/b11518ccfd6295f09f83b7d4baec7cfd.jpg" alt="house" />
-    </div>
+            }
+        }
 
-    <div class="description-house">
-        <div class="title">
-            <h2>House in the beach</h2>
-            <div class="dropdown">
-                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="update/id">Update</a></li>
-                    <li>
-        <form id="form-delete-1">
-            <button type="button" class="dropdown-item" onclick="confirmDelete(1)">Delete</button>
-        </form>
-    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="description">
-            <p>Beautiful house in the beach, with a great view to the sea, perfect for a family.</p>
-        </div>
-
-        <div class="characteristics">
-            <div class="tag-house">
-                <i class="fa-solid fa-bed"></i>
-                <p>3</p>
-            </div>
-            <div class="tag-house">
-                <i class="fa-solid fa-bath"></i>
-                <p>2</p>
-            </div>
-            <div class="tag-house">
-                <i class="fa-solid fa-ruler"></i>
-                <p>200m2</p>
-            </div>
-        </div>
-    </div>
-    <div class="price">
-        <p>$200,000</p>
-    </div>
-</div>
-
-
+    }
 
 </div>
 
@@ -80,6 +86,7 @@
       text: "Tu Propiedad ha sido eliminado.",
       icon: "success"
     });
+    console.log(id)
     const form = document.getElementById(`form-delete-${id}`)
     form.submit()
   }

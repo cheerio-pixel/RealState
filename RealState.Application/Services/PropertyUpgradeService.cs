@@ -69,6 +69,15 @@ namespace RealState.Application.Services
                 await _propertyUpgradeRepository.Create(propertyUpgrade);
             }
         }
+   
+        public async Task DeleteByPropertyId(Guid propertyId)
+        {
+            List<PropertiesUpgrades> upgrades = await _propertyUpgradeRepository.GetAllByPropertyId(propertyId);
+            foreach (var upgrade in upgrades)
+            {
+                await _propertyUpgradeRepository.Delete(upgrade.Id);
+            }
+        }
     }
 
 

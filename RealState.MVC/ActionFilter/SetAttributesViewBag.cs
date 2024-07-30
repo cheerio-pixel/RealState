@@ -9,9 +9,6 @@ namespace RealState.MVC.ActionFilter
         private readonly IUpgradesService _upgradesService = upgradesService;
 
       
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        { }
-
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var controller = context.Controller as Microsoft.AspNetCore.Mvc.Controller;

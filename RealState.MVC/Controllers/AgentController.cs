@@ -30,8 +30,10 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
     private readonly IMapper _mapper = mapper;
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var result = await _propertyService.GetPropertyByAgentId(Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969"));
+        ViewBag.Properties = result.Value;
         return View();
     }
 

@@ -31,6 +31,7 @@ namespace RealState.Application.Mapping
             CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
             CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
             CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
+            CreateMap<PropertyViewModel, Properties>().ReverseMap();
             #endregion
 
             #region Picture

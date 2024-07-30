@@ -8,5 +8,6 @@ namespace RealState.Application.Interfaces.Services
         Task<Result<PropertyUpgradeSaveViewModel>> Add(PropertyUpgradeSaveViewModel vm);
         Task<List<PropertyUpgradeViewModel>> GetAllByPropertyId(Guid propertyId);
         Task UpdatePropertyUpgradesByPropertyId(PropertyUpgradeSaveViewModel vm, Guid propertyId);
+        Task DeleteByPropertyId(Guid propertyId);
     }
 }

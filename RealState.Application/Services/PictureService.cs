@@ -41,5 +41,15 @@ namespace RealState.Application.Services
             await AddPictures(vm);
 
         }
+
+        public async Task DeleteByPropertyId(Guid propertyId)
+        {
+            var pictures = await _pictureRepository.GetAllByPropertyId(propertyId);
+
+            foreach (var picture in pictures)
+            {
+                await _pictureRepository.Delete(picture.Id);
+            }
+        }
     }
 }

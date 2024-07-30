@@ -4,6 +4,7 @@ using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.Property;
 using RealState.Domain.Entities;
 
@@ -54,5 +55,30 @@ namespace RealState.Application.Services
             return property;
         }
 
+        public async Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId)
+        {
+            var properties = await _propertyRepository.GetPropertyByAgentId(agentId);
+            var propertyMap = _mapper.Map<List<PropertyViewModel>>(properties);
+
+            foreach (var property in propertyMap)
+            {
+                var pictures = await _pictureService.GetAllByPropertyId(property.Id);
+                property.Pictures.AddRange(pictures.Value);
+            }
+            return propertyMap;
+        }
+
+        public override async Task Delete(Guid id)
+        {
+            var property = await _propertyRepository.GetByIdWithPictures(id);
+            if (property is null)
+            {
+                return;
+            }
+
+            await _pictureService.DeleteByPropertyId(id);
+            await _propertyUpgradeService.DeleteByPropertyId(id);
+            await base.Delete(id);
+        }
     }
 }
