@@ -1,78 +1,48 @@
-﻿@{
+﻿@model AgentSaveViewModel
+@{
     Layout = "~/Views/Shared/_layoutproperty.cshtml";
 }
 
 
 <form id="registerForm" class="form-user" method="post" enctype="multipart/form-data">
+    <input type="hidden" value="@Model.Id" asp-for="@Model.Id" />"
+
     <h2>Update Profile</h2>
     <hr />
     <div class="form-section">
         <div class="group">
             <label for="firstName">First Name</label>
-            <input name="FirstName" type="text" id="firstName" required />
-            <span class="text-danger" id="firstNameError"></span>
+            <input name="FirstName" type="text" id="firstName" asp-for="@Model.FirstName" required />
+            <span class="text-danger" id="firstNameError" asp-validation-for="@Model.FirstName"></span>
         </div>
 
         <div class="group">
             <label for="lastName">Last Name</label>
-            <input name="LastName" type="text" id="lastName" required />
-            <span class="text-danger" id="lastNameError"></span>
+            <input name="LastName" type="text" id="lastName" asp-for="@Model.LastName" required />
+            <span class="text-danger" id="lastNameError" asp-validation-for="@Model.LastName"></span>
         </div>
 
         <div class="group">
             <label for="phoneNumber">Phone Number</label>
-            <input name="PhoneNumber" type="text" id="phoneNumber" required />
-            <span class="text-danger" id="phoneNumberError"></span>
+            <input name="PhoneNumber" type="text" id="phoneNumber" asp-for="@Model.PhoneNumber" required />
+            <span class="text-danger" id="phoneNumberError" asp-validation-for="@Model.PhoneNumber"></span>
         </div>
 
          <div class="file-upload-group">
                 <label for="fileInput" class="file-upload-label">
                     <i class="fas fa-plus-circle"></i> Upload File
                 </label>
-                <input name="File" type="file" id="fileInput" class="file-upload-input" required />
-                <img id="previewImage" alt="Image preview" src= "https://cultivatedculture.com/wp-content/uploads/2019/12/LinkedIn-Profile-Picture-Example-Rachel-Montan%CC%83ez.jpeg">
-                <span class="text-danger" id="fileError"></span>
+                <input  type="file" id="fileInput" class="file-upload-input" asp-for="@Model.Picture"  />
+                @if(Model.PictureUrl != "")
+                {
+                        <img id="previewImage" alt="Image preview" src= "@Model.PictureUrl">
+                }
+                else
+                {
+                        <img id="previewImage" src="~/images/placeholder.png" class="file-upload-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcyI9Cvp53aaP9XeRn-ZKbJDH2QaWC72O26A&s" />
+                }
+                <span class="text-danger" id="fileError" asp-validation-for="@Model.Picture"></span>
             </div>
-
-        <div class="group">
-            <label for="userName">UserName</label>
-            <input name="UserName" type="text" id="userName" required />
-            <span class="text-danger" id="userNameError"></span>
-        </div>
-
-        <div class="group">
-            <label for="identifierCard">Identifier Card</label>
-            <input name="IdentifierCard" type="text" id="identifierCard" required />
-            <span class="text-danger" id="identifierCardError"></span>
-        </div>
-
-        <div class="group">
-            <label for="email">Email</label>
-            <input name="Email" type="email" id="email" required />
-            <span class="text-danger" id="emailError"></span>
-        </div>
-
-        <div class="group">
-            <label for="password">Password</label>
-            <input name="Password" type="password" id="password" required />
-            <span class="text-danger" id="passwordError"></span>
-        </div>
-
-        <div class="group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input name="ConfirmPassword" type="password" id="confirmPassword" required />
-            <span class="text-danger" id="confirmPasswordError"></span>
-        </div>
-
-        <div class="group">
-            <label for="roles">Select Role</label>
-            <select name="RolesId" id="roles" required>
-                <option value="">Select role</option>
-                <option value="1">Role 1</option>
-            </select>
-            <span class="text-danger" id="rolesError"></span>
-        </div>
-
         <div class="group">
             <button id="login-submit" type="submit" class="btn-user">Save</button>
         </div>

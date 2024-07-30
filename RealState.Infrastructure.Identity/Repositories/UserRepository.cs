@@ -107,9 +107,7 @@ namespace RealState.Infrastructure.Identity.Repositories
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
             _mapper.Map(userDto, user);
             var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded)
-                return false;
-            return true;
+            return result.Succeeded;
         }
 
         private IQueryable<ApplicationUser> FilterQuery(UserQueryFilter filters)

@@ -20,5 +20,6 @@ namespace RealState.Application.Interfaces.Services
         public Result<List<ApplicationUserDTO>> GetAll(UserQueryFilter? filter);
 
         public Task<Result<Unit>> ChangeActiveStatus(string userId, bool status);
+        Task<Result<Unit>>  UpdateAgent(string userId, UserSaveViewModel userSaveViewModel);
     }
 }

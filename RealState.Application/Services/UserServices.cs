@@ -7,6 +7,7 @@ using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters.User;
 using RealState.Application.ViewModel.User;
+using RealState.Domain.Entities;
 
 namespace RealState.Application.Services
 {
@@ -22,12 +23,12 @@ namespace RealState.Application.Services
             if (user is null)
                 return ErrorType.Any.Because($"There isn`t any user with this id: {userId}");
 
-            var roleNames = _roleRepository.GetRolesById(roleIds).Select(x=>x.Name).ToList();
+            var roleNames = _roleRepository.GetRolesById(roleIds).Select(x => x.Name).ToList();
             if (roleNames.Count() == 0)
                 return ErrorType.Any.Because($"There isn`t any roles with those ids: {roleIds.ToString()}");
 
             var result = await _userRepository.AddRolesAsync(user, roleNames);
-            if(!result)
+            if (!result)
                 return ErrorType.Any.Because($"There is a problem adding roles to user");
 
             return Unit.T;
@@ -66,7 +67,7 @@ namespace RealState.Application.Services
         {
             IEnumerable<ApplicationUserDTO> users = [];
 
-            if(filter is not null)
+            if (filter is not null)
             {
                 users = _userRepository.GetWithInclude(filter, ["Roles"]);
             }
@@ -119,10 +120,14 @@ namespace RealState.Application.Services
             if (userByIdentifierCard is not null && userByIdentifierCard.Id != userId)
                 return ErrorType.Any.Because($"This identifier Card: {userViewModel.IdentifierCard} is already taken");
 
+            var user = await _userRepository.Get(userId);
+            userViewModel.Picture ??= user!.Picture;
+
             var IsActive = userById.Active;
             if (IsActive)
                 return ErrorType.Any.Because($"This user isn`t active");
             #endregion
+
 
             var saveUser = _mapper.Map<SaveApplicationUserDTO>(userViewModel);
             var result = await _userRepository.UpdateAsync(saveUser);
@@ -130,6 +135,24 @@ namespace RealState.Application.Services
                 return ErrorType.Any.Because($"There is a problem updating user");
 
             return Unit.T;
+        }
+
+        public async Task<Result<Unit>> UpdateAgent(string userId, UserSaveViewModel userSaveViewModel)
+        {
+            var user = await _userRepository.Get(userId);
+            if (user is null)
+                return ErrorType.Any.Because($"There isn't any user");
+
+            if (userSaveViewModel.Picture != "")
+            {
+                user.Picture = userSaveViewModel.Picture!;
+            }
+            user.FirstName = userSaveViewModel.FirstName;
+            user.LastName = userSaveViewModel.LastName;
+            user.PhoneNumber = userSaveViewModel.PhoneNumber!;
+
+            var result = await _userRepository.UpdateAsync(_mapper.Map<SaveApplicationUserDTO>(user));
+            return !result ? (Result<Unit>)ErrorType.Any.Because($"There is a problem updating user") : (Result<Unit>)Unit.T;
         }
     }
 }
