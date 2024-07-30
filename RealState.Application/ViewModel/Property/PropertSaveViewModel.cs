@@ -29,6 +29,7 @@ namespace RealState.Application.ViewModel.Property
         public List<Guid> UpgradeId { get; set; } = [];
 
         public Guid AgentId { get; set; }
+        public List<string> PicturesUrl { get; set; } = [];
 
 
     }

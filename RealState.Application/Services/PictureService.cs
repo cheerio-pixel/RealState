@@ -23,5 +23,23 @@ namespace RealState.Application.Services
 
             return vm;
         }
+
+        public async Task<Result<List<PicturesViewModel>>> GetAllByPropertyId(Guid propertyId)
+        {
+            var pictures = await _pictureRepository.GetAllByPropertyId(propertyId);
+            return _mapper.Map<List<PicturesViewModel>>(pictures);
+        }
+
+        public async Task UpdatePicturesByPropertyId(List<PicturesSaveViewModel> vm, Guid propertyId)
+        {
+            var pictures = await _pictureRepository.GetAllByPropertyId(propertyId);
+
+            foreach (var picture in pictures)
+            {
+                await _pictureRepository.Delete(picture.Id);
+            }
+            await AddPictures(vm);
+
+        }
     }
 }

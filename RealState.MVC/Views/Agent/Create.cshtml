@@ -18,7 +18,7 @@
             <!--Section 1-->
             @if (id != null)
             {
-                        <input type="hidden" asp-for="Id" value="@id" />
+                                <input type="hidden" asp-for="Id" value="@id" />
             }
             <!-- Resto del formulario -->
             <div class="form-section" id="section-1">
@@ -29,14 +29,21 @@
                 </div>
                 <div class="group">
                     <label for="saleType">Sale Type</label>
-                    <select asp-for="SalesTypeId">
+                    <select id="SalesTypeId" asp-for="SalesTypeId">
                         <option selected>Choose...</option>
                         @{
                             if (salesTypes != null)
                             {
                                 foreach (var item in salesTypes)
                                 {
-                                                         <option value="@item.Id">@item.Name</option>
+                                    if(item.Id == Model.SalesTypeId)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 }
                             }
                         }
@@ -79,15 +86,21 @@
             <div class="form-section" id="section-2" style="display:none;">
                 <!-- Contenido de la Sección 2 -->
                   <div class="group">
-                    <label for="saleType">Property Type</label>
-                    <select asp-for="PropertyTypeId">
+                    <label >Property Type</label>
+                    <select id="PropertyTypeId" asp-for="PropertyTypeId">
                         <option selected>Choose...</option>
                         @{
                             if (propertyTypes != null)
                             {
                                 foreach (var item in propertyTypes)
                                 {
-                                                        <option value="@item.Id">@item.Name</option>
+                                    if(item.Id == Model.PropertyTypeId)
+                                    {
+                                        <option value ="@item.Id" selected>@item.Name</option>
+                                    }else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 }
                             }
                         }
@@ -97,14 +110,22 @@
                 <div class="upgrades-container">
                     <div class="group">
                         <label for="Updagre">Upgrade Type</label>
-                        <select asp-for="UpgradeId" multiple>
+                        <select id="UpgradeId" asp-for="UpgradeId" multiple>
                             <option value="" disabled selected>Choose...</option>
                             @{
                                 if (upgrades != null)
                                 {
                                     foreach (var item in upgrades)
                                     {
-                                                    <option value="@item.Id">@item.Name</option>
+                                        if (Model.UpgradeId.Any(x => x == item.Id))
+                                        {
+                                            <option value="@item.Id" selected>@item.Name
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
                                     }
                                 }
                             }
@@ -118,13 +139,27 @@
                     <span asp-validation-for="Pictures" class="text-danger"></span>
 
                     <label for="file-input"><i class="fa-solid fa-upload"></i> Upload Images</label>
-                    <p id="num-files">No files selected</p>
-                    <div id="file-preview"></div>
+                    @if(Model.PicturesUrl == null)
+                    {
+                        <p id="num-files">No files selected</p>
+                    }
+                    else
+                    {
+                        <p id="num-files">@Model.PicturesUrl.Count files selected</p>
+                               <div id="file-preview">
+                            @foreach (var item in Model.PicturesUrl)
+                            {
+                                <img src="@item" />
+                            }
+                        </div>
+                    }
+                 
                 </div>
             </div>
 
             <!-- Navigation Buttons -->
             <div class="form-navigation">
+                <a href="/agent/index" class= "btn btn-primary" id="btn-out">Back</a>
                 <button type="button" id="next" class="btn btn-primary">Next</button>
                 <button type="button" id="previous" class="btn btn-primary" style="display:none;">Previous</button>
                 <button type="submit" class="btn btn-primary" style="display:none;">Save</button>
@@ -141,6 +176,7 @@
 <script>
        $(document).ready(function () {
         $("#next").click(function () {
+            $("#btn-out").hide();
             $("#section-1").hide();
             $("#section-2").show();
             $("#next").hide();
@@ -149,6 +185,7 @@
         });
 
         $("#previous").click(function () {
+            $("#btn-out").show();
             $("#section-2").hide();
             $("#section-1").show();
             $("#previous").hide();
@@ -177,6 +214,8 @@
             reader.readAsDataURL(file);
         }
     });
+
+
 
 
 </script>

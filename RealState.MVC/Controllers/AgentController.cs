@@ -7,6 +7,9 @@ using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
+using RealState.MVC.ActionFilter;
+
+
 
 namespace RealState.MVC.Controllers;
 
@@ -32,12 +35,10 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         return View();
     }
 
-    public async Task<IActionResult> Create()
+    [ServiceFilter(typeof(SetAttributesViewBag))]
+    public IActionResult Create()
     {
-        ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
-        ViewBag.SalesTypes = await _salesTypeService.GetAllViewModel();
-        ViewBag.Upgrades = await _upgradesService.GetAllViewModel();
-        return View();
+        return View(new PropertSaveViewModel());
     }
 
     public IActionResult Profile()
@@ -47,15 +48,28 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Update(Guid id)
+    [HttpGet("agent/Update/{id}")]
+
+    [ServiceFilter(typeof(SetAttributesViewBag))]
+    public async Task<IActionResult> Update(string id)
     {
-        ViewBag.Id = id;
-        var property = await _propertyService.GetByIdSaveViewModel(id);
+        if (string.IsNullOrEmpty(id))
+        {
+            return Redirect("/Agent/Index");
+        }
+       
+        ViewBag.Id = Guid.Parse(id);
+        var property = await _propertyService.GetByIdSaveViewModel(Guid.Parse(id));
+        if (property is null)
+        {
+            return Redirect("/Agent/Index");
+        }
+    
         return View("create", property);
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
         List<PicturesSaveViewModel> pictures = [];
@@ -64,7 +78,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         {
             return View(vm);
         }
-        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm); 
+        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
 
         Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
         if (!result.IsSuccess)
@@ -83,13 +97,14 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
             });
         }
         proupd.PropertyId = result.Value.Id;
-        var upgradeResult = await _propertyUpgradeService.Add(proupd);
+        await _propertyUpgradeService.Add(proupd);
         var pictureResult = await _pictureService.AddPictures(pictures);
-        
+
         return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("index", "AgentController");
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Update(PropertSaveViewModel vm)
     {
 
@@ -99,7 +114,33 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
             return View(vm);
         }
         var result = await _propertyService.Update(vm, vm.Id);
-        return !result.IsSuccess ? View(vm) : RedirectToAction("Index");
+        if (!result.IsSuccess)
+        {
+            return View(vm);
+        }
+
+
+        // Update propertyupgrades
+        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
+        proupd.PropertyId = vm.Id;
+        await _propertyUpgradeService.UpdatePropertyUpgradesByPropertyId(proupd, vm.Id);
+
+        //update pictures
+        if(vm.Pictures != null && vm.Pictures.Count > 0 )
+        {
+            List<PicturesSaveViewModel> pictures = [];
+            foreach (var picture in vm.Pictures)
+            {
+                pictures.Add(new PicturesSaveViewModel
+                {
+                    Picture = PictureHelper.UploadFile(picture, vm.Id.ToString(), "Properties"),
+                    PropertyId = vm.Id
+                });
+            }
+            await _pictureService.UpdatePicturesByPropertyId(pictures, vm.Id);
+        }
+            
+        return RedirectToAction("Index", "Agent");
     }
 
 
