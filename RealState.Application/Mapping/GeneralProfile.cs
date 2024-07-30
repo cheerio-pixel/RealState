@@ -19,6 +19,7 @@ using RealState.Domain.Entities;
 using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.SalesType;
 using RealState.Application.ViewModel.Upgrades;
+using RealState.Application.ViewModel.PropertiesUpgrades;
 
 namespace RealState.Application.Mapping
 {
@@ -28,7 +29,9 @@ namespace RealState.Application.Mapping
         {
             #region Property
             CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
+            CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
             CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
+            CreateMap<PropertyViewModel, Properties>().ReverseMap();
             #endregion
 
             #region Picture
@@ -64,6 +67,13 @@ namespace RealState.Application.Mapping
 
             #region Role
             CreateMap<RoleViewModel, ApplicationRoleDTO>().ReverseMap();
+            #endregion
+
+
+            #region PropertyUpgrade
+            CreateMap<PropertiesUpgrades, PropertyUpgradeSaveViewModel>().ReverseMap();
+            CreateMap<PropertiesUpgrades, PropertyUpgradeViewModel>().ReverseMap();
+            CreateMap<PropertSaveViewModel, PropertyUpgradeSaveViewModel>();
             #endregion
 
         }

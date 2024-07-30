@@ -2,6 +2,7 @@ using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
 using RealState.Infrastructure.Identity;
 using RealState.Application;
+using RealState.MVC.ActionFilter;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,8 @@ builder.Services.AddApplicationServices();
 builder.Services.AddIdentityLayer(builder.Configuration);
 builder.Services.AddSharedLayer(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<SetAttributesViewBag>();
+
 var app = builder.Build();
 
 await app.RunSeedsAsync();

@@ -12,12 +12,17 @@ namespace RealState.Infrastructure.Persistence.Repositories
 
         public async Task<bool> IsCodeUnique(string code)
         {
-            return !await _properties.AnyAsync(x => x.Code != code);
+            return !await _properties.AnyAsync(x => x.Code == code);
         }
 
         public async Task<Properties?> GetByIdWithPictures(Guid id)
         {
             return await _properties.Include(x => x.Pictures).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Properties>> GetPropertyByAgentId(Guid agentId)
+        {
+            return await _properties.Where(x => x.AgentId == agentId).Include(x => x.Pictures).ToListAsync();
         }
     }
 }
