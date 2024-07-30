@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+using RealState.Application;
+using RealState.Infrastructure.Identity;
 using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
 using RealState.Infrastructure.Identity;
 using RealState.Application;
 using RealState.MVC.ActionFilter;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +24,21 @@ builder.Services.AddApplicationServices();
 builder.Services.AddIdentityLayer(builder.Configuration);
 builder.Services.AddSharedLayer(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+        options.LoginPath = "/Authentication/Index";
+        options.AccessDeniedPath = "/Authentication/AccessDenied";
+        options.SlidingExpiration = true;
+    });
+
 builder.Services.AddScoped<SetAttributesViewBag>();
+
 
 var app = builder.Build();
 
@@ -37,7 +56,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
