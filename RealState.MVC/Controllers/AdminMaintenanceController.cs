@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+
+using AutoMapper;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,7 +50,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View();
+            return View(nameof(Index));
         }
 
         public async Task<IActionResult> Update(string Id)
@@ -64,13 +66,15 @@ namespace RealState.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(viewModel);
 
-            var result = await _userServices.UpdateAsync(viewModel.Id, viewModel);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _userServices.UpdateAsync(viewModel.Id, currentUserId, viewModel);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View();
+            return View(nameof(Index));
         }
     }
 }
