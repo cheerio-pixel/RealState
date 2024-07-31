@@ -120,7 +120,7 @@ namespace RealState.Application.Services
                 return ErrorType.Any.Because($"This identifier Card: {userViewModel.IdentifierCard} is already taken");
 
             var IsActive = userById.Active;
-            if (IsActive)
+            if (!IsActive)
                 return ErrorType.Any.Because($"This user isn`t active");
             #endregion
 
