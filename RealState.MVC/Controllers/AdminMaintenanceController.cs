@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using RealState.Application.Enums;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.QueryFilters.User;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.Helpers;
 
@@ -21,6 +22,9 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Index()
         {
+            var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.Admin });
+            var admins = result.Value;
+            ViewData["Admins"] = admins;
             return View();
         }
 
