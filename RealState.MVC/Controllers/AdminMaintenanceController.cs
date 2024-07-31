@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
+using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.Helpers;
@@ -31,12 +32,15 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            ViewData["AdminRole"] = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            ViewData["AdminRole"] = role.Value;
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
-            //viewModel.Picture = PictureHelper.GetAdminPicture();
+
+            viewModel.Picture = PictureHelper.GetDefaultUserImage();
 
             var result = await _accountServices.RegisterAsync(viewModel);
             if (result.IsFailure)

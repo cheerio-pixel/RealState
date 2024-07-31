@@ -4,7 +4,6 @@ namespace RealState.Application.Helper
 {
     public static class PictureHelper
     {
-
         public static string UploadFile(IFormFile file, string id, string directoryName)
         {
 
@@ -26,6 +25,20 @@ namespace RealState.Application.Helper
 
             return $"{basePath}/{filename}";
 
+        }
+
+        public static string GetDefaultUserImage()
+        {
+            string basePath = $"/Images/Users/Default";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
+
+            //create folder if not exist
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            return $"{basePath}/PerfilUser";
         }
     }
 }
