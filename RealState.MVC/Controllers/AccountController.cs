@@ -1,10 +1,7 @@
-﻿using System.Security.Claims;
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
-using RealState.Application.Services;
 using RealState.Application.ViewModel.Account;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.Helpers;
@@ -41,6 +38,7 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Register()
         {
+            var user = User.Identity.IsAuthenticated;
             ViewData["Roles"] = _roleServices.GetBasicRoles().Value;
             return View();
         }
