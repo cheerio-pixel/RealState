@@ -3,10 +3,10 @@
 @model UserSaveViewModel
 
 @{
-	var roles = ViewData["Roles"] as List<RoleViewModel> ?? new();
+	var role = ViewData["AdminRole"] as RoleViewModel ?? new();
 }
-<form id="registerForm" asp-controller="Authentication" asp-action="Register" method="post" enctype="multipart/form-data">
-	<h2>Join</h2>
+<form id="registerForm" asp-controller="AdminMaintenance" asp-action="Create" method="post">
+	<h2>Create new Admin</h2>
 	<hr />
 	<div class="row">
 		<div class="col-md-4">
@@ -26,15 +26,9 @@
 			</div>
 
 			<div class="form-floating mb-3">
-				<input asp-for="PhoneNumber" class="form-control" type="text" />
-				<label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-				<span asp-validation-for="PhoneNumber" class="text-danger"></span>
-
-			</div>
-
-			<div class="form-floating mb-3">
-				<input asp-for="File" type="file" id="fileInput" / required>
-				<span asp-validation-for="File" class="text-danger"></span>
+				<input asp-for="IdentifierCard" class="form-control" type="text" />
+				<label asp-for="IdentifierCard" class="form-label">Identifier Card</label>
+				<span asp-validation-for="IdentifierCard" class="text-danger"></span>
 
 			</div>
 
@@ -45,12 +39,7 @@
 
 			</div>
 
-			<div class="form-floating mb-3">
-				<input asp-for="IdentifierCard" class="form-control" type="text" />
-				<label asp-for="IdentifierCard" class="form-label">Identifier Card</label>
-				<span asp-validation-for="IdentifierCard" class="text-danger"></span>
-
-			</div>
+			
 		</div>
 
 		<div class="col-md-4 col-md-offset-2">
@@ -76,42 +65,13 @@
 
 				</div>
 
-				<div class="mb-3">
-					<select name="RolesId" class="form-select" required>
-						<option value="">select role</option>
-						@foreach (var item in roles)
-						{
-							<option value="@item.Id">@item.Name</option>
-						}
-					</select>
-					<span class="text-danger"></span>
-				</div>
+				<input type="hidden" asp-for="RolesId" value="@role.Id" />
 
-				<div>
-					<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+				<div style="gap:15px">
+					<button id="login-submit" type="submit" class="btn btn-primary">Save</button>
+					<a asp-controller="AdminMaintenance" asp-action="Index" class="btn btn-warning">Back to List</a>
 				</div>
 			</section>
 		</div>
-		<div class="col-md-2">
-			<div style="max-width:200px">
-				<p>Picture</p>
-				<img id="previewImage" style="width:100%" src="..." class="rounded mx-auto d-block" alt="...">
-			</div>
-		</div>
 	</div>
 </form>
-
-@section Scripts {
-	<script>
-		document.getElementById('fileInput').addEventListener('change', function (event) {
-			const file = event.target.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function (e) {
-					document.getElementById('previewImage').src = e.target.result;
-				};
-				reader.readAsDataURL(file);
-			}
-		});
-	</script>
-}
