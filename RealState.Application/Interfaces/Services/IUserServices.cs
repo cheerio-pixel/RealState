@@ -19,6 +19,6 @@ namespace RealState.Application.Interfaces.Services
 
         public Result<List<ApplicationUserDTO>> GetAll(UserQueryFilter? filter);
 
-        public Task<Result<Unit>> ChangeActiveStatus(string userId, string currentUserId, bool status);
+        public Task<Result<Unit>> ChangeActiveStatusAsync(string userId, string currentUserId, bool status);
     }
 }

@@ -33,7 +33,7 @@ namespace RealState.Application.Services
             return Unit.T;
         }
 
-        public async Task<Result<Unit>> ChangeActiveStatus(string userId, string currentUserId, bool status)
+        public async Task<Result<Unit>> ChangeActiveStatusAsync(string userId, string currentUserId, bool status)
         {
             var user = await _userRepository.GetWithInclude(userId, ["Roles"]);
             if (user is null)

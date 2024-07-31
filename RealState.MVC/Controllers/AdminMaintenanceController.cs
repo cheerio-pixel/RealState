@@ -28,6 +28,20 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(string userId, bool status)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId, status);
+            if (result.IsFailure)
+            {
+                ModelState.AggregateErrors(result.Errors);
+                return View(viewModel);
+            }
+            return View(nameof(Index));
+            return View(nameof(Index));
+        }
+
         public async Task<IActionResult> Create()
         {
             var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
