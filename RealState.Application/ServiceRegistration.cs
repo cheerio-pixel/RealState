@@ -47,7 +47,8 @@ namespace RealState.Application
                     .AddTransient<IRoleServices, RoleServices>()
                     .AddTransient<IPropertyService, PropertyService>()
                     .AddTransient<IPropertyUpgradeService, PropertyUpgradeService>()
-                    .AddTransient<IPictureService, PictureService>();
+                    .AddTransient<IPictureService, PictureService>()
+                    .AddTransient<IUserServices, UserServices>();
         }
     }
 }
