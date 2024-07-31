@@ -24,6 +24,12 @@ namespace RealState.Application.Services
             return _mapper.Map<List<RoleViewModel>>(roles);
         }
 
+        public async Task<Result<RoleViewModel>> GetByName(string roleName)
+        {
+            var roles = await _roleRepository.GetByName(roleName);
+            return _mapper.Map<RoleViewModel>(roles);
+        }
+
         public Result<List<RoleViewModel>> GetManagementRoles()
         {
             var roles = _roleRepository.GetManagementRoles().ToList();

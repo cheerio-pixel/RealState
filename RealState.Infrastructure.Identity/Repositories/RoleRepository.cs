@@ -60,6 +60,12 @@ namespace RealState.Infrastructure.Identity.Repositories
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
         }
 
+        public async Task<ApplicationRoleDTO?> GetByName(string roleName)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == roleName);
+            return _mapper.Map<ApplicationRoleDTO>(role);
+        }
+
         public IEnumerable<ApplicationRoleDTO> GetManagementRoles()
         {
             string[] managementRoleNames = { RoleTypes.Admin.ToString(), RoleTypes.Developer.ToString() };
