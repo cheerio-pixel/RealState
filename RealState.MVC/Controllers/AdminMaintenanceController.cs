@@ -36,9 +36,7 @@ namespace RealState.MVC.Controllers
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
-                return View(viewModel);
             }
-            return View(nameof(Index));
             return View(nameof(Index));
         }
 
