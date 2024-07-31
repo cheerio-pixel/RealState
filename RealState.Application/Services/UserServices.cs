@@ -78,7 +78,7 @@ namespace RealState.Application.Services
             return users.ToList();
         }
 
-        public async Task<Result<ApplicationUserDTO>> GetByIdAsync(string userId)
+        public async Task<Result<ApplicationUserDTO?>> GetByIdAsync(string userId)
         {
             return await _userRepository.GetWithInclude(userId, ["Roles"]);
         }
