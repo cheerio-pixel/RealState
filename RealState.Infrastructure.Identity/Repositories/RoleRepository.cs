@@ -36,7 +36,7 @@ namespace RealState.Infrastructure.Identity.Repositories
             return true;
         }
 
-        public async Task<ApplicationRoleDTO?> Get(string roleId)
+        public async Task<ApplicationRoleDTO?> GetAsync(string roleId)
         {
             var role = await _roleManager.Roles.FirstOrDefaultAsync(x=>x.Id == roleId);
             return _mapper.Map<ApplicationRoleDTO>(role);
@@ -58,6 +58,12 @@ namespace RealState.Infrastructure.Identity.Repositories
                                           .AsEnumerable();
 
             return _mapper.Map<IEnumerable<ApplicationRoleDTO>>(roles);
+        }
+
+        public async Task<ApplicationRoleDTO?> GetByNameAsync(string roleName)
+        {
+            var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == roleName);
+            return _mapper.Map<ApplicationRoleDTO>(role);
         }
 
         public IEnumerable<ApplicationRoleDTO> GetManagementRoles()

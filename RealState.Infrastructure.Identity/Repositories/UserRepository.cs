@@ -57,7 +57,7 @@ namespace RealState.Infrastructure.Identity.Repositories
             return _mapper.Map<IEnumerable<ApplicationUserDTO>>(FilterQuery(filters).AsEnumerable());
         }
 
-        public async Task<ApplicationUserDTO> GetWithInclude(string userId, List<string> properties)
+        public async Task<ApplicationUserDTO?> GetWithInclude(string userId, List<string> properties)
         {
             var query = _userManager.Users.AsQueryable();
 
