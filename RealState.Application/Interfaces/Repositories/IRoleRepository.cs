@@ -10,7 +10,7 @@ namespace RealState.Application.Interfaces.Repositories
 
         public Task<bool> DeleteAsync(ApplicationRoleDTO roleDto);
 
-        public Task<ApplicationRoleDTO?> Get(string roleId);
+        public Task<ApplicationRoleDTO?> GetAsync(string roleId);
 
         public IEnumerable<ApplicationRoleDTO> Get();
 
@@ -20,6 +20,6 @@ namespace RealState.Application.Interfaces.Repositories
 
         public IEnumerable<ApplicationRoleDTO> GetRolesById(List<string> Ids);
 
-        public Task<ApplicationRoleDTO?> GetByName(string roleName);
+        public Task<ApplicationRoleDTO?> GetByNameAsync(string roleName);
     }
 }

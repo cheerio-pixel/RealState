@@ -24,9 +24,9 @@ namespace RealState.Application.Services
             return _mapper.Map<List<RoleViewModel>>(roles);
         }
 
-        public async Task<Result<RoleViewModel>> GetByName(string roleName)
+        public async Task<Result<RoleViewModel>> GetByNameAsync(string roleName)
         {
-            var roles = await _roleRepository.GetByName(roleName);
+            var roles = await _roleRepository.GetByNameAsync(roleName);
             return _mapper.Map<RoleViewModel>(roles);
         }
 
