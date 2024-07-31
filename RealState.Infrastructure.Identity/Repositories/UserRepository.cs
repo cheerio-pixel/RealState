@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.DTOs.User;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.QueryFilters.User;
 using RealState.Infrastructure.Identity.Entities;
@@ -109,7 +110,22 @@ namespace RealState.Infrastructure.Identity.Repositories
             var result = await _userManager.UpdateAsync(user);
             if(!result.Succeeded)
                 return false;
+
+            if(userDto.Password is not null)
+            {
+                result =  await ChangePassword(user, userDto.Password);
+                if (!result.Succeeded)
+                    return false;
+            }
+
             return true;
+        }
+
+        private async Task<IdentityResult> ChangePassword(ApplicationUser user, string newPassword)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword).ConfigureAwait(false);
+            return result;
         }
 
         private IQueryable<ApplicationUser> FilterQuery(UserQueryFilter filters)

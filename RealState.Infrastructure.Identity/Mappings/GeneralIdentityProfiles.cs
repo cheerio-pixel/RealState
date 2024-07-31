@@ -21,7 +21,7 @@ namespace RealState.Infrastructure.Identity.Mappings
                 .ForMember(des => des.ConfirmPassword, opt => opt.Ignore())
                 .ForMember(des => des.Active, opt => opt.Ignore())
                 .ReverseMap()
-                .ForMember(des => des.EmailConfirmed, opt => opt.MapFrom(org => org.Active));
+                .ForMember(des => des.EmailConfirmed, opt => opt.Ignore());
             #endregion
 
             #region Role

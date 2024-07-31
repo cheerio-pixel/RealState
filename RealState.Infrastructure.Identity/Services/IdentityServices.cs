@@ -185,15 +185,16 @@ namespace RealState.Infrastructure.Identity.Services
                     Success = false,
                     Error = $"The IdentifierCard: {saveUser.IdentifierCard} is already taken"
                 };
+            var user = _mapper.Map<ApplicationUser>(saveUser);
+
             //verify if user is a manager or not
             var managerRolesName = _roleRepository.GetManagementRoles().Select(x=>x.Name).ToList();
             var isUserManager = saveUser.Roles.Where(x=> managerRolesName.Contains(x.Name)).Count() > 0;
             if (isUserManager)
-                saveUser.Active = true;
+                user.EmailConfirmed = true;
             #endregion
 
             #region Create user
-            var user = _mapper.Map<ApplicationUser>(saveUser);
             user.Roles.Clear();
             var result = await _userManager.CreateAsync(user, saveUser.Password);
             if (!result.Succeeded)
