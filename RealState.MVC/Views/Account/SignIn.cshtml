@@ -3,12 +3,12 @@
 
 <div class="row">
 	<div class="col-md-4">
-		<form id="registerForm" asp-controller="Authentication" asp-action="SignIn" method="post">
+		<form id="registerForm" asp-controller="Account" asp-action="SignIn" method="post">
 			<h2>Sign In</h2>
 			<hr />
 			@Html.ValidationSummary(true)
 			<div class="form-floating mb-3">
-				<input asp-for="Account" class="form-control" aria-required="true" type="text" />
+				<input asp-for="Account" class="form-control" placeholder="@@userName or Email" aria-required="true" type="text" />
 				<label asp-for="Account" class="form-label">Account</label>
 				<span asp-validation-for="Account" class="text-danger"></span>
 			</div>
@@ -25,13 +25,7 @@
 
 			<div>
 				<p>
-					<a id="forgot-password" href="/Identity/Account/ForgotPassword">Forgot your password?</a>
-				</p>
-				<p>
-					<a href="/Identity/Account/Register?returnUrl=%2F">Register as a new user</a>
-				</p>
-				<p>
-					<a id="resend-confirmation" href="/Identity/Account/ResendEmailConfirmation">Resend email confirmation</a>
+					<a asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
 				</p>
 			</div>
 		</form>

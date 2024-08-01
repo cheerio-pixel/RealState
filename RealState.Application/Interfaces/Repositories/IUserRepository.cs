@@ -19,7 +19,7 @@ namespace RealState.Application.Interfaces.Repositories
 
         public IEnumerable<ApplicationUserDTO> Get(UserQueryFilter filters);
 
-        public Task<ApplicationUserDTO> GetWithInclude(string userId, List<string> properties);
+        public Task<ApplicationUserDTO?> GetWithInclude(string userId, List<string> properties);
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(List<string> properties);
 

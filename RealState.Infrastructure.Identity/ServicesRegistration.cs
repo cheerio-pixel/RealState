@@ -25,7 +25,7 @@ namespace RealState.Infrastructure.Identity
 {
     public static class ServicesRegistration
     {
-        public static void AddIdentityLayer(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityLayer(this IServiceCollection services, IConfiguration configuration)
         {
             #region Identity
             var sqlIdentityConnection = configuration.GetConnectionString("IdentityConnection")
@@ -42,20 +42,10 @@ namespace RealState.Infrastructure.Identity
 
             services.Configure<IdentityOptions>(options =>
            {
-               options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+               options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(1);
                options.Lockout.MaxFailedAccessAttempts = 3;
                options.Lockout.AllowedForNewUsers = true;
            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-                options.LoginPath = "/Authentication/Index";
-                options.AccessDeniedPath = "/Authentication/AccessDenied";
-                options.SlidingExpiration = true;
-            });
             #endregion
 
             #region services
@@ -67,10 +57,16 @@ namespace RealState.Infrastructure.Identity
             services.AddTransient<IRoleRepository, RoleRepository>();
             #endregion
 
-            #region Json Web Token
-            //settings
+            #region options
             services.Configure<JWTSettings>(provider => configuration.GetSection("JwtSettings").Bind(provider));
+            #endregion
 
+            return services;
+        }
+
+        public static IServiceCollection AddJWTokenConfigurations(this IServiceCollection services, IConfiguration configuration)
+        {
+            #region Json Web Token
             //configuration of jwt
             services.AddAuthentication(options =>
             {
@@ -119,6 +115,25 @@ namespace RealState.Infrastructure.Identity
                 };
             });
             #endregion
+
+            return services;
+        }
+
+        public static IServiceCollection AddCookieConfigurations(this IServiceCollection services)
+        {
+            #region cookie
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Authentication/Index";
+                options.AccessDeniedPath = "/Authentication/AccessDenied";
+                options.SlidingExpiration = true;
+            });
+            #endregion
+
+            return services;
         }
 
         public static async Task RunSeedsAsync(this IApplicationBuilder app)

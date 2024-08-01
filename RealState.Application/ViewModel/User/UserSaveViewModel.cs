@@ -33,13 +33,11 @@ namespace RealState.Application.ViewModel.User
         [Phone(ErrorMessage = "Invalid phone number.")]
         public string? PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; } 
 
-        [Required(ErrorMessage = "Confirm password is required.")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; } = null!;
+        public string? ConfirmPassword { get; set; } 
 
         [Required(ErrorMessage = "At least one role is required.")]
         public List<string> RolesId { get; set; } = new List<string>();

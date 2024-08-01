@@ -5,7 +5,7 @@
 @{
 	var roles = ViewData["Roles"] as List<RoleViewModel> ?? new();
 }
-<form id="registerForm" asp-controller="Authentication" asp-action="Register" method="post" enctype="multipart/form-data">
+<form id="registerForm" asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
 	<h2>Join</h2>
 	<hr />
 	<div class="row">
@@ -63,15 +63,15 @@
 				</div>
 
 				<div class="form-floating mb-3">
-					<input asp-for="Password" class="form-control" placeholder="password" type="password" />
+					<input asp-for="Password" class="form-control" type="password" required/>
 					<label asp-for="Password" class="form-label" for="Input_Password">Password</label>
 					<span asp-validation-for="Password" class="text-danger"></span>
 
 				</div>
 
 				<div class="form-floating mb-3">
-					<input asp-for="ConfirmPassword" class="form-control" placeholder="password" type="password" />
-					<label asp-for="ConfirmPassword" class="form-label" for="Input_Password">Password</label>
+					<input asp-for="ConfirmPassword" class="form-control" type="password" required />
+					<label asp-for="ConfirmPassword" class="form-label" for="Input_Password">Confirm Password</label>
 					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 
 				</div>

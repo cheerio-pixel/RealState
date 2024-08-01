@@ -7,6 +7,8 @@ namespace RealState.Application.Interfaces.Services
     {
         public Result<List<RoleViewModel>> Get();
 
+        public Task<Result<RoleViewModel>> GetByNameAsync(string roleName);
+
         public Result<List<RoleViewModel>> GetBasicRoles();
 
         public Result<List<RoleViewModel>> GetManagementRoles();

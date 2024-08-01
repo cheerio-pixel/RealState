@@ -7,7 +7,7 @@ namespace RealState.Application.Interfaces.Services
 {
     public interface IUserServices
     {
-        public Task<Result<Unit>> UpdateAsync(string userId, UserSaveViewModel userViewModel);
+        public Task<Result<Unit>> UpdateAsync(string userId, string currentUserId, UserSaveViewModel userViewModel);
 
         public Task<Result<Unit>> DeleteAsync(string userId);
 
@@ -15,7 +15,7 @@ namespace RealState.Application.Interfaces.Services
 
         public Task<Result<Unit>> AddRolesAsync(string userId, List<string> roleIds);
 
-        public Task<Result<ApplicationUserDTO>> GetByIdAsync(string userId);
+        public Task<Result<ApplicationUserDTO?>> GetByIdAsync(string userId);
 
         public Result<List<ApplicationUserDTO>> GetAll(UserQueryFilter? filter);
 

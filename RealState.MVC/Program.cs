@@ -1,25 +1,22 @@
+using RealState.Application;
+using RealState.Infrastructure.Identity;
 using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
-using RealState.Infrastructure.Identity;
-using RealState.Application;
 using RealState.MVC.ActionFilter;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region Services
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddApplicationServices();
-
-
-
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApplicationServices();
 builder.Services.AddIdentityLayer(builder.Configuration);
 builder.Services.AddSharedLayer(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<SetAttributesViewBag>();
+builder.Services.AddCookieConfigurations();
+#endregion
 
 var app = builder.Build();
 
@@ -37,7 +34,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(

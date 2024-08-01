@@ -1,0 +1,29 @@
+﻿
+@using RealState.Application.ViewModel.Account
+@model ConfirmAccountViewModel
+@{
+	var Success = ViewData["Success"] as bool?;
+	var message = "The account  is now confirmed, you can now access the application";
+}
+<div class="container">
+	<div class="w40">
+		<div class="card">
+
+			<div class="card-header">
+				@if (!Success.Value)
+				{
+					@Html.ValidationSummary(true)
+				}
+				else
+				{
+					@message
+				}
+			</div>
+			<div class="card-body">
+				<div class="d-flex justify-content-center alert alert-@(Success.Value ? "primary" : "danger")" role="alert">
+					<a asp-controller="Account" asp-action="SignIn" class="btn btn-@(Success.Value ? "primary" : "danger")">Acceder</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

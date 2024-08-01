@@ -34,11 +34,18 @@ namespace RealState.Application.Services
             return Unit.T;
         }
 
-        public async Task<Result<Unit>> ChangeActiveStatus(string userId, bool status)
+        public async Task<Result<Unit>> ChangeActiveStatusAsync(string userId, string currentUserId, bool status)
         {
-            var user = await _userRepository.Get(userId);
+            var user = await _userRepository.GetWithInclude(userId, ["Roles"]);
             if (user is null)
                 return ErrorType.Any.Because($"There isn`t any user with this id: {userId}");
+
+            if (userId == currentUserId)
+            {
+                var isAdmin = user.Roles.Any(x => x.Name == RoleTypes.Admin.ToString());
+                if (isAdmin)
+                    return ErrorType.Any.Because($"You can't update yourself");
+            }
 
             user.Active = status;
 
@@ -79,7 +86,7 @@ namespace RealState.Application.Services
             return users.ToList();
         }
 
-        public async Task<Result<ApplicationUserDTO>> GetByIdAsync(string userId)
+        public async Task<Result<ApplicationUserDTO?>> GetByIdAsync(string userId)
         {
             return await _userRepository.GetWithInclude(userId, ["Roles"]);
         }
@@ -101,12 +108,19 @@ namespace RealState.Application.Services
             return Unit.T;
         }
 
-        public async Task<Result<Unit>> UpdateAsync(string userId, UserSaveViewModel userViewModel)
+        public async Task<Result<Unit>> UpdateAsync(string userId, string currentUserId, UserSaveViewModel userViewModel)
         {
             #region Validations
-            var userById = await _userRepository.Get(userId);
+            var userById = await _userRepository.GetWithInclude(userId, ["Roles"]);
             if (userById is null)
                 return ErrorType.Any.Because($"There isn`t any user with this id: {userId}");
+
+            if (userId == currentUserId)
+            {
+                var isAdmin = userById.Roles.Any(x => x.Name == RoleTypes.Admin.ToString());
+                if (isAdmin)
+                    return ErrorType.Any.Because($"You can't update yourself");
+            }
 
             var userByName = _userRepository.Get(new UserQueryFilter() { UserName = userViewModel.UserName }).FirstOrDefault();
             if (userByName is not null && userByName.Id != userId)
@@ -124,7 +138,7 @@ namespace RealState.Application.Services
             userViewModel.Picture ??= user!.Picture;
 
             var IsActive = userById.Active;
-            if (IsActive)
+            if (!IsActive)
                 return ErrorType.Any.Because($"This user isn`t active");
             #endregion
 
