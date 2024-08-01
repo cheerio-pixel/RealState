@@ -32,7 +32,6 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Register()
         {
-            var user = User.Identity!.IsAuthenticated;
             ViewData["Roles"] = _roleServices.GetBasicRoles().Value;
             return View();
         }
