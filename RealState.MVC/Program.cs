@@ -17,6 +17,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<SetAttributesViewBag>();
 builder.Services.AddCookieConfigurations();
 #endregion
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 

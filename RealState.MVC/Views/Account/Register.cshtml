@@ -3,115 +3,138 @@
 @model UserSaveViewModel
 
 @{
-	var roles = ViewData["Roles"] as List<RoleViewModel> ?? new();
+    Layout = "~/Views/Shared/_LayoutAuthentication.cshtml";
+    var roles = ViewData["Roles"] as List<RoleViewModel> ?? new();
 }
-<form id="registerForm" asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
-	<h2>Join</h2>
-	<hr />
-	<div class="row">
-		<div class="col-md-4">
+<div class="section-group">
+    <form id="registerForm" asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
+        <h2>Create Account</h2>
+        <hr />
+        <div class="container mt-5 mb-3">
+            @Html.ValidationSummary(true)
 
-			@Html.ValidationSummary(true)
-			<div class="form-floating mb-3">
-				<input asp-for="FirstName" class="form-control" type="text" />
-				<label asp-for="FirstName" class="form-label">First Name</label>
-				<span asp-validation-for="FirstName" class="text-danger"></span>
-			</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control" placeholder="First Name" type="text" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control" placeholder="Last Name" type="text" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
 
-			<div class="form-floating mb-3">
-				<input asp-for="LastName" class="form-control" type="text" />
-				<label asp-for="LastName" class="form-label">Last Name</label>
-				<span asp-validation-for="LastName" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" type="text" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                 <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="example@gmail.com" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+               
+            </div>
 
-			</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="UserName" class="form-label">UserName</label>
+                        <input asp-for="UserName" class="form-control" placeholder="Username" type="text" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="IdentifierCard" class="form-label">Identifier Card</label>
+                        <input asp-for="IdentifierCard" class="form-control" placeholder="000-0000000-0" type="text" />
+                        <span asp-validation-for="IdentifierCard" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
 
-			<div class="form-floating mb-3">
-				<input asp-for="PhoneNumber" class="form-control" type="text" />
-				<label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-				<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            <div class="row">
+               
+            </div>
 
-			</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label" for="Input_Password">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" required />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                 <div class="form-group mb-3">
+                        <label asp-for="Password" class="form-label" for="Input_Password">Password</label>
+                        <input asp-for="Password" class="form-control" type="password" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+               <div class="form-group mb-3">
+                      
+                       
+                      
+               <div>
+    <label for="Role">Role</label>
+                    @Html.DropDownListFor(m => m.RolesId, new SelectList(roles, "Id", "Name"), "Select role", new { @class = "form-control" })
+    <span asp-validation-for="RolesId" class="text-danger"></span>
+</div>
+                        <span asp-validation-for="RolesId" class="text-danger"></span>
+                    </div>
+            <div class="row mb-4">
+             <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="File" class="form-label">Picture</label>
+                        <input asp-for="File" type="file" id="fileInput" class="form-control" required>
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="max-width:200px">
+                        <p>Picture</p>
+                        <img id="previewImage" style="width:100%" src="..." class="rounded mx-auto d-block" alt="...">
+                    </div>
+                </div>
+            </div>
+            <div class="row col-7">
+              <div class="col-md-4 offset-md-2">
+                   <a class="btn btn-secondary" asp-controller="Account" asp-action="SignIn">Volver</a>
+                </div>
+                  <div class="col-md-4 offset-md-2">
+                    <button id="login-submit" type="submit" class=" btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
-			<div class="form-floating mb-3">
-				<input asp-for="File" type="file" id="fileInput" / required>
-				<span asp-validation-for="File" class="text-danger"></span>
-
-			</div>
-
-			<div class="form-floating mb-3">
-				<input asp-for="UserName" class="form-control" type="text" />
-				<label asp-for="UserName" class="form-label">UserName</label>
-				<span asp-validation-for="UserName" class="text-danger"></span>
-
-			</div>
-
-			<div class="form-floating mb-3">
-				<input asp-for="IdentifierCard" class="form-control" type="text" />
-				<label asp-for="IdentifierCard" class="form-label">Identifier Card</label>
-				<span asp-validation-for="IdentifierCard" class="text-danger"></span>
-
-			</div>
-		</div>
-
-		<div class="col-md-4 col-md-offset-2">
-			<section>
-				<div class="form-floating mb-3">
-					<input asp-for="Email" class="form-control" type="email" />
-					<label asp-for="Email" class="form-label">Email</label>
-					<span asp-validation-for="Email" class="text-danger"></span>
-
-				</div>
-
-				<div class="form-floating mb-3">
-					<input asp-for="Password" class="form-control" type="password" required/>
-					<label asp-for="Password" class="form-label" for="Input_Password">Password</label>
-					<span asp-validation-for="Password" class="text-danger"></span>
-
-				</div>
-
-				<div class="form-floating mb-3">
-					<input asp-for="ConfirmPassword" class="form-control" type="password" required />
-					<label asp-for="ConfirmPassword" class="form-label" for="Input_Password">Confirm Password</label>
-					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-
-				</div>
-
-				<div class="mb-3">
-					<select name="RolesId" class="form-select" required>
-						<option value="">select role</option>
-						@foreach (var item in roles)
-						{
-							<option value="@item.Id">@item.Name</option>
-						}
-					</select>
-					<span class="text-danger"></span>
-				</div>
-
-				<div>
-					<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-				</div>
-			</section>
-		</div>
-		<div class="col-md-2">
-			<div style="max-width:200px">
-				<p>Picture</p>
-				<img id="previewImage" style="width:100%" src="..." class="rounded mx-auto d-block" alt="...">
-			</div>
-		</div>
-	</div>
-</form>
 
 @section Scripts {
-	<script>
-		document.getElementById('fileInput').addEventListener('change', function (event) {
-			const file = event.target.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function (e) {
-					document.getElementById('previewImage').src = e.target.result;
-				};
-				reader.readAsDataURL(file);
-			}
-		});
-	</script>
+            <script>
+                document.getElementById('fileInput').addEventListener('change', function (event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.getElementById('previewImage').src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            </script>
 }
