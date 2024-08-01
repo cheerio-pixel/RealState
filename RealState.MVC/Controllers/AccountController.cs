@@ -8,16 +8,10 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController(IAccountServices accountServices, IRoleServices roleServices) : Controller
     {
-        private readonly IAccountServices _accountServices;
-        private readonly IRoleServices _roleServices;
-
-        public AccountController(IAccountServices accountServices, IRoleServices roleServices)
-        {
-            _accountServices = accountServices;
-            _roleServices = roleServices;
-        }
+        private readonly IAccountServices _accountServices = accountServices;
+        private readonly IRoleServices _roleServices = roleServices;
 
         public IActionResult SignIn()
             => View();
@@ -38,7 +32,7 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Register()
         {
-            var user = User.Identity.IsAuthenticated;
+            var user = User.Identity!.IsAuthenticated;
             ViewData["Roles"] = _roleServices.GetBasicRoles().Value;
             return View();
         }
@@ -53,7 +47,7 @@ namespace RealState.MVC.Controllers
                 return View(user);
             }
 
-            var picture = PictureHelper.UploadFile(user.File, user.UserName, "Users");
+            var picture = PictureHelper.UploadFile(user.File!, user.UserName, "Users");
             user.Picture = picture;
             var result = await _accountServices.RegisterAsync(user);
             if (result.IsFailure)

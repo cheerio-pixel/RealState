@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using RealState.Application.DTOs.User;
 using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
@@ -7,7 +6,7 @@ using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters.User;
 using RealState.Application.ViewModel.User;
-using RealState.Domain.Entities;
+
 
 namespace RealState.Application.Services
 {
@@ -24,14 +23,11 @@ namespace RealState.Application.Services
                 return ErrorType.Any.Because($"There isn`t any user with this id: {userId}");
 
             var roleNames = _roleRepository.GetRolesById(roleIds).Select(x => x.Name).ToList();
-            if (roleNames.Count() == 0)
+            if (roleNames.Count == 0)
                 return ErrorType.Any.Because($"There isn`t any roles with those ids: {roleIds.ToString()}");
 
             var result = await _userRepository.AddRolesAsync(user, roleNames);
-            if (!result)
-                return ErrorType.Any.Because($"There is a problem adding roles to user");
-
-            return Unit.T;
+            return !result ? (Result<Unit>)ErrorType.Any.Because($"There is a problem adding roles to user") : (Result<Unit>)Unit.T;
         }
 
         public async Task<Result<Unit>> ChangeActiveStatusAsync(string userId, string currentUserId, bool status)
@@ -168,5 +164,7 @@ namespace RealState.Application.Services
             var result = await _userRepository.UpdateAsync(_mapper.Map<SaveApplicationUserDTO>(user));
             return !result ? (Result<Unit>)ErrorType.Any.Because($"There is a problem updating user") : (Result<Unit>)Unit.T;
         }
+
+
     }
 }

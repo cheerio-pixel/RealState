@@ -32,7 +32,7 @@ namespace RealState.MVC.Controllers
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId, status);
+            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId!, status);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
@@ -84,7 +84,7 @@ namespace RealState.MVC.Controllers
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var result = await _userServices.UpdateAsync(viewModel.Id, currentUserId, viewModel);
+            var result = await _userServices.UpdateAsync(viewModel.Id!, currentUserId!, viewModel);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);

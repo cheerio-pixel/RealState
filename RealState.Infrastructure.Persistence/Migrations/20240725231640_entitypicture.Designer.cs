@@ -13,7 +13,9 @@ namespace RealState.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MainContext))]
     [Migration("20240725231640_entitypicture")]
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     partial class entitypicture
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

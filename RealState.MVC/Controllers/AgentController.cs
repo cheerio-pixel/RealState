@@ -56,7 +56,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
 
         var user = await _userServices.GetByIdAsync("325c8c63-d4cb-4038-924b-3acde9fdd969");
         var userDto = _mapper.Map<AgentSaveViewModel>(user.Value);
-        userDto.PictureUrl = user.Value.Picture;
+        userDto.PictureUrl = user.Value!.Picture;
         return View(userDto);
     }
 

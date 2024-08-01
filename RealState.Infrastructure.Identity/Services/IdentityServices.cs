@@ -275,7 +275,7 @@ namespace RealState.Infrastructure.Identity.Services
             var url = _uriServices.GetUrl(code, user.Id, "ResetPassword");
             var email = new EmailRequestDTO()
             {
-                To = user.Email,
+                To = user.Email!,
                 Subject = "Reset your account",
                 Body = $"Please reset your password here: {url}"
             };
@@ -293,7 +293,7 @@ namespace RealState.Infrastructure.Identity.Services
 
             var email = new EmailRequestDTO()
             {
-                To = user.Email,
+                To = user.Email!,
                 Subject = "Confirm Your Account",
                 Body = $"Please, confirm your account here {url}"
             };
@@ -323,9 +323,9 @@ namespace RealState.Infrastructure.Identity.Services
 
             var tokenClaims = new[]
             {
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.UserName!),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim("userId", user.Id)
             }
             .Union(userClaims)

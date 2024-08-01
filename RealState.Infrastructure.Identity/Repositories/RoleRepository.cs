@@ -89,7 +89,7 @@ namespace RealState.Infrastructure.Identity.Repositories
         {
             var role = await _roleManager.Roles.FirstOrDefaultAsync(x=>x.Id == roleDto.Id);
             _mapper.Map(roleDto, role);
-            var result = await _roleManager.UpdateAsync(role);
+            var result = await _roleManager.UpdateAsync(role!);
             if (!result.Succeeded)
                 return false;
             return true;
