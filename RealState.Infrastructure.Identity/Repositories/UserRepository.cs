@@ -33,8 +33,8 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<bool> DeleteAsync(ApplicationUserDTO userDto)
         {
-            var user = _mapper.Map<ApplicationUser>(userDto);
-            var result = await _userManager.DeleteAsync(user);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
+            var result = await _userManager.DeleteAsync(user!);
             if (!result.Succeeded)
                 return false;
             return true;
