@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace RealState.Application.Commands.PropertyType.Create
 {
-    internal class CreatePropertyTypeCommandValidator
+    public class CreatePropertyTypeCommandValidator
     : AbstractValidator<CreatePropertyTypeCommand>
     {
         public CreatePropertyTypeCommandValidator()
@@ -18,7 +18,7 @@ namespace RealState.Application.Commands.PropertyType.Create
             .NotEmpty()
             .WithMessage("The Description field is required.")
             .Must(s => s.Length <= 100)
-            .WithMessage("Description length cannot overpass 50 characters.");
+            .WithMessage("Description length cannot overpass 100 characters.");
         }
     }
 }
