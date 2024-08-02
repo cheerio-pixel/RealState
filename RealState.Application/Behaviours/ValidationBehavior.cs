@@ -9,7 +9,7 @@ using RealState.Application.Extras;
 
 namespace RealState.Application.Behaviours
 {
-    public class ValidationBehavior<TRequest, TResponse>(List<IValidator<TRequest>> validators)
+    public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
