@@ -7,42 +7,65 @@
     var admins = ViewData["Admins"] as List<ApplicationUserDTO> ?? new();
 }
 
-
-
-
- <div class="section-group" >
-       <div class="table">
-        <div class="row col-12">
-            <div class="col-lg-8 col-md-10 ml-auto mr-auto">
-
-
-                <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Identifier Card</th>
-                            <th>Name</th>
-                            <th>LastName</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">402-5874693-1</td>
-                            <td>Alan</td>
-                            <td>Tubert</td>
-                            <td>username</td>
-                            <td class="text-right">alantubert@gmail.com</td>
-
-                        </tr>
-
-                    </tbody>
-                </table>
-                </div>
-
-            </div>
-
+<div class="section-group2" >
+    <div class="center-div">
+        <div class=" mb-2" style="width:8%;">
+            <a href="/AdminMaintenance/Create" class="btn btn-secondary">Crear Admin</a>
         </div>
-       </div>
-    </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center">Identificador</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">402-5874693-1</td>
+                        <td>Alan</td>
+                        <td>Tubert</td>
+                        <td>username</td>
+                        <td class="text-right">alantubert@gmail.com</td>
+                        <td style=" z-index: 1050;">
+                            <div class="dropdown" style="z-index: 1050;">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Acciones
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" style="z-index:1200" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                      <tr>
+                        <td class="text-center">402-5874693-1</td>
+                        <td>Alan</td>
+                        <td>Tubert</td>
+                        <td>username</td>
+                        <td class="text-right">alantubert@gmail.com</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Acciones
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+</div>
+  
