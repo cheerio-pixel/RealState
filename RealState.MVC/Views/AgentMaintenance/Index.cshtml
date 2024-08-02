@@ -4,7 +4,7 @@
 *@
 @{
     Layout = "~/Views/Shared/_LayoutMaintance.cshtml";
-	var admins = ViewData["Agents"] as List<ApplicationUserDTO> ?? new();
+	var agents = ViewData["Agents"] as List<ApplicationUserDTO> ?? new();
 }
 
 <div class="section-group2" >
@@ -25,44 +25,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">402-5874693-1</td>
-                        <td>Alan</td>
-                        <td>Tubert</td>
-                        <td>username</td>
-                        <td class="text-right">alantubert@gmail.com</td>
-                        <td style=" z-index: 1050;">
-                            <div class="dropdown" style="z-index: 1050;">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Acciones
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" style="z-index:1200" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
-                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
-                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                      <tr>
-                        <td class="text-center">402-5874693-1</td>
-                        <td>Alan</td>
-                        <td>Tubert</td>
-                        <td>username</td>
-                        <td class="text-right">alantubert@gmail.com</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Acciones
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
-                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
-                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                    @foreach (var item in agents)
+					{
+					<tr>
+						<td class="text-center">402-5874693-1</td>
+						<td>@item.FirstName</td>
+						<td>@item.LastName</td>
+						<td>@item.UserName</td>
+						<td class="text-right">alantubert@gmail.com</td>
+						<td style=" z-index: 1050;">
+							<div class="dropdown" style="z-index: 1050;">
+								<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Acciones
+								</button>
+								<ul class="dropdown-menu dropdown-menu-end" style="z-index:1200" aria-labelledby="dropdownMenuButton">
+									@if (item.Active)
+									{
+										<li><a class="dropdown-item" asp-controller="AgentMaintenance" asp-action="ChangeStatus" asp-route-userId="@item.Id" asp-route-status="false">Desactivate</a></li>
+									}
+									else
+									{
+										<li><a class="dropdown-item" asp-controller="AgentMaintenance" asp-action="ChangeStatus" asp-route-userId="@item.Id" asp-route-status="true">Activate</a></li>
+									}
+									<li><a class="dropdown-item" asp-controller="AgentMaintenance" asp-action="Delete" asp-route-userId="@item.Id">Delete</a></li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+					}	
                 </tbody>
             </table>
         </div>
