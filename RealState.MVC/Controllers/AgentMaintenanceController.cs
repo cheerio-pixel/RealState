@@ -10,6 +10,7 @@ using RealState.Application.QueryFilters.User;
 using RealState.Application.ViewModel.User;
 
 using RealState.MVC.Helpers;
+using System.Drawing;
 
 namespace RealState.MVC.Controllers
 {
@@ -28,11 +29,22 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        public IActionResult Update(string id = "")
+        {
+           
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId, status);
+            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId!, status);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);

@@ -32,7 +32,7 @@ namespace RealState.MVC.Controllers
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId, status);
+            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId!, status);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
@@ -69,9 +69,11 @@ namespace RealState.MVC.Controllers
             return View(nameof(Index));
         }
 
-        public async Task<IActionResult> Update(string Id)
+        public async Task<IActionResult> Update(string id)
         {
-            var result = await _userServices.GetByIdAsync(Id);
+            var result = await _userServices.GetByIdAsync(id);
+            
+            if(result.Value == null) return RedirectPermanent("AdminMaintance/index");
             var user = result.Value;
             var vw = _mapper.Map<UserSaveViewModel>(user);
             return View(vw);
@@ -84,7 +86,7 @@ namespace RealState.MVC.Controllers
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var result = await _userServices.UpdateAsync(viewModel.Id, currentUserId, viewModel);
+            var result = await _userServices.UpdateAsync(viewModel.Id!, currentUserId!, viewModel);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
