@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace RealState.Application.Commands.PropertyType.Update
 {
-    internal class UpdatePropertyTypeCommandValidator
+    public class UpdatePropertyTypeCommandValidator
     : AbstractValidator<UpdatePropertyTypeCommand>
     {
         public UpdatePropertyTypeCommandValidator()

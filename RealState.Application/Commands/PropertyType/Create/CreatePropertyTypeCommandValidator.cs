@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace RealState.Application.Commands.PropertyType.Create
 {
-    internal class CreatePropertyTypeCommandValidator
+    public class CreatePropertyTypeCommandValidator
     : AbstractValidator<CreatePropertyTypeCommand>
     {
         public CreatePropertyTypeCommandValidator()
