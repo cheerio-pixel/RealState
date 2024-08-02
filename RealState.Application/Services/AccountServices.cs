@@ -49,7 +49,7 @@ namespace RealState.Application.Services
             if (!result.Success)
                 return ErrorType.Conflict.Because(result.Error);
 
-            return result.NewUser;
+            return result.NewUser!;
         }
 
         public async Task<Result<Unit>> ResetPasswordAsync(ResetPasswordViewModel resetPassword)
@@ -67,7 +67,7 @@ namespace RealState.Application.Services
             var request = _mapper.Map<AuthenticationRequestDTO>(login);
             var result = await _identityServices.AuthenticationAsync(request);
             if (!result.Success)
-                return ErrorType.Conflict.Because(result.Error);
+                return ErrorType.Conflict.Because(result.Error!);
 
             return result.CurrentUser;
         }

@@ -6,7 +6,7 @@ using RealState.Application.Dtos;
 
 namespace RealState.Application.Behaviours
 {
-    public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResult<TResponse>>
+    public class ValidationBehavior<TRequest, TResponse>(List<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResult<TResponse>>
         where TRequest : IRequest<TResult<TResponse>>
     {
         private readonly IEnumerable<IValidator<TRequest>>? _validator = validators;

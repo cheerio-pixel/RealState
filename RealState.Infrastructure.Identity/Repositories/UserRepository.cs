@@ -107,13 +107,13 @@ namespace RealState.Infrastructure.Identity.Repositories
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
             _mapper.Map(userDto, user);
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user!);
             if(!result.Succeeded)
                 return false;
 
             if(userDto.Password is not null)
             {
-                result =  await ChangePassword(user, userDto.Password);
+                result =  await ChangePassword(user!, userDto.Password);
                 if (!result.Succeeded)
                     return false;
             }
@@ -139,16 +139,16 @@ namespace RealState.Infrastructure.Identity.Repositories
                 query = query.Where(u => u.LastName.Contains(filters.LastName));
 
             if (filters.UserName is not null)
-                query = query.Where(u => u.UserName.Contains(filters.UserName));
+                query = query.Where(u => u.UserName!.Contains(filters.UserName));
 
             if (filters.Email is not null)
-                query = query.Where(u => u.Email.Contains(filters.Email));
+                query = query.Where(u => u.Email!.Contains(filters.Email));
 
             if (filters.IdentifierCard is not null)
                 query = query.Where(u => u.IdentifierCard.Contains(filters.IdentifierCard));
 
             if (filters.PhoneNumber is not null)
-                query = query.Where(u => u.PhoneNumber.Contains(filters.PhoneNumber));
+                query = query.Where(u => u.PhoneNumber!.Contains(filters.PhoneNumber));
 
             if (filters.Active is not null)
                 query = query.Where(u => u.EmailConfirmed == filters.Active);
