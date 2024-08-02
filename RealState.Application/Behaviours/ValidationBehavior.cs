@@ -1,29 +1,40 @@
-﻿using FluentValidation;
+﻿using System.Net;
+
+using FluentValidation;
 
 using MediatR;
 
-using RealState.Application.Dtos;
+using RealState.Application.Exceptions;
+using RealState.Application.Extras;
 
 namespace RealState.Application.Behaviours
 {
-    public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResult<TResponse>>
-        where TRequest : IRequest<TResult<TResponse>>
+    public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
+    : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>>? _validator = validators;
 
-        public async Task<TResult<TResponse>> Handle(TRequest request, RequestHandlerDelegate<TResult<TResponse>> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (_validator == null) return await next();
 
             var context = new ValidationContext<TRequest>(request);
             var validationResults = await Task.WhenAll(
-                validators.Select(v =>
+                _validator.Select(v =>
                     v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
             var failures = validationResults.SelectMany(r => r.Errors)
                 .Where(f => f != null).ToList();
-
-            return failures.Count == 0 ? await next() : TResult<TResponse>.Failure(failures);
+            if (failures.Count != 0)
+            {
+                throw new AppErrorException(failures.Select(f => new HttpError(
+                    HttpStatusCode.BadRequest,
+                    f.ErrorMessage,
+                    f.PropertyName
+                )));
+            }
+            return await next();
         }
     }
 }
