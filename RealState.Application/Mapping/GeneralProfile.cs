@@ -80,6 +80,7 @@ namespace RealState.Application.Mapping
             CreateMap<PropertSaveViewModel, PropertyUpgradeSaveViewModel>();
             #endregion
 
+            CreateMap<PropertyTypeDTO, PropertyTypes>().ReverseMap();
             CreateMap<UpdatePropertyTypeCommand, PropertyTypes>().ReverseMap();
             CreateMap<UpdatePropertyTypeResponse, PropertyTypes>().ReverseMap();
             CreateMap<CreatePropertyTypeCommand, PropertyTypes>().ReverseMap();
