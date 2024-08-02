@@ -54,7 +54,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Update(string id)
@@ -80,7 +80,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -92,10 +92,9 @@ namespace RealState.MVC.Controllers
             {
                 ModelState.AggregateErrors(result.Errors);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         public async Task<IActionResult> Delete(string userId)
         {
             var result = await _userServices.DeleteAsync(userId);
@@ -104,7 +103,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(nameof(Index));
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
     }
 }
