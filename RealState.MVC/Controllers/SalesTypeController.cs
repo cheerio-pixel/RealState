@@ -9,16 +9,10 @@ using RealState.MVC.Models;
 
 namespace RealState.MVC.Controllers
 {
-    public class SalesTypeController
-    : CrudController<SalesTypeSaveViewModel, SalesTypeViewModel, SalesTypes, Guid, ISalesTypesService>
+    public class SalesTypeController(ISalesTypesService salesTypesService)
+        : CrudController<SalesTypeSaveViewModel, SalesTypeViewModel, SalesTypes, Guid, ISalesTypesService>(salesTypesService, "SalesType", "Index")
     {
-        private readonly ISalesTypesService _salesTypesService;
-
-        public SalesTypeController(ISalesTypesService salesTypesService)
-        : base(salesTypesService, "SalesType", "Index")
-        {
-            _salesTypesService = salesTypesService;
-        }
+        private readonly ISalesTypesService _salesTypesService = salesTypesService;
 
         public async Task<IActionResult> Index(SalesTypesQueryFilter? filter)
         {
