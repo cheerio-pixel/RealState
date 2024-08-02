@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Text;
 
+using Asp.Versioning;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
@@ -115,6 +118,58 @@ namespace RealState.Infrastructure.Identity
                 };
             });
             #endregion
+
+            return services;
+        }
+
+        public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(swagger =>
+             {
+                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                 {
+                     Name = "Authorization",
+                     Type = SecuritySchemeType.ApiKey,
+                     Scheme = "Bearer",
+                     BearerFormat = "JWT",
+                     In = ParameterLocation.Header,
+                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                 });
+                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+                 {
+                             {
+                                   new OpenApiSecurityScheme
+                                     {
+                                         Reference = new OpenApiReference
+                                         {
+                                             Type = ReferenceType.SecurityScheme,
+                                             Id = "Bearer"
+                                         }
+                                     },
+                                     new string[] {}
+                             }
+                 });
+                 swagger.SwaggerDoc("v1", new OpenApiInfo
+                 {
+                     Title = "Restaurant ITLA API",
+                     Version = "v1"
+                 });
+             });
+
+            // https://stackoverflow.com/questions/76371992/which-package-should-be-used-for-versioning-api-controllers-in-net-7-microsoft
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("X-Api-Version"));
+            }).AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
 
             return services;
         }
