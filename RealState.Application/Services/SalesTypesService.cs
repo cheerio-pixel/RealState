@@ -37,7 +37,7 @@ namespace RealState.Application.Services
 
         public async Task<List<SalesTypeListItemViewModel>> SearchSalesTypes(SalesTypesQueryFilter filter)
         {
-            List<SalesTypesListItemDTO> salesTypes = await _salesTypeRepository.ListSalesTypes(filter);
+            List<SalesTypesListItemDTO> salesTypes = await _salesTypeRepository.ListSalesTypesWithCount(filter);
             return _mapper.Map<List<SalesTypeListItemViewModel>>(salesTypes);
         }
     }

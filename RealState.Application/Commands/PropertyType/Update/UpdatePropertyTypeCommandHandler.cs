@@ -1,33 +1,33 @@
+
 using System.Net;
 
 using AutoMapper;
 
 using MediatR;
 
-using RealState.Application.DTOs.PropertyType;
 using RealState.Application.Exceptions;
 using RealState.Application.Extras;
-using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Domain.Entities;
 
-namespace RealState.Application.Queries.PropertyType.GetById
+namespace RealState.Application.Commands.PropertyType.Update
 {
-    internal class GetByIdPropertyTypeQueryHandler
-    : IRequestHandler<GetByIdPropertyTypeQuery, PropertyTypeDTO>
+    internal class UpdatePropertyTypeCommandHandler
+    : IRequestHandler<UpdatePropertyTypeCommand, UpdatePropertyTypeResponse>
     {
         private readonly IPropertyTypeRepository _propertyTypeRepository;
         private readonly IMapper _mapper;
 
-        public GetByIdPropertyTypeQueryHandler(IPropertyTypeRepository propertyTypeRepository, IMapper mapper)
+        public UpdatePropertyTypeCommandHandler(IPropertyTypeRepository propertyTypeRepository, IMapper mapper)
         {
             _propertyTypeRepository = propertyTypeRepository;
             _mapper = mapper;
         }
 
-        public async Task<PropertyTypeDTO> Handle(GetByIdPropertyTypeQuery request, CancellationToken cancellationToken)
+        public async Task<UpdatePropertyTypeResponse> Handle(UpdatePropertyTypeCommand request, CancellationToken cancellationToken)
         {
-            PropertyTypes? propertyTypes = await _propertyTypeRepository.GetById(request.Id);
+            PropertyTypes propertyToUpdate = _mapper.Map<PropertyTypes>(request);
+            PropertyTypes? propertyTypes = await _propertyTypeRepository.Update(propertyToUpdate);
             if (propertyTypes is null)
             {
                 HttpStatusCode
@@ -35,7 +35,7 @@ namespace RealState.Application.Queries.PropertyType.GetById
                .Because($"We cannot find a property type with id {request.Id} does not exist ")
                .Throw();
             }
-            return _mapper.Map<PropertyTypeDTO>(propertyTypes);
+            return _mapper.Map<UpdatePropertyTypeResponse>(propertyTypes);
         }
     }
 }

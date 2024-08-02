@@ -3,6 +3,8 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+RealState.MVC/wwwroot/Images/*
+
 # dotenv files
 .env
 

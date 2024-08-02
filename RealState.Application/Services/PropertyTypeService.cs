@@ -38,7 +38,7 @@ namespace RealState.Application.Services
         public async Task<List<PropertyTypeListItemViewModel>> SearchPropertyType(PropertyTypeQueryFilter filter)
         {
             List<PropertyTypeListItemDTO> propertyTypeListItemDTOs
-                = await _propertyTypeRepository.ListPropertyTypes(filter);
+                = await _propertyTypeRepository.ListPropertyTypesWithCount(filter);
 
             return _mapper.Map<List<PropertyTypeListItemViewModel>>(propertyTypeListItemDTOs);
         }

@@ -8,6 +8,7 @@ namespace RealState.Application.Interfaces.Repositories
     : IGenericRepository<SalesTypes>
     {
         Task<bool> DoesSalesTypeNameExists(string name, Guid? idToExclude);
-        Task<List<SalesTypesListItemDTO>> ListSalesTypes(SalesTypesQueryFilter filter);
+        Task<List<SalesTypesListItemDTO>> ListSalesTypesWithCount(SalesTypesQueryFilter filter);
+        Task<List<SalesTypes>> ListSalesTypes(SalesTypesQueryFilter filter);
     }
 }
