@@ -69,9 +69,11 @@ namespace RealState.MVC.Controllers
             return View(nameof(Index));
         }
 
-        public async Task<IActionResult> Update(string Id)
+        public async Task<IActionResult> Update(string id)
         {
-            var result = await _userServices.GetByIdAsync(Id);
+            var result = await _userServices.GetByIdAsync(id);
+            
+            if(result.Value == null) return RedirectPermanent("AdminMaintance/index");
             var user = result.Value;
             var vw = _mapper.Map<UserSaveViewModel>(user);
             return View(vw);

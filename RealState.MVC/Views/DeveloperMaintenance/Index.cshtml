@@ -1,5 +1,67 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using RealState.Application.DTOs.User
 @{
+    Layout = "~/Views/Shared/_LayoutMaintance.cshtml";
+    var admins = ViewData["DeveloperRole"] as List<ApplicationUserDTO> ?? new();
 }
+
+<div class="section-group2" >
+    <div class="center-div">
+        <div class=" mb-2" style="width:10%;">
+            <a href="/DeveloperMaintenance/Create" class="btn btn-secondary">Crear Developer</a>
+        </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center">Identificador</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">402-5874693-1</td>
+                        <td>Alan</td>
+                        <td>Tubert</td>
+                        <td>username</td>
+                        <td class="text-right">alantubert@gmail.com</td>
+                        <td style=" z-index: 1050;">
+                            <div class="dropdown" style="z-index: 1050;">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Acciones
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" style="z-index:1200" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                      <tr>
+                        <td class="text-center">402-5874693-1</td>
+                        <td>Alan</td>
+                        <td>Tubert</td>
+                        <td>username</td>
+                        <td class="text-right">alantubert@gmail.com</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Acciones
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#">Acción 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 2</a></li>
+                                    <li><a class="dropdown-item" href="#">Acción 3</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+</div>

@@ -10,6 +10,7 @@ using RealState.Application.QueryFilters.User;
 using RealState.Application.ViewModel.User;
 
 using RealState.MVC.Helpers;
+using System.Drawing;
 
 namespace RealState.MVC.Controllers
 {
@@ -25,6 +26,17 @@ namespace RealState.MVC.Controllers
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.StateAgent });
             var agents = result.Value;
             ViewData["Agents"] = agents;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        public IActionResult Update(string id = "")
+        {
+           
             return View();
         }
 
