@@ -2,9 +2,6 @@
 @using RealState.Application.ViewModel.User
 @model UserSaveViewModel
 
-@{
-    var role = ViewData["DeveloperRole"] as RoleViewModel ?? new();
-}
 <form id="registerForm" asp-controller="DeveloperMaintenance" asp-action="Update" method="post">
     <h2>Update Developer</h2>
     <hr />
