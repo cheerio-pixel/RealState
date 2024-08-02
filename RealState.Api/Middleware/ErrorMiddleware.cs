@@ -27,6 +27,18 @@ namespace RealState.Api.Middleware
                     errors = appErrorException.InnerError
                 };
                 context.Response.StatusCode = (int)httpError.Type;
+                if (context.Response.StatusCode != 204)
+                {
+                    await context.Response.WriteAsJsonAsync(json);
+                }
+            }
+            catch (Exception e)
+            {
+                var json = new
+                {
+                    errors = e.Message
+                };
+                context.Response.StatusCode = 500;
                 await context.Response.WriteAsJsonAsync(json);
             }
         }
