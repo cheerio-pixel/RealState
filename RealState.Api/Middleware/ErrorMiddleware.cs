@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -6,11 +7,15 @@ using RealState.Application.Extras;
 
 namespace RealState.Api.Middleware
 {
-    public class ErrorMiddleware : IExceptionFilter
+    public class ErrorMiddleware : IMiddleware
     {
-        public void OnException(ExceptionContext filterContext)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (filterContext.Exception is AppErrorException appErrorException)
+            try
+            {
+                await next(context);
+            }
+            catch (AppErrorException appErrorException)
             {
                 HttpError? httpError = appErrorException.InnerError.FirstOrDefault();
                 if (httpError is default(HttpError))
@@ -21,10 +26,8 @@ namespace RealState.Api.Middleware
                 {
                     errors = appErrorException.InnerError
                 };
-
-                filterContext.Result = new ObjectResult(json) { StatusCode = (int)httpError.Type };
-                filterContext.HttpContext.Response.StatusCode = (int)httpError.Type;
-                filterContext.ExceptionHandled = true;
+                context.Response.StatusCode = (int)httpError.Type;
+                await context.Response.WriteAsJsonAsync(json);
             }
         }
     }

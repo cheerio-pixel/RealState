@@ -1,7 +1,7 @@
+using RealState.Api.Middleware;
+using RealState.Infrastructure.Identity;
 using RealState.Infrastructure.Persistence;
 using RealState.Infrastructure.Shared;
-using RealState.Infrastructure.Identity;
-using RealState.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +11,10 @@ builder.Services.AddIdentityLayer(builder.Configuration);
 builder.Services.AddSharedLayer(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddControllers(static option => option.Filters.Add<ErrorMiddleware>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ErrorMiddleware>();
 
 var app = builder.Build();
 
@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
