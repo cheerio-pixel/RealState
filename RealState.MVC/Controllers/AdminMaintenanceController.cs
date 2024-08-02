@@ -28,7 +28,6 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -37,7 +36,7 @@ namespace RealState.MVC.Controllers
             {
                 ModelState.AggregateErrors(result.Errors);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Create()
@@ -66,7 +65,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Update(string id)
@@ -92,7 +91,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -71,7 +71,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<ApplicationUserDTO?> GetWithInclude(string userId, List<string> properties)
         {
-            var query = _userManager.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable().AsNoTracking();
 
             foreach (var item in properties)
             {
@@ -83,7 +83,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(List<string> properties)
         {
-            var query = _userManager.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable().AsNoTracking();
 
             foreach (var item in properties)
             {
@@ -95,7 +95,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(UserQueryFilter filters, List<string> properties)
         {
-            var query = FilterQuery(filters);
+            var query = FilterQuery(filters).AsNoTracking();
 
             foreach (var item in properties)
             {
