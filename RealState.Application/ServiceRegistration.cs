@@ -20,9 +20,6 @@ namespace RealState.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             // Registrar MediatR
 
-            services.AddValidatorsFromAssemblies([Assembly.GetExecutingAssembly()]);
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
 
             services.AddMediatR(config =>
             {
