@@ -83,11 +83,10 @@ namespace RealState.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId!, status);
+            var result = await _userServices.ChangeStatusAsync(userId, currentUserId!, status);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);

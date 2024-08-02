@@ -30,7 +30,7 @@ namespace RealState.Application.Services
             return !result ? (Result<Unit>)ErrorType.Any.Because($"There is a problem adding roles to user") : (Result<Unit>)Unit.T;
         }
 
-        public async Task<Result<Unit>> ChangeActiveStatusAsync(string userId, string currentUserId, bool status)
+        public async Task<Result<Unit>> ChangeStatusAsync(string userId, string currentUserId, bool status)
         {
             var user = await _userRepository.GetWithInclude(userId, ["Roles"]);
             if (user is null)
@@ -43,10 +43,7 @@ namespace RealState.Application.Services
                     return ErrorType.Any.Because($"You can't update yourself");
             }
 
-            user.Active = status;
-
-            var saveUser = _mapper.Map<SaveApplicationUserDTO>(user);
-            var result = await _userRepository.UpdateAsync(saveUser);
+            var result = await _userRepository.ChangeStatus(userId, status);
             if (!result)
                 return ErrorType.Any.Because($"There is a problem updating user");
 

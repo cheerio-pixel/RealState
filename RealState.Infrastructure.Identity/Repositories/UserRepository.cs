@@ -31,6 +31,18 @@ namespace RealState.Infrastructure.Identity.Repositories
             return true;
         }
 
+        public async Task<bool> ChangeStatus(string userId, bool status)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user!.EmailConfirmed = status;
+
+            var result = await _userManager.UpdateAsync(user!);
+            if (!result.Succeeded)
+                return false;
+
+            return true;
+        }
+
         public async Task<bool> DeleteAsync(ApplicationUserDTO userDto)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
