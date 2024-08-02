@@ -1,21 +1,20 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
 
-using System.Security.Claims;
+using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc;
+
 using RealState.Application.Enums;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters.User;
-
 using RealState.Application.ViewModel.User;
-
 using RealState.MVC.Helpers;
-using System.Drawing;
 
 namespace RealState.MVC.Controllers
 {
-     public class AgentMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
-     {
+    public class AgentMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
+    {
         private readonly IUserServices _userServices = userServices;
         private readonly IRoleServices _roleServices = roleServices;
         private readonly IAccountServices _accountServices = accountServices;
@@ -29,15 +28,59 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            ViewData["AgentRole"] = role.Value;
             return View();
         }
 
-        public IActionResult Update(string id = "")
+        [HttpPost]
+        public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-           
-            return View();
+            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            ViewData["AgentRole"] = role.Value;
+
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            viewModel.Picture = PictureHelper.GetDefaultUserImage();
+
+            var result = await _accountServices.RegisterAsync(viewModel);
+            if (result.IsFailure)
+            {
+                ModelState.AggregateErrors(result.Errors);
+                return View(viewModel);
+            }
+            return View(nameof(Index));
+        }
+
+        public async Task<IActionResult> Update(string id)
+        {
+            var result = await _userServices.GetByIdAsync(id);
+
+            if (result.Value == null) return View(nameof(Index));
+            var user = result.Value;
+            var vw = _mapper.Map<UserSaveViewModel>(user);
+            return View(vw);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UserSaveViewModel viewModel)
+        {
+            if (!ModelState.IsValid) return View(viewModel);
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _userServices.UpdateAsync(viewModel.Id!, currentUserId!, viewModel);
+            if (result.IsFailure)
+            {
+                ModelState.AggregateErrors(result.Errors);
+                return View(viewModel);
+            }
+            return View(nameof(Index));
         }
 
         [HttpPost]
