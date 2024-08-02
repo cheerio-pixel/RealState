@@ -1,9 +1,9 @@
 @model UpgradesIndexViewModel
 @{
-    ViewData["Title"] = "Upgrades";
+    ViewData["Title"] = "Upgrade";
 }
 
-<h1>Upgrades</h1>
+<h1>Upgrade</h1>
 
 <form asp-action="Index" method="get" id="searchForm" class="mb-4">
     <div class="form-group">
@@ -29,7 +29,7 @@
     </tbody>
 </table>
 
-<nav aria-label="Upgrades pagination" class="mt-4">
+<nav aria-label="Upgrade pagination" class="mt-4">
     <ul class="pagination" id="pagination"></ul>
 </nav>
 
@@ -187,7 +187,7 @@
             console.log(id);
             const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
             const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-            confirmDeleteButton.href = `/Upgrades/Delete/${id}`;
+            confirmDeleteButton.href = `/Upgrade/Delete/${id}`;
             modal.show();
         }
 
