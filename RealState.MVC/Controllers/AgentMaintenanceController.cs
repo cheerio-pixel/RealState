@@ -2,6 +2,7 @@
 
 using AutoMapper;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
@@ -13,6 +14,7 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class AgentMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
     {
         private readonly IUserServices _userServices = userServices;

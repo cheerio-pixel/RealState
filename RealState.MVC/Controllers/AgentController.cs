@@ -21,7 +21,7 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers;
 
-[Authorize(Roles = nameof(RoleTypes.Admin))]
+[Authorize(Roles = nameof(RoleTypes.StateAgent))]
 public class AgentController(IPropertyService propertyService
     , IMapper mapper,
     IPictureService pictureService,
