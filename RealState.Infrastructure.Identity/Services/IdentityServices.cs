@@ -49,16 +49,11 @@ namespace RealState.Infrastructure.Identity.Services
         public async Task<AuthenticationResponseDTO> AuthenticationAsync(AuthenticationRequestDTO request)
         {
             #region Validations
-            ApplicationUser? user;
-            switch (IsEmailAccount(request.Account))
+            ApplicationUser? user = IsEmailAccount(request.Account) switch
             {
-                case true:
-                    user = await _userManager.FindByEmailAsync(request.Account);
-                    break;
-                case false:
-                    user = await _userManager.FindByNameAsync(request.Account);
-                    break;
-            }
+                true => await _userManager.FindByEmailAsync(request.Account),
+                false => await _userManager.FindByNameAsync(request.Account)
+            };
 
             if (user is null)
                 return new()
