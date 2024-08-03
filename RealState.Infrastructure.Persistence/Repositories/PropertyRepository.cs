@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Domain.Entities;
 using RealState.Infrastructure.Persistence.Context;
@@ -23,6 +24,13 @@ namespace RealState.Infrastructure.Persistence.Repositories
         public async Task<List<Properties>> GetPropertyByAgentId(Guid agentId)
         {
             return await _properties.Where(x => x.AgentId == agentId).Include(x => x.Pictures).ToListAsync();
+        }
+
+        public Task<int> GetNumberOfPropertiesOfAgent(Guid agentId)
+        {
+            return _properties.Where(p => p.AgentId == agentId)
+                              .Count()
+                              .AsTask();
         }
     }
 }

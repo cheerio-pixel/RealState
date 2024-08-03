@@ -16,26 +16,28 @@ namespace RealState.Application.Queries.Agent.GetById
         : IRequestHandler<GetByIdAgentQuery, AgentDTO>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPropertyRepository _propertyRepository;
         private readonly IMapper _mapper;
 
-        public GetByIdAgentQueryHandler(IUserRepository userRepository, IMapper mapper)
+        public GetByIdAgentQueryHandler(IUserRepository userRepository, IMapper mapper, IPropertyRepository propertyRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _propertyRepository = propertyRepository;
         }
         public async Task<AgentDTO> Handle(GetByIdAgentQuery request, CancellationToken cancellationToken)
         {
-            var agent = await _userRepository.GetWithInclude(request.AgentId, ["Roles"]);
+            ApplicationUserDTO? agent = await _userRepository.GetWithInclude(request.AgentId, ["Roles"]);
             if(agent is null || !agent.Roles.Any(x=>x.Name == RoleTypes.StateAgent.ToString()))
                 HttpStatusCode
                 .NoContent
                 .Because("There is no content")
                 .Throw();
 
-            var agentDto = _mapper.Map<AgentDTO>(agent);
+            AgentDTO agentDto = _mapper.Map<AgentDTO>(agent);
 
-            var count = 0; // _propertyRepository.GetPropertiesCountByAgentId(Guid.Parse(agentDto.Id));
-            agentDto.PropertiesCount = count;
+            Guid agentId = Guid.Parse(agent!.Id); // Cannot be null, since we throw
+            agentDto.PropertiesCount = await _propertyRepository.GetNumberOfPropertiesOfAgent(agentId);
 
             return agentDto;
         }
