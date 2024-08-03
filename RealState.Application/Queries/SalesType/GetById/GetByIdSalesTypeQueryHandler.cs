@@ -1,33 +1,33 @@
-
 using System.Net;
 
 using AutoMapper;
 
 using MediatR;
 
+using RealState.Application.DTOs.SalesType;
 using RealState.Application.Exceptions;
 using RealState.Application.Extras;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Domain.Entities;
 
-namespace RealState.Application.Commands.SalesType.Update
+namespace RealState.Application.Queries.SalesType.GetById
 {
-    internal class UpdateSalesTypeCommandHandler
-    : IRequestHandler<UpdateSalesTypeCommand, UpdateSalesTypeResponse>
+    internal class GetByIdSalesTypeQueryHandler
+    : IRequestHandler<GetByIdSalesTypeQuery, SalesTypeDTO>
     {
         private readonly ISalesTypeRepository _salesTypeRepository;
         private readonly IMapper _mapper;
 
-        public UpdateSalesTypeCommandHandler(ISalesTypeRepository salesTypeRepository, IMapper mapper)
+        public GetByIdSalesTypeQueryHandler(ISalesTypeRepository salesTypeRepository, IMapper mapper)
         {
             _salesTypeRepository = salesTypeRepository;
             _mapper = mapper;
         }
 
-        public async Task<UpdateSalesTypeResponse> Handle(UpdateSalesTypeCommand request, CancellationToken cancellationToken)
+        public async Task<SalesTypeDTO> Handle(GetByIdSalesTypeQuery request, CancellationToken cancellationToken)
         {
-            SalesTypes propertyToUpdate = _mapper.Map<SalesTypes>(request);
-            SalesTypes? salesTypes = await _salesTypeRepository.Update(propertyToUpdate);
+            SalesTypes? salesTypes = await _salesTypeRepository.GetById(request.Id);
             if (salesTypes is null)
             {
                 HttpStatusCode
@@ -35,7 +35,7 @@ namespace RealState.Application.Commands.SalesType.Update
                .Because($"We cannot find a property type with id {request.Id} does not exist ")
                .Throw();
             }
-            return _mapper.Map<UpdateSalesTypeResponse>(salesTypes);
+            return _mapper.Map<SalesTypeDTO>(salesTypes);
         }
     }
 }

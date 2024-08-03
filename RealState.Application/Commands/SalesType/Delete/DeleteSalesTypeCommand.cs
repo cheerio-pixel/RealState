@@ -1,8 +1,8 @@
 using MediatR;
 
-namespace RealState.Application.Commands.SsalesType.Delete
+namespace RealState.Application.Commands.SalesType.Delete
 {
-    public class DeleteSsalesTypeCommand
+    public class DeleteSalesTypeCommand
     : IRequest<Unit>
     {
         public Guid Id { get; set; }

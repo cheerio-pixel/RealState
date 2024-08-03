@@ -1,11 +1,11 @@
 using FluentValidation;
 
-namespace RealState.Application.Commands.SsalesType.Update
+namespace RealState.Application.Commands.SalesType.Update
 {
-    public class UpdateSsalesTypeCommandValidator
-    : AbstractValidator<UpdateSsalesTypeCommand>
+    public class UpdateSalesTypeCommandValidator
+    : AbstractValidator<UpdateSalesTypeCommand>
     {
-        public UpdateSsalesTypeCommandValidator()
+        public UpdateSalesTypeCommandValidator()
         {
             RuleFor(x => x.Name)
             .Cascade(CascadeMode.Stop)

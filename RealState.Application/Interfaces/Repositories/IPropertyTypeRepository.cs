@@ -1,5 +1,5 @@
 using RealState.Application.DTOs.PropertyType;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;
 
 namespace RealState.Application.Interfaces.Repositories

@@ -1,6 +1,6 @@
-namespace RealState.Application.Commands.SalesType.Update
+namespace RealState.Application.DTOs.SalesType
 {
-    public class UpdateSalesTypeResponse
+    public class SalesTypeDTO
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }

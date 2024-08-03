@@ -1,4 +1,4 @@
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.PropertyType;
 
 namespace RealState.MVC.Models

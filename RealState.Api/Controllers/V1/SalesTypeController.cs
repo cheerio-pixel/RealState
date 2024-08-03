@@ -1,15 +1,16 @@
+
 using Asp.Versioning;
 
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
-using RealState.Application.Commands.PropertyType.Create;
-using RealState.Application.Commands.PropertyType.Delete;
-using RealState.Application.Commands.PropertyType.Update;
-using RealState.Application.DTOs.PropertyType;
-using RealState.Application.Queries.PropertyType.GetAll;
-using RealState.Application.Queries.PropertyType.GetById;
+using RealState.Application.Commands.SalesType.Create;
+using RealState.Application.Commands.SalesType.Delete;
+using RealState.Application.Commands.SalesType.Update;
+using RealState.Application.DTOs.SalesType;
+using RealState.Application.Queries.SalesType.GetAll;
+using RealState.Application.Queries.SalesType.GetById;
 using RealState.Application.QueryFilters;
 
 namespace RealState.Api.Controllers.V1
@@ -17,24 +18,24 @@ namespace RealState.Api.Controllers.V1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
     [ApiController]
-    public class PropertyTypeController : ControllerBase
+    public class SalesTypeController : ControllerBase
     {
         private readonly ISender _sender;
 
-        public PropertyTypeController(ISender sender)
+        public SalesTypeController(ISender sender)
         {
             _sender = sender;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreatePropertyTypeCommand cmd)
+        public async Task<IActionResult> Post([FromBody] CreateSalesTypeCommand cmd)
         {
             await _sender.Send(cmd);
             return NoContent();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdatePropertyTypeCommand cmd)
+        public async Task<IActionResult> Put([FromBody] UpdateSalesTypeCommand cmd)
         {
             return Ok(await _sender.Send(cmd));
         }
@@ -42,7 +43,7 @@ namespace RealState.Api.Controllers.V1
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
-            _ = await _sender.Send(new DeletePropertyTypeCommand()
+            _ = await _sender.Send(new DeleteSalesTypeCommand()
             {
                 Id = id
             });
@@ -52,7 +53,7 @@ namespace RealState.Api.Controllers.V1
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            PropertyTypeDTO propertyTypeDTO = await _sender.Send(new GetByIdPropertyTypeQuery()
+            SalesTypeDTO propertyTypeDTO = await _sender.Send(new GetByIdSalesTypeQuery()
             {
                 Id = id
             });
@@ -60,9 +61,9 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet]
-        public async Task<IActionResult> List([FromQuery] PropertyTypeQueryFilter filters)
+        public async Task<IActionResult> List([FromQuery] SalesTypesQueryFilter filters)
         {
-            List<PropertyTypeDTO> propertyTypeDTOs = await _sender.Send(new GetAllPropertyTypeQuery()
+            List<SalesTypeDTO> propertyTypeDTOs = await _sender.Send(new GetAllSalesTypeQuery()
             {
                 Filters = filters
             });

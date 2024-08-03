@@ -1,7 +1,7 @@
 using MediatR;
 
 using RealState.Application.DTOs.PropertyType;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 
 namespace RealState.Application.Queries.PropertyType.GetAll
 {

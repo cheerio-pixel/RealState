@@ -2,14 +2,14 @@ using MediatR;
 
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RealState.Application.Commands.SsalesType.Create
+namespace RealState.Application.Commands.SalesType.Create
 {
-    public class CreateSsalesTypeCommand
+    public class CreateSalesTypeCommand
     : IRequest<Unit>
     {
-        [SwaggerParameter(Description = "Name of the SsalesType to Create")]
+        [SwaggerParameter(Description = "Name of the SalesType to Create")]
         public required string Name { get; set; }
-        [SwaggerParameter(Description = "Description of the SsalesType to Create")]
+        [SwaggerParameter(Description = "Description of the SalesType to Create")]
         public required string Description { get; set; }
     }
 }
