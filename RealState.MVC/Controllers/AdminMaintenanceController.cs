@@ -43,7 +43,7 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Admin));
             ViewData["AdminRole"] = role.Value;
             return View();
         }
@@ -51,7 +51,7 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Admin));
             ViewData["AdminRole"] = role.Value;
 
             if (!ModelState.IsValid)
@@ -73,7 +73,6 @@ namespace RealState.MVC.Controllers
         public async Task<IActionResult> Update(string id)
         {
             var result = await _userServices.GetByIdAsync(id);
-            
             if(result.Value == null) return RedirectPermanent("AdminMaintance/index");
             var user = result.Value;
             var vw = _mapper.Map<UserSaveViewModel>(user);

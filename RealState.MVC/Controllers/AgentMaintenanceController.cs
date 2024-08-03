@@ -30,7 +30,7 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.StateAgent));
             ViewData["AgentRole"] = role.Value;
             return View();
         }
@@ -38,7 +38,7 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.StateAgent));
             ViewData["AgentRole"] = role.Value;
 
             if (!ModelState.IsValid)
