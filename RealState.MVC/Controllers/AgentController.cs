@@ -1,10 +1,6 @@
 using AutoMapper;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
-
-using RealState.Application.DTOs.User;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
@@ -113,7 +109,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         await _propertyUpgradeService.Add(proupd);
         var pictureResult = await _pictureService.AddPictures(pictures);
 
-        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("index", "AgentController");
+        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("/Agent/index");
     }
 
     [HttpPost]

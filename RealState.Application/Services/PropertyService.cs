@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
-using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.Property;
 using RealState.Domain.Entities;
 
@@ -12,12 +10,14 @@ namespace RealState.Application.Services
 {
     public class PropertyService(IPropertyRepository propertyRepository, IMapper mapper,
         IPropertyUpgradeService propertyUpgradeService,
+        IUserServices userServices,
         IPictureService pictureService) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
     {
         private readonly IMapper _mapper = mapper;
         private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
         private readonly IPropertyRepository _propertyRepository = propertyRepository;
         private readonly IPictureService _pictureService = pictureService;
+        private readonly IUserServices _userServices = userServices;
 
         public async override Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
         {
@@ -79,6 +79,21 @@ namespace RealState.Application.Services
             await _pictureService.DeleteByPropertyId(id);
             await _propertyUpgradeService.DeleteByPropertyId(id);
             await base.Delete(id);
+        }
+
+        public async Task<Result<List<PropertyViewModel>>> GetAllWithIncludes()
+        {
+            var propertyMap = _mapper.Map<List<PropertyViewModel>>(await _propertyRepository.GetAllWithInclude());
+            return propertyMap;
+        }
+
+        public async Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id)
+        {
+            var property = await _propertyRepository.GetByIdWithInclude(id);
+            var propertyMapper = _mapper.Map<PropertyDetailsViewModel>(property);
+            var userResult = await _userServices.GetByIdAsync(property!.AgentId.ToString());
+            propertyMapper.ApplicationUser = userResult.Value!;
+            return propertyMapper;
         }
     }
 }

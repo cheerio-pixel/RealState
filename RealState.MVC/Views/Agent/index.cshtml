@@ -11,62 +11,57 @@
         <i class="fa fa-plus"></i> 
     </a>
     @{
-        if (properties.Count > 0)
+        @if (properties.Count > 0)
         {
-            foreach (var property in properties)
+            @foreach (var property in properties)
             {
-                                                       <div class="card-house">
-                                        <div class="header-house">    
-                                                     <img src="@property.Pictures[0].Picture" alt="house" />
-                                                    </div>
-                                                                 <div class="description-house">
-                                                        <div class="title">
-                                                            <h2>@property.Name</h2>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa fa-ellipsis-v"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <li><a class="dropdown-item" href="update/@property.Id">Update</a></li>
-                                                                    <li>
-                                                                                                                 <form id="form-delete-@property.Id" method="post" asp-action="Delete">
-                                                                                                                 <input type="hidden" name="id" value="@property.Id" />
-                                            <button type="button" class="dropdown-item" onclick="confirmDelete('@property.Id')">Delete</button>
-                                        </form>
-                                                    </li>
-
-                                                                </ul>
-                                                                                </div>
-                                                        </div>
-                                                        <div class="description">
-                                                            <p>@property.Description</p>
-                                                        </div>
-
-                                                        <div class="characteristics">
-                                                            <div class="tag-house">
-                                                                <i class="fa-solid fa-bed"></i>
-                                                                <p>@property.Rooms</p>
-                                                            </div>
-                                                            <div class="tag-house">
-                                                                <i class="fa-solid fa-bath"></i>
-                                                                <p>@property.Bathrooms</p>
-                                                            </div>
-                                                            <div class="tag-house">
-                                                                <i class="fa-solid fa-ruler"></i>
-                                                                <p>@property.Meters m2</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="price">
-                                                        <p>@property.Price.ToString("C")</p>
-                                                    </div>
-                                                </div>
-
+                    <div class="card-house">
+                        <div class="header-house">
+                            <img src="@property.Pictures[0].Picture" alt="house" />
+                        </div>
+                        <div class="description-house">
+                            <div class="title">
+                                <h2>@property.Name</h2>
+                                <div class="dropdown">
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="update/@property.Id">Update</a></li>
+                                        <li>
+                                            <form id="form-delete-@property.Id" method="post" asp-action="Delete">
+                                                <input type="hidden" name="id" value="@property.Id" />
+                                                <button type="button" class="dropdown-item" onclick="confirmDelete('@property.Id')">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="description">
+                                <p>@property.Description</p>
+                            </div>
+                            <div class="characteristics">
+                                <div class="tag-house">
+                                    <i class="fa-solid fa-bed"></i>
+                                    <p>@property.Rooms</p>
+                                </div>
+                                <div class="tag-house">
+                                    <i class="fa-solid fa-bath"></i>
+                                    <p>@property.Bathrooms</p>
+                                </div>
+                                <div class="tag-house">
+                                    <i class="fa-solid fa-ruler"></i>
+                                    <p>@property.Meters m2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price">
+                            <p>@property.Price.ToString("C")</p>
+                        </div>
+                    </div>
             }
         }
-
-    }
-
+        }
 </div>
 
             <script>

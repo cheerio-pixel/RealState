@@ -8,5 +8,7 @@ namespace RealState.Application.Interfaces.Services
     {
         Task<Result<PropertyViewModel>> GetByIdWithPictures(Guid id);
         Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId);
+        Task<Result<List<PropertyViewModel>>> GetAllWithIncludes();
+        Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id);
     }
 }

@@ -8,5 +8,7 @@ namespace RealState.Application.Interfaces.Repositories
         Task<bool> IsCodeUnique(string code);
         Task<List<Properties>> GetPropertyByAgentId(Guid agentId);
         Task<Properties?> GetByIdWithPictures(Guid id);
+        Task<List<Properties>> GetAllWithInclude();
+        Task<Properties?> GetByIdWithInclude(Guid id);
     }
 }

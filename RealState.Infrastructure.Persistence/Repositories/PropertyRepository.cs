@@ -24,5 +24,21 @@ namespace RealState.Infrastructure.Persistence.Repositories
         {
             return await _properties.Where(x => x.AgentId == agentId).Include(x => x.Pictures).ToListAsync();
         }
+
+        public async Task<List<Properties>> GetAllWithInclude()
+        {
+            return await _properties.Include(x => x.Pictures).Include(x => x.PropertyTypes).Include(x => x.SalesTypes).ToListAsync();
+        }
+
+        public async Task<Properties?> GetByIdWithInclude(Guid id)
+        {
+            return await _properties
+                .Include(x => x.Pictures)
+                .Include(x => x.PropertyTypes)
+                .Include(x => x.SalesTypes)
+                .Include(x => x.PropertiesUpgrades)
+                .ThenInclude(x => x.Upgrade)
+                .FirstOrDefaultAsync(x => x.Id == id)!;
+        }
     }
 }

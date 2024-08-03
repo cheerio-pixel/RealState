@@ -1,8 +1,116 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    List<PropertyViewModel> properties = ViewBag.Properties;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="main-body">
+    <div class="header">
+        <div class="title">
+            <h1> RealState Dom</h1>
+            <div class="descripcion">
+                <p>Los mejores en romper precios</p>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="form">
+                <h3 class="mb-3">Search for a building</h3>
+            <form>
+
+                <div class="form-group">
+                    <input type="text" placeholder="Building Code" class="form-control" >
+                </div>
+                <div class="form-group row">
+                        <select id="inputState" class="form-control">
+                            <option selected>Choose building type...</option>
+                            <option>Casa</option>
+                            <option>Apartamento</option>
+                            <option>Local</option>
+                            <option>Terreno</option>
+                        </select>
+                    </div>
+                    <!--Average price searching-->
+                   
+                    <div class="form-group">
+                    <input type="text" placeholder="Bedrooms number" class="form-control" >
+                </div>
+                 <div class="form-group">
+                    <input type="text" placeholder="Bathrooms number" class="form-control" >
+                </div>
+              <div class="form-group">
+                  <div class="range">
+                      <input type="range" min="0" max="1000000" value="500000" class="slider" id="myRange">
+                      <p style="display:flex; gap:5px;font-family: 'Roboto', sans-serif;2">Price: <span id="demo"></span></p>
+              </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="container mt-5" style="padding-left:0;">
+            @if (properties.Count > 0)
+            {
+                @foreach (var property in properties)
+                {
+                <a href="hola" class="card-house">
+                    <div class="header-house">
+                        <img src="@property.Pictures[0].Picture" alt="house" />
+                    </div>
+                    <div class="description-house">
+                        <div class="title">
+                            <h2>@property.Name</h2>
+                        </div>
+                        <div class="description">
+                            <p>@property.Description</p>
+                        </div>
+                        <div >
+                            <p><b>Tipo de venta</b></p>
+                            <p>@property.SalesTypes.Name</p>
+                        </div>
+                                 <div>
+                                    <p><b>Tipo de Propiedad</b></p>
+                                    <p>@property.PropertyTypes.Name</p>
+                                </div>
+                        <div class="characteristics">
+                            <div class="tag-house">
+                                <i class="fa-solid fa-bed" style="font-size:15px"></i>
+                                <p>@property.Rooms</p>
+                            </div>
+                            <div class="tag-house">
+                                <i class="fa-solid fa-bath"></i>
+                                <p>@property.Bathrooms</p>
+                            </div>
+                            <div class="tag-house">
+                                <i class="fa-solid fa-ruler"></i>
+                                <p>@property.Meters m2</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price">
+                        <p>@property.Price.ToString("C")</p>
+                    </div>
+                </a>
+                }
+            }
+        </div>
+    </div>
 </div>
+
+                            <script>
+$(document).ready(function() {
+    $('.progress-container').click(function(e) {
+        var offset = $(this).offset();
+        var clickX = e.pageX - offset.left;
+        var totalWidth = $('.progress-container').width();
+        var percent = clickX / totalWidth * 100;
+        $('#progress-bar').css('width', percent + '%');
+    });
+
+    $('#myRange').on('input', function() {
+        $('#demo').text($(this).val());
+    });
+});
+
+
+
+</script>

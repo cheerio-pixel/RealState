@@ -1,0 +1,133 @@
+﻿@model PropertyDetailsViewModel
+@{
+    ViewBag.Title = "Details";
+    PropertyDetailsViewModel property = ViewBag.Property as PropertyDetailsViewModel;
+
+}
+<div>
+<div class="header-slide">
+    <div class="glide">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                <li class="glide__slide">
+                    <img src="~/pictures/building1.jpg" alt="Image 1">
+                </li>
+                <li class="glide__slide">
+                    <img src="~/pictures/building2.jpg" alt="Image 2">
+                </li>
+                <li class="glide__slide">
+                    <img src="~/pictures/building3.jpg" alt="Image 3">
+                </li>
+            </ul>
+        </div>
+        <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">Prev</button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">Next</button>
+        </div>
+    </div>
+</div>
+<div class="property-information">
+    <div class="card-property">
+        <div class="property-title">
+            <h1 >@property!.Name</h1>
+            <p>Code : @property.Code</p>
+        </div>
+
+      <div class="icons-flex">
+             <div class="icon-container">
+             <i class="fas fa-bed" style="  color: rgb(120,122,122) ;"></i>
+                <p style="margin:0;">Rooms</p>
+                <p>@property!.Rooms</p>
+            </div>   
+            <div class="icon-container">
+                <i class="fas fa-bath" style="  color: rgb(120,122,122) ;"></i>
+                <p>Bathrooms</p>
+                <p>@property!.Bathrooms</p>
+            </div> 
+               <div class="icon-container">
+                   <i class="fas fa-ruler-horizontal" style="  color: rgb(120,122,122) ;"></i>
+                <p>Area</p>
+                <p>@property!.Meters</p>
+
+            </div>
+
+      </div>
+        <div class="property-upgrades">
+               <h3>Upgrades</h3>
+                  <div class="upgrade-container">
+                    @{
+                        if (property.Upgrade != null)
+                        {
+                            foreach (var item in property.Upgrade)
+                            {
+                                                                <p>@item.Name</p>
+                            }
+                        }
+                    }
+                  </div>
+        </div>
+        <div class="description-property">
+            <h3>Description</h3>
+            <p>@property!.Description</p>
+        </div>
+        <div class="extra-information">
+             <div>
+                <h4>Property type</h4>
+                <p>@property!.PropertyTypes.Name</p>
+            </div> 
+
+              <div>
+                <h4>Sales type</h4>
+                <p>@property!.SalesTypes.Name</p>
+            </div> 
+        </div>
+</div>
+<div class="card-agent">
+    <div class="agent-header">
+        <p class="title">Buy with the price</p>
+        <p class="price">@property!.Price.ToString("C")</p>
+    </div>
+    <hr />
+    <div class="agent-information">
+        <h4>Seller Information</h4>
+       <div class="profile">
+            <div class="agent-image">
+            <img src="@property.ApplicationUser.Picture" alt="Agent">
+        </div>
+        <div class="row">
+             <p style="margin:0; font-weight:600">@property.ApplicationUser.FirstName @property.ApplicationUser.LastName</p>
+         <p style="font-size:13px">Agent </p>
+        </div>
+       </div>
+        <div class="agent-data">
+            <p style="font-weight:700">Contact:</p>
+           
+          <div class="contact-info" >
+              <i class="fa-solid fa-envelope"></i>
+                <p style="margin:0">@property.ApplicationUser.PhoneNumber</p>
+          </div>
+          <div  class="contact-info">
+              <i class="fa-solid fa-phone"></i>
+            <p style="margin:0">@property.ApplicationUser.Email</p>
+          </div>
+        </div>
+</div>
+</div>
+</div>
+
+
+<script>
+    new Glide('.glide', {
+        type: 'carousel',
+        startAt: 0,
+        perView: 3,
+        breakpoints: {
+            768: {
+                perView: 2
+            },
+            576: {
+                perView: 1
+            }
+        }
+    }).mount();
+</script>
