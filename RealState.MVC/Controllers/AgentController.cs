@@ -86,7 +86,7 @@ public class AgentController(IPropertyService propertyService
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
         List<PicturesSaveViewModel> pictures = [];
-        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
