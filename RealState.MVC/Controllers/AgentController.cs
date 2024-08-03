@@ -38,7 +38,8 @@ public class AgentController(IPropertyService propertyService
 
     public async Task<IActionResult> Index()
     {
-        var result = await _propertyService.GetPropertyByAgentId(User.GetId());
+        Guid userId = User.GetId();
+        var result = await _propertyService.GetPropertyByAgentId(userId);
         ViewBag.Properties = result.Value;
         return View();
     }
@@ -60,9 +61,7 @@ public class AgentController(IPropertyService propertyService
         return View(userDto);
     }
 
-
     [HttpGet("agent/Update/{id}")]
-
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Update(string id)
     {
