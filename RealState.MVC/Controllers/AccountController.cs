@@ -136,15 +136,22 @@ namespace RealState.MVC.Controllers
         [Authorize]
         public IActionResult ChooseRole()
         {
-            if (!Enum.IsDefined(typeof(RoleTypes), role))
             string role = User.GetUnparsedMainRole();
+            if (!Enum.TryParse(role, out RoleTypes roleT))
             {
                 // Do not throw exception, log it
                 _logger.LogError("Unknown role {Role} when coming from {PreviousUrl}",
                                    role,
                                    Request.Headers.Referer);
-                role = "Home";
+                return RedirectToAction("Index", "Home");
             }
+            role = roleT switch
+            {
+                RoleTypes.Admin => "AdminMaintenance",
+                RoleTypes.Client => throw new NotImplementedException(),
+                RoleTypes.StateAgent => "AgentMaintenance",
+                _ => "Home"
+            };
 
             return RedirectToAction("Index", role);
         }
