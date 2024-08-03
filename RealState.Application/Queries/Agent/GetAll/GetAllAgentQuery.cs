@@ -11,6 +11,6 @@ namespace RealState.Application.Queries.Agent.GetAll
         : IRequest<List<AgentDTO>>
     {
         [SwaggerParameter("Filters to list of agents")]
-        public required UserQueryFilter Filter { get; set; }
+        public required AgentQueryFilter Filter { get; set; }
     }
 }
