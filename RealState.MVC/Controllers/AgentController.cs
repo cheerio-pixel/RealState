@@ -18,20 +18,13 @@ using RealState.MVC.ActionFilter;
 
 namespace RealState.MVC.Controllers;
 
-public class AgentController(IMediator mediator, IPropertyService propertyService
+public class AgentController(IPropertyService propertyService
     , IMapper mapper,
-    IUpgradesService upgradesService,
-    ISalesTypesService salesTypesService,
-    IPropertyTypeService propertyTypeService,
     IPictureService pictureService,
     IPropertyUpgradeService propertyUpgradeService,
     IUserServices userServices) : Controller
 {
-    private readonly IMediator _mediator = mediator;
     private readonly IPropertyService _propertyService = propertyService;
-    private readonly IUpgradesService _upgradesService = upgradesService;
-    private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
-    private readonly ISalesTypesService _salesTypeService = salesTypesService;
     private readonly IPictureService _pictureService = pictureService;
     private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
     private readonly IMapper _mapper = mapper;
