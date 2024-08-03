@@ -2,9 +2,11 @@ using AutoMapper;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
@@ -18,17 +20,20 @@ using RealState.MVC.ActionFilter;
 
 namespace RealState.MVC.Controllers;
 
+[Authorize(Roles = nameof(RoleTypes.Admin))]
 public class AgentController(IPropertyService propertyService
     , IMapper mapper,
     IPictureService pictureService,
     IPropertyUpgradeService propertyUpgradeService,
-    IUserServices userServices) : Controller
+    IUserServices userServices,
+    ILogger<AgentController> logger) : Controller
 {
     private readonly IPropertyService _propertyService = propertyService;
     private readonly IPictureService _pictureService = pictureService;
     private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
     private readonly IMapper _mapper = mapper;
     private readonly IUserServices _userServices = userServices;
+    private readonly ILogger<AgentController> _logger = logger;
 
     public async Task<IActionResult> Index()
     {
@@ -160,7 +165,7 @@ public class AgentController(IPropertyService propertyService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            _logger.LogError(ex, "Error when trying to delete property {PropertyId}", id);
             return RedirectToAction("Index");
         }
     }

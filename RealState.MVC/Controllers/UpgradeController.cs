@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.Upgrades;
@@ -9,6 +11,7 @@ using RealState.MVC.Models;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class UpgradeController
     : CrudController<UpgradesSaveViewModel, UpgradesViewModel, Upgrades, Guid, IUpgradesService>
     {
