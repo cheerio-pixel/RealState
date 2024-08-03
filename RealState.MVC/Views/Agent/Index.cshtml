@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = "~/Views/Shared/_layoutproperty.cshtml";
+    Layout = "~/Views/Shared/_Layoutproperty.cshtml";
     List<PropertyViewModel> properties = ViewBag.Properties;
 }
 
@@ -16,7 +16,7 @@
             foreach (var property in properties)
             {
                                                        <div class="card-house">
-                                        <div class="header-house">    
+                                        <div class="header-house">
                                                      <img src="@property.Pictures[0].Picture" alt="house" />
                                                     </div>
                                                                  <div class="description-house">

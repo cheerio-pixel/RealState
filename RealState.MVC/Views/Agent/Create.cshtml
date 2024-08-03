@@ -2,7 +2,7 @@
 @model PropertSaveViewModel
 @{
     Guid? id = ViewBag.Id;
-    Layout = "~/Views/Shared/_layoutproperty.cshtml";
+    Layout = "~/Views/Shared/_Layoutproperty.cshtml";
     List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertyTypes;
     List<SalesTypeViewModel> salesTypes = ViewBag.SalesTypes;
     List<UpgradesViewModel> upgrades = ViewBag.Upgrades;
@@ -18,9 +18,10 @@
             else
             {
                 <h1>Create Property</h1>
-            })
+            }
            
         </div>
+        @(Html.ValidationSummary(true))
         <form asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
             <!--Section 1-->
             @if (id != null)
