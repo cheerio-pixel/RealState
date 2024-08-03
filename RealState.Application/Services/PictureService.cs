@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 
+using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
@@ -14,7 +15,14 @@ namespace RealState.Application.Services
         private readonly IMapper _mapper = mapper;
         public async Task<Result<List<PicturesSaveViewModel>>> AddPictures(List<PicturesSaveViewModel> vm)
         {
-
+            if (vm.Count == 0)
+            {
+                return "You must have at least 1 image.";
+            }
+            if (vm.Count > 4)
+            {
+                return "You cannot add more than 4 images.";
+            }
             foreach (var picture in vm)
             {
                 var pictureEntity = _mapper.Map<Pictures>(picture);
