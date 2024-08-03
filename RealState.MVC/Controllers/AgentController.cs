@@ -84,35 +84,50 @@ public class AgentController(IPropertyService propertyService
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
-        List<PicturesSaveViewModel> pictures = [];
         vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
         }
-        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
 
         Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
-        if (!result.IsSuccess)
+        if (result.IsFailure)
         {
+            ModelState.AggregateErrors(result.Errors);
+            return View(vm);
+        }
+        PropertSaveViewModel property = result.Value;
+
+        List<PicturesSaveViewModel> pictures = vm.Pictures.ConvertAll(picture =>
+        new PicturesSaveViewModel
+        {
+            Picture = PictureHelper.UploadFile(picture, property.Id.ToString(), "Properties"),
+            PropertyId = property.Id
+        });
+
+        var pictureResult = await _pictureService.AddPictures(pictures);
+        if (pictureResult.IsFailure)
+        {
+            foreach (var e in pictureResult.Errors)
+            {
+                ModelState.AddModelError(nameof(vm.Pictures), e.Message);
+            }
+            await _propertyService.Delete(property.Id);
             return View(vm);
         }
 
-
-
-        foreach (var picture in vm.Pictures)
+        PropertyUpgradeSaveViewModel propertyUpgrade = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
+        propertyUpgrade.PropertyId = property.Id;
+        Result<PropertyUpgradeSaveViewModel> propertyUpgradeResult = await _propertyUpgradeService.Add(propertyUpgrade);
+        if (propertyUpgradeResult.IsFailure)
         {
-            pictures.Add(new PicturesSaveViewModel
-            {
-                Picture = PictureHelper.UploadFile(picture, result.Value.Id.ToString(), "Properties"),
-                PropertyId = result.Value.Id
-            });
+            ModelState.AggregateErrors(propertyUpgradeResult.Errors);
+            await _propertyService.Delete(property.Id);
+            await _pictureService.DeleteByPropertyId(property.Id);
+            return View(vm);
         }
-        proupd.PropertyId = result.Value.Id;
-        await _propertyUpgradeService.Add(proupd);
-        var pictureResult = await _pictureService.AddPictures(pictures);
 
-        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("index", "AgentController");
+        return RedirectToAction("index", "Agent");
     }
 
     [HttpPost]
