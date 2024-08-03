@@ -1,0 +1,41 @@
+
+using System.Net;
+
+using AutoMapper;
+
+using MediatR;
+
+using RealState.Application.Exceptions;
+using RealState.Application.Extras;
+using RealState.Application.Interfaces.Repositories;
+using RealState.Domain.Entities;
+
+namespace RealState.Application.Commands.SsalesType.Update
+{
+    internal class UpdateSsalesTypeCommandHandler
+    : IRequestHandler<UpdateSsalesTypeCommand, UpdateSsalesTypeResponse>
+    {
+        private readonly ISalesTypeRepository _salesTypeRepository;
+        private readonly IMapper _mapper;
+
+        public UpdateSsalesTypeCommandHandler(ISalesTypeRepository salesTypeRepository, IMapper mapper)
+        {
+            _salesTypeRepository = salesTypeRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<UpdateSsalesTypeResponse> Handle(UpdateSsalesTypeCommand request, CancellationToken cancellationToken)
+        {
+            SalesTypes propertyToUpdate = _mapper.Map<SalesTypes>(request);
+            SalesTypes? salesTypes = await _salesTypeRepository.Update(propertyToUpdate);
+            if (salesTypes is null)
+            {
+                HttpStatusCode
+               .NoContent
+               .Because($"We cannot find a property type with id {request.Id} does not exist ")
+               .Throw();
+            }
+            return _mapper.Map<UpdateSsalesTypeResponse>(salesTypes);
+        }
+    }
+}
