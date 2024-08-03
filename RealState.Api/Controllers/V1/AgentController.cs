@@ -24,28 +24,32 @@ namespace RealState.Api.Controllers.V1
             _sender = sender;
         }
 
-        [HttpPost("ChangeStatus")]
-        public async Task<IActionResult> ChangeStatus(ChangeStatusAgentCommand cmd)
+        [HttpPatch("{id}/Status")]
+        public async Task<IActionResult> ChangeStatus([FromRoute] string id, bool status)
         {
-            await _sender.Send(cmd);
+            await _sender.Send(new ChangeStatusAgentCommand ()
+            {
+                AgentId = id,
+                Status = status
+            });
             return NoContent();
         }
 
-        [HttpGet("Get")]
-        public async Task<IActionResult> Get([FromQuery]AgentQueryFilter filter)
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] AgentQueryFilter filter)
         {
              var result = await _sender.Send(new GetAllAgentQuery() { Filter = filter});
             return Ok(result);
         }
 
-        [HttpGet("Get{Id}")]
-        public async Task<IActionResult> Get(string Id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = Id});
+            var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = id});
             return Ok(result);
         }
 
-        [HttpGet("GetAgentProperties{Id}")]
+        [HttpGet("{id}/Properties")]
         public async Task<IActionResult> GetAgentProperties(string Id)
         {
             var result = await _sender.Send(new GetPropertiesByAgentQuery() { AgentId = Id });
