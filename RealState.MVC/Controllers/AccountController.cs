@@ -149,7 +149,7 @@ namespace RealState.MVC.Controllers
             {
                 RoleTypes.Admin => "AdminMaintenance",
                 RoleTypes.Client => throw new NotImplementedException(),
-                RoleTypes.StateAgent => "AgentMaintenance",
+                RoleTypes.StateAgent => "Agent",
                 _ => "Home"
             };
 
