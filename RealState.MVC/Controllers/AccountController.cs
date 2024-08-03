@@ -136,8 +136,8 @@ namespace RealState.MVC.Controllers
         [Authorize]
         public IActionResult ChooseRole()
         {
-            string role = User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
             if (!Enum.IsDefined(typeof(RoleTypes), role))
+            string role = User.GetUnparsedMainRole();
             {
                 // Do not throw exception, log it
                 _logger.LogError("Unknown role {Role} when coming from {PreviousUrl}",

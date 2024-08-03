@@ -17,6 +17,16 @@ namespace RealState.MVC.Helpers
         }
 
         /// <summary>
+        /// Return the id of the current logged user. Throws if non-existant
+        /// </summary>
+        public static string GetUnparsedId(this ClaimsPrincipal self)
+        {
+            var guid = self.FindFirstValue(ClaimTypes.NameIdentifier);
+            ArgumentException.ThrowIfNullOrEmpty(guid);
+            return guid;
+        }
+
+        /// <summary>
         /// Get the parsed Role of the current logged user. Throws if non-existant
         /// </summary>
         public static RoleTypes GetMainRole(this ClaimsPrincipal self)

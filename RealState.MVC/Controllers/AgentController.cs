@@ -15,6 +15,7 @@ using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.ActionFilter;
+using RealState.MVC.Helpers;
 
 
 
@@ -37,7 +38,7 @@ public class AgentController(IPropertyService propertyService
 
     public async Task<IActionResult> Index()
     {
-        var result = await _propertyService.GetPropertyByAgentId(Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969"));
+        var result = await _propertyService.GetPropertyByAgentId(User.GetId());
         ViewBag.Properties = result.Value;
         return View();
     }
@@ -50,9 +51,10 @@ public class AgentController(IPropertyService propertyService
 
     public async Task<IActionResult> Profile()
     {
-        ViewBag.Id = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        var userId = User.GetId();
+        ViewBag.Id = userId;
 
-        var user = await _userServices.GetByIdAsync("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        var user = await _userServices.GetByIdAsync(userId.ToString());
         var userDto = _mapper.Map<AgentSaveViewModel>(user.Value);
         userDto.PictureUrl = user.Value!.Picture;
         return View(userDto);
@@ -119,7 +121,7 @@ public class AgentController(IPropertyService propertyService
     public async Task<IActionResult> Update(PropertSaveViewModel vm)
     {
 
-        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
@@ -182,6 +184,7 @@ public class AgentController(IPropertyService propertyService
         {
             vm.PictureUrl = PictureHelper.UploadFile(vm.Picture, vm.Id.ToString(), "Users");
         }
+
         var vmDto = _mapper.Map<UserSaveViewModel>(vm);
         vmDto.Picture = vm.PictureUrl!;
         var result = await _userServices.UpdateAgent(vm.Id.ToString(), vmDto);
