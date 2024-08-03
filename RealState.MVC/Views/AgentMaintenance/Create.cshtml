@@ -4,10 +4,10 @@
 
 @{
     Layout = "~/Views/Shared/_LayoutMaintance.cshtml";
-    var role = ViewData["Agents"] as RoleViewModel ?? new();
+	var role = ViewData["AgentRole"] as RoleViewModel ?? new();
 }
 <div class="section-group">
-<form id="registerForm" >
+	<form id="registerForm" asp-controller="AgentMaintenance" asp-action="Create">
     <h2>Create new Agent</h2>
     <hr />
     <div class="row">

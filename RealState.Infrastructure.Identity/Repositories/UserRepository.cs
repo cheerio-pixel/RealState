@@ -31,10 +31,22 @@ namespace RealState.Infrastructure.Identity.Repositories
             return true;
         }
 
+        public async Task<bool> ChangeStatus(string userId, bool status)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user!.EmailConfirmed = status;
+
+            var result = await _userManager.UpdateAsync(user!);
+            if (!result.Succeeded)
+                return false;
+
+            return true;
+        }
+
         public async Task<bool> DeleteAsync(ApplicationUserDTO userDto)
         {
-            var user = _mapper.Map<ApplicationUser>(userDto);
-            var result = await _userManager.DeleteAsync(user);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
+            var result = await _userManager.DeleteAsync(user!);
             if (!result.Succeeded)
                 return false;
             return true;
@@ -59,7 +71,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<ApplicationUserDTO?> GetWithInclude(string userId, List<string> properties)
         {
-            var query = _userManager.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable().AsNoTracking();
 
             foreach (var item in properties)
             {
@@ -71,7 +83,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(List<string> properties)
         {
-            var query = _userManager.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable().AsNoTracking();
 
             foreach (var item in properties)
             {
@@ -83,7 +95,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(UserQueryFilter filters, List<string> properties)
         {
-            var query = FilterQuery(filters);
+            var query = FilterQuery(filters).AsNoTracking();
 
             foreach (var item in properties)
             {
