@@ -23,8 +23,7 @@ namespace RealState.MVC.Controllers
         public IActionResult Index()
         {
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.StateAgent });
-            var agents = result.Value;
-            ViewData["Agents"] = agents;
+            ViewData["Agents"] = result.Value;
             return View();
         }
 
