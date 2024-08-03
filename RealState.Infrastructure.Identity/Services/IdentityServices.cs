@@ -3,11 +3,14 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using AutoMapper;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
@@ -70,17 +73,17 @@ namespace RealState.Infrastructure.Identity.Services
                 };
             #endregion
 
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure :  false);
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
-                return new() 
-                { 
+                return new()
+                {
                     Success = false,
                     Error = "The password is incorrect."
                 };
 
             var userDTO = _mapper.Map<ApplicationUserDTO>(user);
             var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
-            userDTO.Roles = roles.ToList().ConvertAll(x => new ApplicationRoleDTO(x));
+            userDTO.Roles = roles.Select(x => new ApplicationRoleDTO(x)).ToList();
 
             var token = await GenerateJWTokenAsync(user);
 
@@ -96,9 +99,9 @@ namespace RealState.Infrastructure.Identity.Services
         public async Task<ConfirmAccountResponseDTO> ConfirmAccountAsync(ConfirmAccountRequestDTO request)
         {
             var userById = await _userManager.FindByIdAsync(request.UserID);
-            if(userById is null)
-                return new() 
-                { 
+            if (userById is null)
+                return new()
+                {
                     Error = $"There isn't any user with this id: {request.UserID}.",
                     Success = false
                 };
@@ -107,8 +110,8 @@ namespace RealState.Infrastructure.Identity.Services
 
             var result = await _userManager.ConfirmEmailAsync(userById, token);
             if (!result.Succeeded)
-                return new() 
-                { 
+                return new()
+                {
                     Error = result.Errors.First().Description,
                     Success = false
                 };
@@ -183,8 +186,8 @@ namespace RealState.Infrastructure.Identity.Services
             var user = _mapper.Map<ApplicationUser>(saveUser);
 
             //verify if user is a manager or not
-            var managerRolesName = _roleRepository.GetManagementRoles().Select(x=>x.Name).ToList();
-            var isUserManager = saveUser.Roles.Where(x=> managerRolesName.Contains(x.Name)).Count() > 0;
+            var managerRolesName = _roleRepository.GetManagementRoles().Select(x => x.Name).ToList();
+            var isUserManager = saveUser.Roles.Where(x => managerRolesName.Contains(x.Name)).Count() > 0;
             if (isUserManager)
                 user.EmailConfirmed = true;
             #endregion
@@ -302,7 +305,7 @@ namespace RealState.Infrastructure.Identity.Services
             var regex = new Regex(patron);
             return regex.IsMatch(account);
         }
-        
+
         private async Task<string> GenerateJWTokenAsync(ApplicationUser user)
         {
             #region Header
@@ -331,7 +334,7 @@ namespace RealState.Infrastructure.Identity.Services
             var payload = new JwtPayload
                 (
                 issuer: _jwtSettings.Issuer,
-                audience:  _jwtSettings.Audience,
+                audience: _jwtSettings.Audience,
                 claims: tokenClaims,
                 notBefore: DateTime.UtcNow,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes)
