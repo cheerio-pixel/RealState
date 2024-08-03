@@ -14,7 +14,7 @@ using RealState.Application.QueryFilters;
 
 namespace RealState.Api.Controllers.V1
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}")]
     [ApiVersion("1.0")]
     [ApiController]
     public class PropertyTypeController : ControllerBase
@@ -26,20 +26,20 @@ namespace RealState.Api.Controllers.V1
             _sender = sender;
         }
 
-        [HttpPost]
+        [HttpPost("PropertyType")]
         public async Task<IActionResult> Post([FromBody] CreatePropertyTypeCommand cmd)
         {
             await _sender.Send(cmd);
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPut("PropertyType")]
         public async Task<IActionResult> Put([FromBody] UpdatePropertyTypeCommand cmd)
         {
             return Ok(await _sender.Send(cmd));
         }
 
-        [HttpDelete]
+        [HttpDelete("PropertyType")]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
             _ = await _sender.Send(new DeletePropertyTypeCommand()
@@ -49,7 +49,7 @@ namespace RealState.Api.Controllers.V1
             return NoContent();
         }
 
-        [HttpGet("{id:Guid}")]
+        [HttpGet("PropertyType/{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             PropertyTypeDTO propertyTypeDTO = await _sender.Send(new GetByIdPropertyTypeQuery()
@@ -59,7 +59,7 @@ namespace RealState.Api.Controllers.V1
             return Ok(propertyTypeDTO);
         }
 
-        [HttpGet]
+        [HttpGet("PropertyTypes")]
         public async Task<IActionResult> List([FromQuery] PropertyTypeQueryFilter filters)
         {
             List<PropertyTypeDTO> propertyTypeDTOs = await _sender.Send(new GetAllPropertyTypeQuery()

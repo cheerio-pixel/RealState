@@ -15,7 +15,7 @@ using RealState.Application.QueryFilters;
 
 namespace RealState.Api.Controllers.V1
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}")]
     [ApiVersion("1.0")]
     [ApiController]
     public class SalesTypeController : ControllerBase
@@ -27,20 +27,20 @@ namespace RealState.Api.Controllers.V1
             _sender = sender;
         }
 
-        [HttpPost]
+        [HttpPost("SalesType")]
         public async Task<IActionResult> Post([FromBody] CreateSalesTypeCommand cmd)
         {
             await _sender.Send(cmd);
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPut("SalesType")]
         public async Task<IActionResult> Put([FromBody] UpdateSalesTypeCommand cmd)
         {
             return Ok(await _sender.Send(cmd));
         }
 
-        [HttpDelete]
+        [HttpDelete("SalesType")]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
             _ = await _sender.Send(new DeleteSalesTypeCommand()
@@ -60,7 +60,7 @@ namespace RealState.Api.Controllers.V1
             return Ok(propertyTypeDTO);
         }
 
-        [HttpGet]
+        [HttpGet("SalesTypes")]
         public async Task<IActionResult> List([FromQuery] SalesTypesQueryFilter filters)
         {
             List<SalesTypeDTO> propertyTypeDTOs = await _sender.Send(new GetAllSalesTypeQuery()

@@ -12,7 +12,7 @@ using RealState.Application.QueryFilters.User;
 
 namespace RealState.Api.Controllers.V1
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}")]
     [ApiVersion("1.0")]
     [ApiController]
     public class AgentController : ControllerBase
@@ -24,7 +24,7 @@ namespace RealState.Api.Controllers.V1
             _sender = sender;
         }
 
-        [HttpPatch("{id}/Status")]
+        [HttpPatch("Agent/{id}/Status")]
         public async Task<IActionResult> ChangeStatus([FromRoute] string id, bool status)
         {
             await _sender.Send(new ChangeStatusAgentCommand ()
@@ -35,21 +35,21 @@ namespace RealState.Api.Controllers.V1
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet("Agents")]
         public async Task<IActionResult> Get([FromQuery] AgentQueryFilter filter)
         {
              var result = await _sender.Send(new GetAllAgentQuery() { Filter = filter});
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Agent/{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
             var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = id});
             return Ok(result);
         }
 
-        [HttpGet("{id}/Properties")]
+        [HttpGet("Agent/{id}/Properties")]
         public async Task<IActionResult> GetAgentProperties(string Id)
         {
             var result = await _sender.Send(new GetPropertiesByAgentQuery() { AgentId = Id });
