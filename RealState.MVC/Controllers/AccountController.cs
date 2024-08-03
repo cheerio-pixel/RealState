@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using RealState.Application.Enums;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.ViewModel.Account;
@@ -8,10 +12,11 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
-    public class AccountController(IAccountServices accountServices, IRoleServices roleServices) : Controller
+    public class AccountController(IAccountServices accountServices, IRoleServices roleServices, ILogger<AccountController> logger) : Controller
     {
         private readonly IAccountServices _accountServices = accountServices;
         private readonly IRoleServices _roleServices = roleServices;
+        private readonly ILogger<AccountController> _logger = logger;
 
         public IActionResult SignIn()
             => View();
@@ -27,7 +32,8 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(login);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(ChooseRole));
+            // return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Register()
@@ -63,7 +69,7 @@ namespace RealState.MVC.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Success"] = false;
-                return View(confimAccountVw); 
+                return View(confimAccountVw);
             }
 
             var result = await _accountServices.ConfirmAccountAsync(confimAccountVw);
@@ -97,7 +103,7 @@ namespace RealState.MVC.Controllers
             return View(nameof(SignIn));
         }
 
-        public IActionResult ResetPassword(string Token, string UserId) => View(new ResetPasswordViewModel() { Token = Token, UserId = UserId});
+        public IActionResult ResetPassword(string Token, string UserId) => View(new ResetPasswordViewModel() { Token = Token, UserId = UserId });
 
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel ResetPasswordVm)
@@ -124,8 +130,23 @@ namespace RealState.MVC.Controllers
 
         public IActionResult AccessDenied()
         {
-            
             return View();
+        }
+
+        [Authorize]
+        public IActionResult ChooseRole()
+        {
+            string role = User.FindFirstValue(ClaimTypes.Role) ?? string.Empty;
+            if (!Enum.IsDefined(typeof(RoleTypes), role))
+            {
+                // Do not throw exception, log it
+                _logger.LogError("Unknown role {Role} when coming from {PreviousUrl}",
+                                   role,
+                                   Request.Headers.Referer);
+                role = "Home";
+            }
+
+            return RedirectToAction("Index", role);
         }
     }
 }
