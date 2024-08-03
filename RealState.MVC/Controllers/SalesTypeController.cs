@@ -1,5 +1,8 @@
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.SalesType;
@@ -9,6 +12,7 @@ using RealState.MVC.Models;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class SalesTypeController(ISalesTypesService salesTypesService)
         : CrudController<SalesTypeSaveViewModel, SalesTypeViewModel, SalesTypes, Guid, ISalesTypesService>(salesTypesService, "SalesType", "Index")
     {

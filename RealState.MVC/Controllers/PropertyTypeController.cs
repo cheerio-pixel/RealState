@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Interfaces.Services;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.PropertyType;
 using RealState.Domain.Entities;
 using RealState.MVC.Common;

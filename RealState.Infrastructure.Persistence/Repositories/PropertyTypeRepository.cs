@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.DTOs.PropertyType;
 using RealState.Application.Interfaces.Repositories;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;
 using RealState.Infrastructure.Persistence.Context;
 

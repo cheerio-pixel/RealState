@@ -5,7 +5,7 @@ using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.PropertyType;
 using RealState.Domain.Entities;
 
