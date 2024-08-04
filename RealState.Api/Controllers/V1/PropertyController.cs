@@ -29,17 +29,23 @@ namespace RealState.Api.Controllers.V1
 
         [HttpGet("Code/{code}/Property/")]
         [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
-        public async Task<IActionResult> GetByCode([FromRoute] GetByCodeQuery id)
+        public async Task<IActionResult> GetByCode([FromRoute] string code)
         {
-            PropertyDTO propertyTypeDTO = await _sender.Send(id);
+            PropertyDTO propertyTypeDTO = await _sender.Send(new GetByCodeQuery()
+            {
+                Code = code
+            });
             return Ok(propertyTypeDTO);
         }
 
         [HttpGet("Property/{id:Guid}")]
         [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
-        public async Task<IActionResult> GetById([FromRoute] GetByIdPropertyQuery id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            PropertyDTO propertyTypeDTO = await _sender.Send(id);
+            PropertyDTO propertyTypeDTO = await _sender.Send(new GetByIdPropertyQuery()
+            {
+                Id = id
+            });
             return Ok(propertyTypeDTO);
         }
 
