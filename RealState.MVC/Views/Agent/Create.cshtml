@@ -21,8 +21,7 @@
             }
            
         </div>
-        @(Html.ValidationSummary(true))
-        <form asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
+        <form asp-controller="AgentController" asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
             <!--Section 1-->
             @if (id != null)
             {

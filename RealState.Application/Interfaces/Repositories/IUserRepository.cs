@@ -26,5 +26,6 @@ namespace RealState.Application.Interfaces.Repositories
         public IEnumerable<ApplicationUserDTO> GetWithInclude(List<string> properties);
 
         public IEnumerable<ApplicationUserDTO> GetWithInclude(UserQueryFilter filters, List<string> properties);
+        Task<UserStatisticsDto> GetUserStatisticsAsync();
     }
 }

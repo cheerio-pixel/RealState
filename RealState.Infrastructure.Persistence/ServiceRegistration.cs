@@ -23,6 +23,7 @@ namespace RealState.Infrastructure.Persistence
             services.AddTransient<IUpgradesRepository, UpgradesRepository>();
             services.AddTransient<IPictureRepository, PictureRepository>();
             services.AddTransient<IPropertyUpgradeRepository, PropertyUpgradeRepository>();
+            services.AddTransient<IFavoriteRepository, FavoriteRepository>();
             #endregion
         }
     }

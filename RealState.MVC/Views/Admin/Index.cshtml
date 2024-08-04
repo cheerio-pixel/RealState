@@ -1,0 +1,58 @@
+﻿@using RealState.Application.DTOs.User;
+@{
+        ViewBag.Title = "Dashboard";
+    UserStatisticsDto userStatistcs = ViewBag.UserStatistcs;
+
+}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tarjeta para agente activo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-active">
+                <div class="card-header">Agente Activo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@userStatistcs</h2>
+                </div>
+                <div class="card-footer text-end">
+                 
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta para agente inactivo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-inactive">
+                <div class="card-header">Agente Inactivo</div>
+                <div class="card-body">
+                   <h2 style="text-align:center">100</h2>
+                </div>
+                <div class="card-footer text-end">
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Tarjeta para agente activo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-active">
+                <div class="card-header">Agente Activo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">100</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta para agente inactivo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-inactive">
+                <div class="card-header">Agente Inactivo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">100</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

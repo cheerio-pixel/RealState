@@ -163,5 +163,10 @@ namespace RealState.Application.Services
             var result = await _userRepository.UpdateAsync(_mapper.Map<SaveApplicationUserDTO>(user));
             return result ? Unit.T : "There is a problem updating user";
         }
-    }
+
+        public async Task<UserStatisticsDto> UserStatisticsDtoAsync()
+        {
+            return await _userRepository.GetUserStatisticsAsync();
+        }
+   }
 }

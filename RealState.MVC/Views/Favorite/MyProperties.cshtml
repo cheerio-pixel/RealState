@@ -1,0 +1,82 @@
+﻿@using RealState.Application.Enums
+@using RealState.Application.ViewModel.Favorite
+@{
+        ViewData["Title"] = "My Properties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<FavoriteViewModel> favorites = ViewBag.Favorites;
+}
+
+<div class="main-body">
+    <div class="header">
+        <div class="title">
+            <h1> RealState Dom</h1>
+            <div class="descripcion">
+                <p>Los mejores en romper precios</p>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+       
+<div class="container mt-5" style="padding-left:0;">
+    @if (favorites.Count > 0)
+    {
+        <h1 style="margin-bottom:30px;text-align:center">My Favorite Properties</h1>
+        @foreach (var favorite in favorites)
+        {
+            <div class="card-house">
+                <div class="header-house">
+                    <img src="@favorite.Property!.Pictures.FirstOrDefault()!.Picture" alt="house" />
+                </div>
+                <div class="description-house">
+                    <div class="title">
+                        <h2>@favorite.Property!.Name</h2>
+                        <p style="margin:0; margin-right:5px;">Code: <strong>@favorite.Property!.Code</strong></p>
+                    </div>
+                    <div class="description">
+                        <p>@favorite.Property!.Description</p>
+                    </div>
+                    <div>
+                        <p><b>Tipo de venta</b></p>
+                        <p>@favorite.Property!.SalesTypes.Name</p>
+                    </div>
+                    <div>
+                        <p><b>Tipo de Propiedad</b></p>
+                        <p>@favorite.Property!.PropertyTypes.Name</p>
+                    </div>
+                    <div class="characteristics">
+                        <div class="tag-house">
+                            <i class="fa-solid fa-bed" style="font-size:15px"></i>
+                            <p>@favorite.Property!.Rooms</p>
+                        </div>
+                        <div class="tag-house">
+                            <i class="fa-solid fa-bath"></i>
+                            <p>@favorite.Property!.Bathrooms</p>
+                        </div>
+                        <div class="tag-house">
+                            <i class="fa-solid fa-ruler"></i>
+                            <p>@favorite.Property!.Meters m2</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="price">
+                        <p>@favorite.Property!.Price.ToString("C")</p>
+                    </div>
+
+                    <form method="post" asp-controller="Favorite" asp-action=@("RemoveFavorite")>
+                          <input type="hidden" name="favoriteId" value="@favorite.Id" />
+                        <input type="hidden" name="returnUrl" value="/Favorite/MyProperties" />
+                         <button type="submit" class="btn btn-primary">Remove from favorites</button>
+                    </form>
+                  
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <h1>No properties found</h1>
+    }
+</div>
+    </div>

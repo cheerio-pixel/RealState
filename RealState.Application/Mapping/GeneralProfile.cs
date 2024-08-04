@@ -13,6 +13,7 @@ using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.SalesType;
 using RealState.Application.DTOs.User;
 using RealState.Application.ViewModel.Account;
+using RealState.Application.ViewModel.Favorite;
 using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
@@ -29,11 +30,17 @@ namespace RealState.Application.Mapping
     {
         public GeneralProfile()
         {
+
+            #region Favorite
+            CreateMap<FavoriteSaveViewModel, Favorite>().ReverseMap();
+            CreateMap<FavoriteViewModel, Favorite>().ReverseMap();
+            #endregion
             #region Property
             CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
             CreateMap<PropertyViewModel, Properties>().ReverseMap();
-            CreateMap<PropertyDTO, Properties>().ReverseMap();
-
+            CreateMap<Properties, PropertyDetailsViewModel>()
+                .ForMember(x => x.Upgrade, 
+                opt => opt.MapFrom(src => src.PropertiesUpgrades.Select(x => x.Upgrade).ToList()));
             #endregion
 
             #region Picture
@@ -80,6 +87,7 @@ namespace RealState.Application.Mapping
             CreateMap<PropertiesUpgrades, PropertyUpgradeSaveViewModel>().ReverseMap();
             CreateMap<PropertiesUpgrades, PropertyUpgradeViewModel>().ReverseMap();
             CreateMap<PropertSaveViewModel, PropertyUpgradeSaveViewModel>();
+            CreateMap<UpgradesViewModel, Upgrades>().ReverseMap();
             #endregion
 
             CreateMap<PropertyTypeDTO, PropertyTypes>().ReverseMap();

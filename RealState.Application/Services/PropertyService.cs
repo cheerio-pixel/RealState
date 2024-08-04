@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
-using RealState.Application.ViewModel.Pictures;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.Property;
 using RealState.Domain.Entities;
 
@@ -12,12 +11,14 @@ namespace RealState.Application.Services
 {
     public class PropertyService(IPropertyRepository propertyRepository, IMapper mapper,
         IPropertyUpgradeService propertyUpgradeService,
+        IUserServices userServices,
         IPictureService pictureService) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
     {
         private readonly IMapper _mapper = mapper;
         private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
         private readonly IPropertyRepository _propertyRepository = propertyRepository;
         private readonly IPictureService _pictureService = pictureService;
+        private readonly IUserServices _userServices = userServices;
 
         public override async Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
         {
@@ -78,6 +79,23 @@ namespace RealState.Application.Services
         {
             IEnumerable<Guid> ids = await _propertyRepository.GetPropertyIdsByAgentId(agentId);
             await Task.WhenAll(ids.Select(Delete));
+        }
+
+        public async Task<Result<List<PropertyViewModel>>> ListPropertiesQueryable(PropertyQueryFilter filter)
+        {
+            List<Properties> properties = await _propertyRepository.ListProperties(filter);
+            return _mapper.Map<List<PropertyViewModel>>(
+                properties
+            );
+        }
+
+        public async Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id)
+        {
+            var property = await _propertyRepository.GetByIdWithInclude(id);
+            var propertyMapper = _mapper.Map<PropertyDetailsViewModel>(property);
+            var userResult = await _userServices.GetByIdAsync(property!.AgentId.ToString());
+            propertyMapper.ApplicationUser = userResult.Value!;
+            return propertyMapper;
         }
     }
 }
