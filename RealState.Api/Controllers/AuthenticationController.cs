@@ -1,8 +1,12 @@
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Commands.Authentication.Login;
+using RealState.Application.Commands.Authentication.Register;
+using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 
 namespace RealState.Api.Controllers
 {
@@ -23,6 +27,27 @@ namespace RealState.Api.Controllers
         {
             LoginCommandResponse loginCommandResponse = await _sender.Send(cmd);
             return Ok(loginCommandResponse);
+        }
+
+        [HttpPost("Register/Developer")]
+        public async Task<IActionResult> RegisterDeveloper(RegisterCommand cmd)
+        {
+            cmd.Role = RoleTypes.Developer;
+            ApplicationUserDTO applicationUserDTO = await _sender.Send(
+                cmd
+            );
+            return Ok(applicationUserDTO);
+        }
+
+        [HttpPost("Register/Administrator")]
+        [Authorize(Roles = nameof(RoleTypes.Admin))]
+        public async Task<IActionResult> RegisterAdministrator(RegisterCommand cmd)
+        {
+            cmd.Role = RoleTypes.Admin;
+            ApplicationUserDTO applicationUserDTO = await _sender.Send(
+                cmd
+            );
+            return Ok(applicationUserDTO);
         }
     }
 }
