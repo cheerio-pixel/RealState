@@ -415,3 +415,26 @@
     flex-direction: column;
     margin-bottom: 20px;
 }
+
+
+/*Card user*/
+
+.card-active {
+    border: 2px solid #28a745; /* Verde para agentes activos */
+}
+
+.card-inactive {
+    border: 2px solid #dc3545; /* Rojo para agentes inactivos */
+}
+
+.card-active .card-header,
+.card-active .card-footer {
+    background-color: #28a745;
+    color: white;
+}
+
+.card-inactive .card-header,
+.card-inactive .card-footer {
+    background-color: #dc3545;
+    color: white;
+}

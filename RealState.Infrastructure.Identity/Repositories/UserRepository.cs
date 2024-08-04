@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.QueryFilters.User;
@@ -54,7 +55,7 @@ namespace RealState.Infrastructure.Identity.Repositories
 
         public async Task<ApplicationUserDTO?> Get(string userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Id == userId);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             return _mapper.Map<ApplicationUserDTO?>(user);
         }
 
@@ -120,12 +121,12 @@ namespace RealState.Infrastructure.Identity.Repositories
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userDto.Id);
             _mapper.Map(userDto, user);
             var result = await _userManager.UpdateAsync(user!);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
                 return false;
 
-            if(userDto.Password is not null)
+            if (userDto.Password is not null)
             {
-                result =  await ChangePassword(user!, userDto.Password);
+                result = await ChangePassword(user!, userDto.Password);
                 if (!result.Succeeded)
                     return false;
             }
@@ -170,6 +171,47 @@ namespace RealState.Infrastructure.Identity.Repositories
                              .Where(u => u.Roles.Select(r => r.Name).Contains(filters.Role.ToString()));
 
             return query;
+        }
+
+        public async Task<UserStatisticsDto> GetUserStatisticsAsync()
+        {
+            var userStatistics = new UserStatisticsDto
+            {
+                // Obtener conteos directamente desde la base de datos utilizando IQueryable
+                AdminActive = await _userManager.Users
+                .Where(u => u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Admin)))
+                .CountAsync(),
+
+                AdminInactive = await _userManager.Users
+                .Where(u => !u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Admin)))
+                .CountAsync(),
+
+                ClientActive = await _userManager.Users
+                .Where(u => u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Client)))
+                .CountAsync(),
+
+                ClientInactive = await _userManager.Users
+                .Where(u => !u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Client)))
+                .CountAsync(),
+
+                AgentActive = await _userManager.Users
+                .Where(u => u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.StateAgent)))
+                .CountAsync(),
+
+                AgentInactive = await _userManager.Users
+                .Where(u => !u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.StateAgent)))
+                .CountAsync(),
+
+                DeveloperActive = await _userManager.Users
+                .Where(u => u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Developer)))
+                .CountAsync(),
+
+                DeveloperInactive = await _userManager.Users
+                .Where(u => !u.EmailConfirmed && u.Roles.Any(r => r.Name == nameof(RoleTypes.Developer)))
+                .CountAsync()
+            };
+
+            return userStatistics;
         }
     }
 }
