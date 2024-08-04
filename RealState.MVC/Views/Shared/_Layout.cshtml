@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using RealState.Application.Enums
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,13 +36,23 @@
                     <li><a href="/home" class="nav-item nav-link active text-dark">Home</a></li>
                     <li><a href="/home/agents" class="nav-item nav-link text-dark">Agent</a></li>
                    
-                  @{
-                      if(User!.Identity!.IsAuthenticated)
-                      {
+                        @{
+                            if(User!.Identity!.IsAuthenticated)
+                            {
+
+                                var roleClaim = User.Identities.FirstOrDefault()?.FindFirst(ClaimTypes.Role)?.Value;
+                                RoleTypes userRole;
+                                var isRoleParsed = Enum.TryParse(roleClaim, out userRole);
+
+                                if (isRoleParsed && userRole == RoleTypes.Client)
+                                {
+                                    <li><a href="/Favorite/MyProperties" class="nav-item nav-link text-dark">My Properties</a></li>
+                                }
                                 <li><a href="/Account/LogOut" class="nav-item nav-link text-dark">Logout</a></li>
                       }
                       else
                       {
+                          
                                 <li class="dropdown">
                                     <a href="/Account/Register" class="nav-item nav-link text-dark" data-toggle="dropdown">Meet App</a>
                                 </li>
