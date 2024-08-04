@@ -1,10 +1,8 @@
 using MediatR;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Commands.Authentication.Login;
-using RealState.Application.DTOs.Account.Authentication;
 
 namespace RealState.Api.Controllers
 {

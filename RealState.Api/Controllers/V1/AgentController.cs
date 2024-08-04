@@ -27,7 +27,7 @@ namespace RealState.Api.Controllers.V1
         [HttpPatch("Agent/{id}/Status")]
         public async Task<IActionResult> ChangeStatus([FromRoute] string id, bool status)
         {
-            await _sender.Send(new ChangeStatusAgentCommand ()
+            await _sender.Send(new ChangeStatusAgentCommand()
             {
                 AgentId = id,
                 Status = status
@@ -38,14 +38,14 @@ namespace RealState.Api.Controllers.V1
         [HttpGet("Agents")]
         public async Task<IActionResult> Get([FromQuery] AgentQueryFilter filter)
         {
-             var result = await _sender.Send(new GetAllAgentQuery() { Filter = filter});
+            var result = await _sender.Send(new GetAllAgentQuery() { Filter = filter });
             return Ok(result);
         }
 
         [HttpGet("Agent/{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = id});
+            var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = id });
             return Ok(result);
         }
 
