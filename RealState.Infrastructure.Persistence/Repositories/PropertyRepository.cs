@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
@@ -7,7 +8,8 @@ using RealState.Infrastructure.Persistence.Context;
 
 namespace RealState.Infrastructure.Persistence.Repositories
 {
-    public class PropertyRepository(MainContext context) : GenericRepository<Properties>(context), IPropertyRepository
+    public class PropertyRepository(MainContext context)
+    : GenericRepository<Properties>(context), IPropertyRepository
     {
         private readonly DbSet<Properties> _properties = context.Set<Properties>();
 
@@ -31,6 +33,15 @@ namespace RealState.Infrastructure.Persistence.Repositories
             return _properties.Where(p => p.AgentId == agentId)
                               .Count()
                               .AsTask();
+        }
+
+        public async Task<IEnumerable<Guid>> GetPropertyIdsByAgentId(Guid agentId)
+        {
+            return await (
+                from p in _properties
+                where p.AgentId == agentId
+                select p.Id
+            ).ToListAsync();
         }
     }
 }
