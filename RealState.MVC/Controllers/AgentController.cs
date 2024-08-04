@@ -1,11 +1,7 @@
 using AutoMapper;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using RealState.Application.DTOs.User;
 using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
@@ -126,7 +122,7 @@ public class AgentController(IPropertyService propertyService
             return View(vm);
         }
 
-        return RedirectToAction("index", "Agent");
+        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("/Agent/index");
     }
 
     [HttpPost]

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using RealState.Application.Enums
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,43 +9,68 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RealState.MVC.styles.css" asp-append-version="true" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
       <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@glidejs/glide/dist/css/glide.core.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@glidejs/glide/dist/css/glide.theme.min.css">
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/@@glidejs/glide"></script>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RealState.MVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-controller="Account" asp-action="SignIn">Login</a>
-						</li>
-					</ul>
-                </div>
+<header class="header-area overlay">
+    <nav class="navbar navbar-expand-md navbar-white">
+        <div class="container">
+            <a href="#" class="navbar-brand text-dark"><strong>RealStateRD.com</strong></a>
+
+            <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-nav">
+                <span class="menu-icon-bar"></span>
+                <span class="menu-icon-bar"></span>
+                <span class="menu-icon-bar"></span>
+            </button>
+
+            <div id="main-nav" class="collapse navbar-collapse text-dark" style="color:black;">
+                <ul class="navbar-nav ml-auto">
+                    <li><a href="/home" class="nav-item nav-link active text-dark">Home</a></li>
+                    <li><a href="/home/agents" class="nav-item nav-link text-dark">Agent</a></li>
+                   
+                        @{
+                            if(User!.Identity!.IsAuthenticated)
+                            {
+
+                                var roleClaim = User.Identities.FirstOrDefault()?.FindFirst(ClaimTypes.Role)?.Value;
+                                RoleTypes userRole;
+                                var isRoleParsed = Enum.TryParse(roleClaim, out userRole);
+
+                                if (isRoleParsed && userRole == RoleTypes.Client)
+                                {
+                                    <li><a href="/Favorite/MyProperties" class="nav-item nav-link text-dark">My Properties</a></li>
+                                }
+                                <li><a href="/Account/LogOut" class="nav-item nav-link text-dark">Logout</a></li>
+                      }
+                      else
+                      {
+                          
+                                <li class="dropdown">
+                                    <a href="/Account/Register" class="nav-item nav-link text-dark" data-toggle="dropdown">Meet App</a>
+                                </li>
+                          <li><a href="/Account/Signin" class="nav-item nav-link text-dark">Login</a></li>
+                         
+                      }
+                  }
+                   
+                </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container">
+        </div>
+    </nav>
+</header>
+
         <main role="main" class="pb-3">
-            @RenderBody()
+        @RenderBody()
         </main>
-    </div>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

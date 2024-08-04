@@ -2,6 +2,7 @@
 
 using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
+using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;
 using RealState.Infrastructure.Persistence.Context;
 
@@ -26,11 +27,45 @@ namespace RealState.Infrastructure.Persistence.Repositories
             return await _properties.Where(x => x.AgentId == agentId).Include(x => x.Pictures).ToListAsync();
         }
 
+        public async Task<List<Properties>> ListProperties(PropertyQueryFilter filter)
+        {
+            IQueryable<Properties> properties = _properties.AsQueryable();
+            if(filter.PropertyTypeId != null)
+            {
+                properties = properties.Where(x => x.PropertyTypeId == filter.PropertyTypeId);
+            }
+            if (filter.Bathrooms != 0)
+            {
+                properties = properties.Where(x => x.Bathrooms == filter.Bathrooms);
+            }
+            if (filter.Rooms != 0)
+            {
+                properties = properties.Where(x => x.Rooms == filter.Rooms);
+            }
+            if (filter.Price != 0)
+            {
+                properties = properties.Where(x => x.Price >= filter.Price);
+            }
+
+            return await properties.Include(x => x.Pictures).Include(x => x.PropertyTypes).Include(x => x.SalesTypes).ToListAsync();
+        }
+
+        public async Task<Properties?> GetByIdWithInclude(Guid id)
+        {
+            return await _properties
+                .Include(x => x.Pictures)
+                .Include(x => x.PropertyTypes)
+                .Include(x => x.SalesTypes)
+                .Include(x => x.PropertiesUpgrades)
+                .ThenInclude(x => x.Upgrade)
+                .FirstOrDefaultAsync(x => x.Id == id)!;
+        }
+
         public Task<int> GetNumberOfPropertiesOfAgent(Guid agentId)
         {
             return _properties.Where(p => p.AgentId == agentId)
-                              .Count()
-                              .AsTask();
+                            .Count()
+                            .AsTask();
         }
     }
 }

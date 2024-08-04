@@ -162,6 +162,11 @@ namespace RealState.Application.Services
             return !result ? (Result<Unit>)ErrorType.Any.Because($"There is a problem updating user") : (Result<Unit>)Unit.T;
         }
 
+        public async Task<UserStatisticsDto> UserStatisticsDtoAsync()
+        {
+            return await _userRepository.GetUserStatisticsAsync();
+        }   
+
 
     }
 }

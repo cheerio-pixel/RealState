@@ -1,8 +1,5 @@
-﻿using System.Security.Claims;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using RealState.Application.Enums;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
@@ -125,7 +122,7 @@ namespace RealState.MVC.Controllers
         public async Task<IActionResult> LogOut()
         {
             await _accountServices.SignOutAsync();
-            return View(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult AccessDenied()
@@ -148,7 +145,7 @@ namespace RealState.MVC.Controllers
             role = roleT switch
             {
                 RoleTypes.Admin => "AdminMaintenance",
-                RoleTypes.Client => throw new NotImplementedException(),
+                RoleTypes.Client => "home",
                 RoleTypes.StateAgent => "Agent",
                 _ => "Home"
             };
