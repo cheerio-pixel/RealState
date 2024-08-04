@@ -12,6 +12,7 @@ namespace RealState.Application.Interfaces.Repositories
         Task<Properties?> GetByIdWithPictures(Guid id);
         Task<List<Properties>> ListProperties(PropertyQueryFilter filter);
         Task<Properties?> GetByIdWithInclude(Guid id);
+        Task<Properties?> GetByCode(string code);
         Task<int> GetNumberOfPropertiesOfAgent(Guid agentId);
     }
 }
