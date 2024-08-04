@@ -20,7 +20,7 @@ namespace RealState.Application.Services
         private readonly IPictureService _pictureService = pictureService;
         private readonly IUserServices _userServices = userServices;
 
-        public async override Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
+        public override async Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
         {
             var property = _mapper.Map<Properties>(vm);
 
@@ -75,10 +75,18 @@ namespace RealState.Application.Services
             await base.Delete(id);
         }
 
+        public async Task DeletePropertiesOfAgent(Guid agentId)
+        {
+            IEnumerable<Guid> ids = await _propertyRepository.GetPropertyIdsByAgentId(agentId);
+            await Task.WhenAll(ids.Select(Delete));
+        }
+
         public async Task<Result<List<PropertyViewModel>>> ListPropertiesQueryable(PropertyQueryFilter filter)
         {
-            var propertyMap = _mapper.Map<List<PropertyViewModel>>(await _propertyRepository.ListProperties(filter));
-            return propertyMap;
+            List<Properties> properties = await _propertyRepository.ListProperties(filter);
+            return _mapper.Map<List<PropertyViewModel>>(
+                properties
+            );
         }
 
         public async Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id)
