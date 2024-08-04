@@ -119,7 +119,6 @@ public class AgentController(IPropertyService propertyService
         {
             ModelState.AggregateErrors(propertyUpgradeResult.Errors);
             await _propertyService.Delete(property.Id);
-            await _pictureService.DeleteByPropertyId(property.Id);
             return View(vm);
         }
 
