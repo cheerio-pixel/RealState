@@ -184,6 +184,7 @@ public class AgentController(IPropertyService propertyService
     [HttpPost]
     public async Task<IActionResult> Profile(AgentSaveViewModel vm)
     {
+        ModelState.Remove(nameof(vm.Picture));
         if (!ModelState.IsValid)
         {
             return View(vm);
