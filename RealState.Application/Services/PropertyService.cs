@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
@@ -11,14 +12,13 @@ namespace RealState.Application.Services
 {
     public class PropertyService(IPropertyRepository propertyRepository, IMapper mapper,
         IPropertyUpgradeService propertyUpgradeService,
-        IUserServices userServices,
-        IPictureService pictureService) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
+        IPictureService pictureService, IUserRepository userRepository) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
     {
         private readonly IMapper _mapper = mapper;
         private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
         private readonly IPropertyRepository _propertyRepository = propertyRepository;
         private readonly IPictureService _pictureService = pictureService;
-        private readonly IUserServices _userServices = userServices;
+        private readonly IUserRepository _userRepository = userRepository;
 
         public override async Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
         {
@@ -93,8 +93,8 @@ namespace RealState.Application.Services
         {
             var property = await _propertyRepository.GetByIdWithInclude(id);
             var propertyMapper = _mapper.Map<PropertyDetailsViewModel>(property);
-            var userResult = await _userServices.GetByIdAsync(property!.AgentId.ToString());
-            propertyMapper.ApplicationUser = userResult.Value!;
+            var userResult = await _userRepository.Get(property!.AgentId.ToString());
+            propertyMapper.ApplicationUser = userResult!;
             return propertyMapper;
         }
     }
