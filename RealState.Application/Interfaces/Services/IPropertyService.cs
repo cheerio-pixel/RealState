@@ -8,5 +8,6 @@ namespace RealState.Application.Interfaces.Services
     {
         Task<Result<PropertyViewModel>> GetByIdWithPictures(Guid id);
         Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId);
+        Task DeletePropertiesOfAgent(Guid agentId);
     }
 }
