@@ -126,12 +126,12 @@
                                     {
                                         if (Model.UpgradeId.Any(x => x == item.Id))
                                         {
-                                            <option value="@item.Id" selected>@item.Name
+                                            <option class="option-pressed" value="@item.Id" selected>@item.Name
                                             </option>
                                         }
                                         else
                                         {
-                                            <option value="@item.Id">@item.Name</option>
+                                            <option class="option-pressed" value="@item.Id">@item.Name</option>
                                         }
                                     }
                                 }
@@ -221,6 +221,11 @@
             reader.readAsDataURL(file);
         }
     });
+     $('.option-pressed').mousedown(function(e) {
+         e.preventDefault();
+         $(this).prop('selected', !$(this).prop('selected'));
+         return false;
+});
 
 
 
