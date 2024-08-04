@@ -6,7 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.DTOs.Property;
 using RealState.Application.Enums;
+using RealState.Application.Queries.Property.GetAll;
+using RealState.Application.Queries.Property.GetByCode;
+using RealState.Application.Queries.Property.GetById;
+using RealState.Application.QueryFilters;
 
 namespace RealState.Api.Controllers.V1
 {
@@ -26,36 +31,33 @@ namespace RealState.Api.Controllers.V1
         [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> GetByCode([FromRoute] string code)
         {
-            // PropertyDTO propertyTypeDTO = await _sender.Send(new GetByIdUpgradeQuery()
-            // {
-            //     Id = id
-            // });
-            // return Ok(propertyTypeDTO);
-            throw new NotImplementedException();
+            PropertyDTO propertyTypeDTO = await _sender.Send(new GetByCodeQuery()
+            {
+                Code = code
+            });
+            return Ok(propertyTypeDTO);
         }
 
         [HttpGet("Property/{id:Guid}")]
         [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            // PropertyDTO propertyTypeDTO = await _sender.Send(new GetByIdUpgradeQuery()
-            // {
-            //     Id = id
-            // });
-            // return Ok(propertyTypeDTO);
-            throw new NotImplementedException();
+            PropertyDTO propertyTypeDTO = await _sender.Send(new GetByIdPropertyQuery()
+            {
+                Id = id
+            });
+            return Ok(propertyTypeDTO);
         }
 
         [HttpGet("Properties")]
         [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
-        public async Task<IActionResult> List(/* [FromQuery] PropertysQueryFilter filters */)
+        public async Task<IActionResult> List([FromQuery] PropertyQueryFilter filters)
         {
-            // List<PropertyDTO> propertyTypeDTOs = await _sender.Send(new GetAllUpgradeQuery()
-            // {
-            //     Filters = filters
-            // });
-            // return Ok(propertyTypeDTOs);
-            throw new NotImplementedException();
+            List<PropertyDTO> propertyTypeDTOs = await _sender.Send(new GetAllPropertyQuery()
+            {
+                Filter = filters
+            });
+            return Ok(propertyTypeDTOs);
         }
     }
 }

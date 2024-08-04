@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
@@ -21,8 +22,9 @@ namespace RealState.Application.Services
         private readonly IPictureService _pictureService = pictureService;
         private readonly IUserServices _userServices = userServices;
         private readonly IFavoriteRepository _favoriteRepository = favoriteRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public async override Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
+        public override async Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
         {
             var property = _mapper.Map<Properties>(vm);
 
@@ -78,18 +80,26 @@ namespace RealState.Application.Services
             await base.Delete(id);
         }
 
+        public async Task DeletePropertiesOfAgent(Guid agentId)
+        {
+            IEnumerable<Guid> ids = await _propertyRepository.GetPropertyIdsByAgentId(agentId);
+            await Task.WhenAll(ids.Select(Delete));
+        }
+
         public async Task<Result<List<PropertyViewModel>>> ListPropertiesQueryable(PropertyQueryFilter filter)
         {
-            var propertyMap = _mapper.Map<List<PropertyViewModel>>(await _propertyRepository.ListProperties(filter));
-            return propertyMap;
+            List<Properties> properties = await _propertyRepository.ListProperties(filter);
+            return _mapper.Map<List<PropertyViewModel>>(
+                properties
+            );
         }
 
         public async Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id)
         {
             var property = await _propertyRepository.GetByIdWithInclude(id);
             var propertyMapper = _mapper.Map<PropertyDetailsViewModel>(property);
-            var userResult = await _userServices.GetByIdAsync(property!.AgentId.ToString());
-            propertyMapper.ApplicationUser = userResult.Value!;
+            var userResult = await _userRepository.Get(property!.AgentId.ToString());
+            propertyMapper.ApplicationUser = userResult!;
             return propertyMapper;
         }
         
