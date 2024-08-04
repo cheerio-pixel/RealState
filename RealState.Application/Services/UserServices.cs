@@ -16,6 +16,7 @@ namespace RealState.Application.Services
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
         private readonly IRoleRepository _roleRepository = roleRepository;
+        private readonly IPropertyService _propertyService = propertyService;
 
         public async Task<Result<Unit>> AddRolesAsync(string userId, List<string> roleIds)
         {
@@ -61,6 +62,10 @@ namespace RealState.Application.Services
             if (!result)
             {
                 return "There is a problem deleting user";
+            }
+            else if (user.Roles.Select(a => a.Name).Contains(nameof(RoleTypes.StateAgent)))
+            {
+                await _propertyService.DeletePropertiesOfAgent(Guid.Parse(userId));
             }
 
             return Unit.T;
