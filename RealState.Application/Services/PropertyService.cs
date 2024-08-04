@@ -3,6 +3,7 @@ using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.Property;
 using RealState.Domain.Entities;
 
@@ -81,9 +82,9 @@ namespace RealState.Application.Services
             await base.Delete(id);
         }
 
-        public async Task<Result<List<PropertyViewModel>>> GetAllWithIncludes()
+        public async Task<Result<List<PropertyViewModel>>> ListPropertiesQueryable(PropertyQueryFilter filter)
         {
-            var propertyMap = _mapper.Map<List<PropertyViewModel>>(await _propertyRepository.GetAllWithInclude());
+            var propertyMap = _mapper.Map<List<PropertyViewModel>>(await _propertyRepository.ListProperties(filter));
             return propertyMap;
         }
 

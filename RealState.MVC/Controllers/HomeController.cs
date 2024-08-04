@@ -1,29 +1,44 @@
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.QueryFilters;
+using RealState.Application.QueryFilters.User;
+
 namespace RealState.MVC.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IPropertyService propertyService,
+                                IPropertyTypeService propertyTypeService,
+                                IUserServices userServices) : Controller
     {
-        private readonly IPropertyService _propertyService;
+        private readonly IPropertyService _propertyService = propertyService;
+        private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
+        public readonly IUserServices _userServices = userServices;
 
-        public HomeController(IPropertyService propertyService)
+        public async Task<IActionResult> Index(PropertyQueryFilter? filter)
         {
-            _propertyService = propertyService;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var result = await _propertyService.GetAllWithIncludes();
-         
+            PropertyQueryFilter propertyQueryFilter = filter ?? new();
+            var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
+            ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
             return View();
         }
 
-        public async  Task<IActionResult> Details()
+        public async Task<IActionResult> Details()
         {
             var test = await _propertyService.GetPropertyDetailsById(Guid.Parse("588BA8F9-614B-4E67-2C61-08DCB3167A35"));
             ViewBag.Property = test.Value;
+            return View();
+        }
+
+        public IActionResult Agents(UserQueryFilter filter)
+        {
+            UserQueryFilter userQueryFilter = filter ?? new()
+            {
+                Role = RoleTypes.StateAgent
+            };
+
+            ViewBag.Agents = _userServices.GetAll(userQueryFilter);
             return View();
         }
     }
