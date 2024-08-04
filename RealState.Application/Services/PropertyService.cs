@@ -59,14 +59,7 @@ namespace RealState.Application.Services
         public async Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId)
         {
             var properties = await _propertyRepository.GetPropertyByAgentId(agentId);
-            var propertyMap = _mapper.Map<List<PropertyViewModel>>(properties);
-
-            foreach (var property in propertyMap)
-            {
-                var pictures = await _pictureService.GetAllByPropertyId(property.Id);
-                property.Pictures.AddRange(pictures.Value);
-            }
-            return propertyMap;
+            return _mapper.Map<List<PropertyViewModel>>(properties);
         }
 
         public override async Task Delete(Guid id)

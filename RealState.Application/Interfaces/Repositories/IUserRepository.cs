@@ -9,6 +9,8 @@ namespace RealState.Application.Interfaces.Repositories
 
         public Task<bool> DeleteAsync(ApplicationUserDTO userDto);
 
+        public Task<bool> ChangeStatus(string userId, bool status);
+
         public Task<bool> AddRolesAsync(ApplicationUserDTO userDto, List<string> roleNames);
 
         public Task<bool> RemoveRolesAsync(ApplicationUserDTO userDto, List<string> roleNames);

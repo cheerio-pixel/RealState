@@ -1,4 +1,4 @@
-namespace RealState.Application.QueryFilters.PropertyType
+namespace RealState.Application.QueryFilters
 {
     public class PropertyTypeQueryFilter
     {

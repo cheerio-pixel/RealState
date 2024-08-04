@@ -1,8 +1,10 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using RealState.Application.Enums;
 using RealState.Application.Interfaces.Services;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.PropertyType;
 using RealState.Domain.Entities;
 using RealState.MVC.Common;
@@ -10,6 +12,7 @@ using RealState.MVC.Models;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class PropertyTypeController
     : CrudController<PropertyTypeSaveViewModel, PropertyTypeViewModel, PropertyTypes, Guid, IPropertyTypeService>
     {

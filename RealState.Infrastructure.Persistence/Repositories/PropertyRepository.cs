@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;

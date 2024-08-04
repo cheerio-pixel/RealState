@@ -2,6 +2,7 @@
 
 using AutoMapper;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
@@ -13,7 +14,12 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
-    public class DeveloperMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
+    public class DeveloperMaintenanceController(
+        IUserServices userServices,
+        IRoleServices roleServices,
+        IAccountServices accountServices,
+        IMapper mapper) : Controller
     {
         private readonly IUserServices _userServices = userServices;
         private readonly IRoleServices _roleServices = roleServices;
@@ -23,26 +29,24 @@ namespace RealState.MVC.Controllers
         public IActionResult Index()
         {
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.Developer });
-            var developers = result.Value;
-            ViewData["Admins"] = developers;
+            ViewData["Developers"] = result.Value;
             return View();
         }
 
-        [HttpPost]
         public async Task<IActionResult> ChangeStatus(string userId, bool status)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userServices.ChangeActiveStatusAsync(userId, currentUserId!, status);
+            var result = await _userServices.ChangeStatusAsync(userId, currentUserId!, status);
             if (result.IsFailure)
             {
                 ModelState.AggregateErrors(result.Errors);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Create()
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Developer.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Developer));
             ViewData["DeveloperRole"] = role.Value;
             return View();
         }
@@ -50,7 +54,7 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Developer.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Developer));
             ViewData["DeveloperRole"] = role.Value;
 
             if (!ModelState.IsValid)
@@ -66,7 +70,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Update(string Id)
@@ -90,7 +94,7 @@ namespace RealState.MVC.Controllers
                 ModelState.AggregateErrors(result.Errors);
                 return View(viewModel);
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

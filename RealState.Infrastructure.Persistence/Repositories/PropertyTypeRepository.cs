@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using RealState.Application.DTOs.PropertyType;
 using RealState.Application.Interfaces.Repositories;
-using RealState.Application.QueryFilters.PropertyType;
+using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;
 using RealState.Infrastructure.Persistence.Context;
 
@@ -17,14 +17,7 @@ namespace RealState.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-
-        public async Task<bool> DoesPropertyTypeNameExists(string name, Guid? idToExclude)
-        {
-            // return await _context.PropertyTypes.AnyAsync(t => t.Name == name && t.Id != idToExclude);
-            return await PropertyExistsWithValue(e => e.Name, name, idToExclude.GetValueOrDefault());
-        }
-
-        public async Task<List<PropertyTypeListItemDTO>> ListPropertyTypes(PropertyTypeQueryFilter filter)
+        public IQueryable<PropertyTypes> Filter(PropertyTypeQueryFilter filter)
         {
             IQueryable<PropertyTypes> propertyTypeses = _context.PropertyTypes.AsQueryable();
 
@@ -32,7 +25,18 @@ namespace RealState.Infrastructure.Persistence.Repositories
             {
                 propertyTypeses = propertyTypeses.Where(pt => pt.Name.Contains(filter.Name));
             }
+            return propertyTypeses;
+        }
 
+        public async Task<bool> DoesPropertyTypeNameExists(string name, Guid? idToExclude)
+        {
+            // return await _context.PropertyTypes.AnyAsync(t => t.Name == name && t.Id != idToExclude);
+            return await PropertyExistsWithValue(e => e.Name, name, idToExclude.GetValueOrDefault());
+        }
+
+        public async Task<List<PropertyTypeListItemDTO>> ListPropertyTypesWithCount(PropertyTypeQueryFilter filter)
+        {
+            IQueryable<PropertyTypes> propertyTypeses = Filter(filter);
             return await propertyTypeses
                          .AsNoTracking()
                          .Select(pt => new PropertyTypeListItemDTO()
@@ -43,6 +47,11 @@ namespace RealState.Infrastructure.Persistence.Repositories
                              NumberOfProperties = pt.Properties.Count
                          })
                          .ToListAsync();
+        }
+
+        public async Task<List<PropertyTypes>> ListPropertyTypes(PropertyTypeQueryFilter filter)
+        {
+            return await Filter(filter).ToListAsync();
         }
     }
 }

@@ -16,6 +16,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<SetAttributesViewBag>();
 builder.Services.AddCookieConfigurations();
+// Identity uses this, we reference identity. But why is this needed here?
+builder.Services.AddApiVersioning();
 #endregion
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 

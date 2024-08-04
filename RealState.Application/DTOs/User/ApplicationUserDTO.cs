@@ -24,4 +24,5 @@ namespace RealState.Application.DTOs.User
 
         public ICollection<ApplicationRoleDTO> Roles { get; set; } = [];
     }
+
 }

@@ -34,6 +34,18 @@ body {
   margin-bottom: 60px;
 }
 
+.validation-summary-errors {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.validation-summary-errors ul {
+    margin: 2px;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

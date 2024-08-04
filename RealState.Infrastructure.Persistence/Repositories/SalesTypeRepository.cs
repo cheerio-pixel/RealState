@@ -23,7 +23,7 @@ namespace RealState.Infrastructure.Persistence.Repositories
             return await PropertyExistsWithValue(e => e.Name, name, idToExclude.GetValueOrDefault());
         }
 
-        public async Task<List<SalesTypesListItemDTO>> ListSalesTypes(SalesTypesQueryFilter filter)
+        public IQueryable<SalesTypes> Filter(SalesTypesQueryFilter filter)
         {
             IQueryable<SalesTypes> salesTypeses = _context.SalesTypes.AsQueryable();
 
@@ -31,6 +31,17 @@ namespace RealState.Infrastructure.Persistence.Repositories
             {
                 salesTypeses = salesTypeses.Where(st => st.Name.Contains(filter.Name));
             }
+            return salesTypeses;
+        }
+
+        public async Task<List<SalesTypes>> ListSalesTypes(SalesTypesQueryFilter filter)
+        {
+            return await Filter(filter).ToListAsync();
+        }
+
+        public async Task<List<SalesTypesListItemDTO>> ListSalesTypesWithCount(SalesTypesQueryFilter filter)
+        {
+            IQueryable<SalesTypes> salesTypeses = Filter(filter);
 
             return await salesTypeses.Select(st => new SalesTypesListItemDTO()
             {

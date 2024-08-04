@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
+using RealState.Application.Enums;
 using RealState.Infrastructure.Identity.Entities;
 
 namespace RealState.Infrastructure.Identity.Seeds
@@ -26,13 +28,10 @@ namespace RealState.Infrastructure.Identity.Seeds
             var adminByEmail = await userManager.FindByEmailAsync(admin.Email);
             if (adminByEmail is not null) return;
 
-            try
+            var result = await userManager.CreateAsync(admin, "123Pa$$word!");
+            if (result.Succeeded)
             {
-                var result = await userManager.CreateAsync(admin, "123Pa$$word!");
-            }
-            catch (Exception)
-            {
-                throw;
+                await userManager.AddToRoleAsync(admin, nameof(RoleTypes.Admin));
             }
         }
 
@@ -57,13 +56,10 @@ namespace RealState.Infrastructure.Identity.Seeds
             var clientByEmail = await userManager.FindByEmailAsync(client.Email);
             if (clientByEmail is not null) return;
 
-            try
+            var result = await userManager.CreateAsync(client, "123Pa$$word!");
+            if (result.Succeeded)
             {
-                var result = await userManager.CreateAsync(client, "123Pa$$word!");
-            }
-            catch (Exception)
-            {
-                throw;
+                await userManager.AddToRoleAsync(client, nameof(RoleTypes.Client));
             }
         }
 
@@ -88,13 +84,10 @@ namespace RealState.Infrastructure.Identity.Seeds
             var statusAgentByEmail = await userManager.FindByEmailAsync(statusAgent.Email);
             if (statusAgentByEmail is not null) return;
 
-            try
+            var result = await userManager.CreateAsync(statusAgent, "123Pa$$word!");
+            if (result.Succeeded)
             {
-                var result = await userManager.CreateAsync(statusAgent, "123Pa$$word!");
-            }
-            catch (Exception)
-            {
-                throw;
+                await userManager.AddToRoleAsync(statusAgent, nameof(RoleTypes.StateAgent));
             }
         }
     }

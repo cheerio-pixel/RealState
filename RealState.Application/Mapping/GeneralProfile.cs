@@ -1,18 +1,25 @@
 ﻿using AutoMapper;
 
-using RealState.Application.Commands.Property.Create;
-using RealState.Application.DTOs.PropertyType;
-using RealState.Application.DTOs.SalesType;
+using RealState.Application.Commands.Authentication.Register;
+using RealState.Application.Commands.PropertyType.Create;
+using RealState.Application.Commands.PropertyType.Update;
 using RealState.Application.DTOs.Account.Authentication;
 using RealState.Application.DTOs.Account.ConfirmAccount;
 using RealState.Application.DTOs.Account.ForgotPassword;
 using RealState.Application.DTOs.Account.ResetPassword;
+using RealState.Application.DTOs.Property;
+using RealState.Application.DTOs.PropertyType;
 using RealState.Application.DTOs.Role;
+using RealState.Application.DTOs.SalesType;
 using RealState.Application.DTOs.User;
 using RealState.Application.ViewModel.Account;
-using RealState.Application.ViewModel.PropertyType;
+using RealState.Application.ViewModel.Pictures;
+using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
+using RealState.Application.ViewModel.PropertyType;
 using RealState.Application.ViewModel.Role;
+using RealState.Application.ViewModel.SalesType;
+using RealState.Application.ViewModel.Upgrades;
 using RealState.Application.ViewModel.User;
 using RealState.Domain.Entities;
 using RealState.Application.ViewModel.Pictures;
@@ -28,9 +35,7 @@ namespace RealState.Application.Mapping
         public GeneralProfile()
         {
             #region Property
-            CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
             CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
-            CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
             CreateMap<PropertyViewModel, Properties>().ReverseMap();
             CreateMap<Properties, PropertyDetailsViewModel>()
                 .ForMember(x => x.Upgrade, 
@@ -67,6 +72,7 @@ namespace RealState.Application.Mapping
             CreateMap<UserSaveViewModel, SaveApplicationUserDTO>().ReverseMap();
             CreateMap<ApplicationUserDTO, SaveApplicationUserDTO>().ReverseMap();
             CreateMap<ApplicationUserDTO, UserSaveViewModel>().ReverseMap();
+            CreateMap<ApplicationUserDTO, AgentDTO>().ReverseMap();
             CreateMap<ApplicationUserDTO, AgentSaveViewModel>().ForMember(x => x.Picture, x => x.Ignore()).ReverseMap();
             CreateMap<UserSaveViewModel, AgentSaveViewModel>().ForMember(x => x.Picture, x => x.Ignore()).ReverseMap();
             #endregion
@@ -83,6 +89,13 @@ namespace RealState.Application.Mapping
             CreateMap<UpgradesViewModel, Upgrades>().ReverseMap();
             #endregion
 
+            CreateMap<PropertyTypeDTO, PropertyTypes>().ReverseMap();
+            CreateMap<UpdatePropertyTypeCommand, PropertyTypes>().ReverseMap();
+            CreateMap<UpdatePropertyTypeResponse, PropertyTypes>().ReverseMap();
+            CreateMap<CreatePropertyTypeCommand, PropertyTypes>().ReverseMap();
+            CreateMap<PropertyTypeDTO, PropertyTypeViewModel>().ReverseMap();
+
+            CreateMap<SaveApplicationUserDTO, RegisterCommand>().ReverseMap();
         }
     }
 }
