@@ -2,9 +2,11 @@
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Commands.Agent.ChangeStatus;
+using RealState.Application.Enums;
 using RealState.Application.Queries.Agent.GetAll;
 using RealState.Application.Queries.Agent.GetById;
 using RealState.Application.Queries.Agent.GetPropertiesByAgent;
@@ -25,6 +27,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpPatch("Agent/{id}/Status")]
+        [Authorize(Roles = nameof(RoleTypes.Admin))]
         public async Task<IActionResult> ChangeStatus([FromRoute] string id, bool status)
         {
             await _sender.Send(new ChangeStatusAgentCommand()
@@ -36,6 +39,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("Agents")]
+        [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> Get([FromQuery] AgentQueryFilter filter)
         {
             var result = await _sender.Send(new GetAllAgentQuery() { Filter = filter });
@@ -43,6 +47,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("Agent/{id}")]
+        [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
             var result = await _sender.Send(new GetByIdAgentQuery() { AgentId = id });
@@ -50,6 +55,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("Agent/{id}/Properties")]
+        [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> GetAgentProperties(string id)
         {
             var result = await _sender.Send(new GetPropertiesByAgentQuery() { AgentId = id });

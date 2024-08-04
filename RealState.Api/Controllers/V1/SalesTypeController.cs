@@ -3,12 +3,14 @@ using Asp.Versioning;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Commands.SalesType.Create;
 using RealState.Application.Commands.SalesType.Delete;
 using RealState.Application.Commands.SalesType.Update;
 using RealState.Application.DTOs.SalesType;
+using RealState.Application.Enums;
 using RealState.Application.Queries.SalesType.GetAll;
 using RealState.Application.Queries.SalesType.GetById;
 using RealState.Application.QueryFilters;
@@ -28,6 +30,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpPost("SalesType")]
+        [Authorize(Roles = nameof(RoleTypes.Admin))]
         public async Task<IActionResult> Post([FromBody] CreateSalesTypeCommand cmd)
         {
             await _sender.Send(cmd);
@@ -35,12 +38,14 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpPut("SalesType")]
+        [Authorize(Roles = nameof(RoleTypes.Admin))]
         public async Task<IActionResult> Put([FromBody] UpdateSalesTypeCommand cmd)
         {
             return Ok(await _sender.Send(cmd));
         }
 
         [HttpDelete("SalesType")]
+        [Authorize(Roles = nameof(RoleTypes.Admin))]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
             _ = await _sender.Send(new DeleteSalesTypeCommand()
@@ -51,6 +56,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("SalesType/{id:Guid}")]
+        [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             SalesTypeDTO propertyTypeDTO = await _sender.Send(new GetByIdSalesTypeQuery()
@@ -61,6 +67,7 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("SalesTypes")]
+        [Authorize(Roles = nameof(RoleTypes.Admin) + "," + nameof(RoleTypes.Developer))]
         public async Task<IActionResult> List([FromQuery] SalesTypesQueryFilter filters)
         {
             List<SalesTypeDTO> propertyTypeDTOs = await _sender.Send(new GetAllSalesTypeQuery()
