@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using RealState.Application.Commands.Property.Create;
+using RealState.Application.Commands.Authentication.Register;
 using RealState.Application.Commands.PropertyType.Create;
 using RealState.Application.Commands.PropertyType.Update;
 using RealState.Application.DTOs.Account.Authentication;
@@ -30,9 +30,7 @@ namespace RealState.Application.Mapping
         public GeneralProfile()
         {
             #region Property
-            CreateMap<CreatePropertyCommand, Properties>().ReverseMap();
             CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
-            CreateMap<PropertyViewModel, CreatePropertyCommand>().ReverseMap();
             CreateMap<PropertyViewModel, Properties>().ReverseMap();
             CreateMap<PropertyDTO, Properties>().ReverseMap();
 
@@ -89,6 +87,8 @@ namespace RealState.Application.Mapping
             CreateMap<UpdatePropertyTypeResponse, PropertyTypes>().ReverseMap();
             CreateMap<CreatePropertyTypeCommand, PropertyTypes>().ReverseMap();
             CreateMap<PropertyTypeDTO, PropertyTypeViewModel>().ReverseMap();
+
+            CreateMap<SaveApplicationUserDTO, RegisterCommand>().ReverseMap();
         }
     }
 }

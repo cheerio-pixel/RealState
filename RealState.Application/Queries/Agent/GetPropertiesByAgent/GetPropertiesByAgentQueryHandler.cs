@@ -43,9 +43,7 @@ namespace RealState.Application.Queries.Agent.GetPropertiesByAgent
                 .Because("There is no content")
                 .Throw();
 
-            var agentDto = _mapper.Map<List<PropertyDTO>>(properties);
-
-            return agentDto;
+            return _mapper.Map<List<PropertyDTO>>(properties);
         }
     }
 }

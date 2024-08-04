@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 
+using RealState.Application.DTOs.Role;
+using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
