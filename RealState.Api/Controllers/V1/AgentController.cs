@@ -50,9 +50,9 @@ namespace RealState.Api.Controllers.V1
         }
 
         [HttpGet("Agent/{id}/Properties")]
-        public async Task<IActionResult> GetAgentProperties(string Id)
+        public async Task<IActionResult> GetAgentProperties(string id)
         {
-            var result = await _sender.Send(new GetPropertiesByAgentQuery() { AgentId = Id });
+            var result = await _sender.Send(new GetPropertiesByAgentQuery() { AgentId = id });
             return Ok(result);
         }
     }

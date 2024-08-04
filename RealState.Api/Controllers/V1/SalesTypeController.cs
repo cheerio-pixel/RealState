@@ -50,7 +50,7 @@ namespace RealState.Api.Controllers.V1
             return NoContent();
         }
 
-        [HttpGet("{id:Guid}")]
+        [HttpGet("SalesType/{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             SalesTypeDTO propertyTypeDTO = await _sender.Send(new GetByIdSalesTypeQuery()
