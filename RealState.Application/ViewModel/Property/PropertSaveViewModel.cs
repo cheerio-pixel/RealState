@@ -24,7 +24,7 @@ namespace RealState.Application.ViewModel.Property
         [Required(ErrorMessage = "Meters is required")]
         [Range(typeof(decimal), "0.00000001", "79228162514264337593543950335", ErrorMessage = "Must equal or greater than 0.00000001")]
         public decimal Meters { get; set; }
-        public List<IFormFile> Pictures { get; set; } = [];
+        public List<IFormFile> Pictures { get; set; } = null!;
         [Required(ErrorMessage = "PropertyTypeId is required")]
         public Guid PropertyTypeId { get; set; }
         [Required(ErrorMessage = "SalesTypeId is required")]

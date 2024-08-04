@@ -1,7 +1,7 @@
 ﻿@using RealState.Application.ViewModel.Property
 @model PropertSaveViewModel
 @{
-    Guid? id = ViewBag.Id;
+   
     Layout = "~/Views/Shared/_Layoutproperty.cshtml";
     List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertyTypes;
     List<SalesTypeViewModel> salesTypes = ViewBag.SalesTypes;
@@ -11,7 +11,7 @@
 <main class="section-production">
     <section>
         <div class="title">
-            @if(id != null)
+            @if (Model!.Id != Guid.Empty)
             {
                 <h1>Edit Property</h1>
             }
@@ -19,19 +19,17 @@
             {
                 <h1>Create Property</h1>
             }
-           
         </div>
-        <form asp-controller="AgentController" asp-action="@(id != null ? "update" : "create")" method="post" enctype="multipart/form-data">
-            <!--Section 1-->
-            @if (id != null)
+        <form asp-controller="Agent" asp-action="@(Model!.Id != Guid.Empty ? "update" : "create")" method="post" enctype="multipart/form-data">
+            <!-- Section 1 -->
+            @if (Model!.Id != Guid.Empty)
             {
-                                <input type="hidden" asp-for="Id" value="@id" />
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
             }
-            <!-- Resto del formulario -->
             <div class="form-section" id="section-1">
                 <div class="group">
                     <label for="Name">Name</label>
-                   <input type="text" asp-for="Name" />
+                    <input type="text" asp-for="Name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="group">
@@ -43,7 +41,7 @@
                             {
                                 foreach (var item in salesTypes)
                                 {
-                                    if(item.Id == Model.SalesTypeId)
+                                    if (item.Id == Model.SalesTypeId)
                                     {
                                         <option value="@item.Id" selected>@item.Name</option>
                                     }
@@ -57,31 +55,26 @@
                     </select>
                     <span asp-validation-for="SalesTypeId" class="text-danger"></span>
                 </div>
-
                 <div class="group">
                     <label for="propertyPrice">Property Price</label>
                     <input type="number" id="propertyPrice" asp-for="Price" placeholder="2,500,000.00" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
-
                 <div class="group">
                     <label for="description">Description</label>
                     <textarea id="description" name="Description" rows="4" cols="60" asp-for="Description"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-
                 <div class="group">
                     <label for="area">Area</label>
                     <input type="number" asp-for="Meters" placeholder="200.5" />
                     <span asp-validation-for="Meters" class="text-danger"></span>
                 </div>
-
                 <div class="group">
                     <label for="rooms">Rooms</label>
                     <input type="number" id="rooms" name="Rooms" placeholder="5" asp-for="Rooms" />
                     <span asp-validation-for="Rooms" class="text-danger"></span>
                 </div>
-
                 <div class="group">
                     <label for="bathrooms">Bathrooms</label>
                     <input type="number" id="bathrooms" asp-for="Bathrooms" name="Bathrooms" placeholder="5" />
@@ -89,11 +82,10 @@
                 </div>
             </div>
 
-            <!--Section 2-->
+            <!-- Section 2 -->
             <div class="form-section" id="section-2" style="display:none;">
-                <!-- Contenido de la Sección 2 -->
-                  <div class="group">
-                    <label >Property Type</label>
+                <div class="group">
+                    <label>Property Type</label>
                     <select id="PropertyTypeId" asp-for="PropertyTypeId">
                         <option selected>Choose...</option>
                         @{
@@ -101,10 +93,11 @@
                             {
                                 foreach (var item in propertyTypes)
                                 {
-                                    if(item.Id == Model.PropertyTypeId)
+                                    if (item.Id == Model.PropertyTypeId)
                                     {
-                                        <option value ="@item.Id" selected>@item.Name</option>
-                                    }else
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }
@@ -126,8 +119,7 @@
                                     {
                                         if (Model.UpgradeId.Any(x => x == item.Id))
                                         {
-                                            <option value="@item.Id" selected>@item.Name
-                                            </option>
+                                            <option value="@item.Id" selected>@item.Name</option>
                                         }
                                         else
                                         {
@@ -136,37 +128,35 @@
                                     }
                                 }
                             }
-
                         </select>
                     </div>
-                  <span asp-validation-for="UpgradeId" class="text-danger"></span>
+                    <span asp-validation-for="UpgradeId" class="text-danger"></span>
                 </div>
-                <div class="file-container" id="">
+                <div class="file-container">
                     <input type="file" id="file-input" accept="image/png, image/gif, image/jpeg" multiple asp-for="Pictures" />
                     <span asp-validation-for="Pictures" class="text-danger"></span>
-
                     <label for="file-input"><i class="fa-solid fa-upload"></i> Upload Images</label>
-                    @if(Model.PicturesUrl == null)
+                    @if (Model.PicturesUrl == null)
                     {
                         <p id="num-files">No files selected</p>
                     }
                     else
                     {
                         <p id="num-files">@Model.PicturesUrl.Count files selected</p>
-                               <div id="file-preview">
+                        <div id="file-preview">
                             @foreach (var item in Model.PicturesUrl)
                             {
-                                <img src="@item" />
+                                
+                                <img src="@item" alt="@item" />
                             }
                         </div>
                     }
-                 
                 </div>
             </div>
 
             <!-- Navigation Buttons -->
             <div class="form-navigation">
-                <a href="/agent/index" class= "btn btn-primary" id="btn-out">Back</a>
+                <a href="/agent/index" class="btn btn-primary" id="btn-out">Back</a>
                 <button type="button" id="next" class="btn btn-primary">Next</button>
                 <button type="button" id="previous" class="btn btn-primary" style="display:none;">Previous</button>
                 <button type="submit" class="btn btn-primary" style="display:none;">Save</button>
@@ -179,9 +169,8 @@
     </aside>
 </main>
 
-
 <script>
-       $(document).ready(function () {
+    $(document).ready(function () {
         $("#next").click(function () {
             $("#btn-out").hide();
             $("#section-1").hide();
@@ -221,8 +210,4 @@
             reader.readAsDataURL(file);
         }
     });
-
-
-
-
 </script>

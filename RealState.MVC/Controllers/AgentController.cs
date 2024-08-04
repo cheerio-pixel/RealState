@@ -1,5 +1,4 @@
 using AutoMapper;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealState.Application.Enums;
@@ -66,25 +65,20 @@ public class AgentController(IPropertyService propertyService
             return Redirect("/Agent/Index");
         }
 
-        ViewBag.Id = Guid.Parse(id);
+      
         var property = await _propertyService.GetByIdSaveViewModel(Guid.Parse(id));
-        if (property is null)
-        {
-            return Redirect("/Agent/Index");
-        }
-
-        return View("create", property);
+        return property is null ? Redirect("/Agent/Index") : View("create", property);
     }
 
     [HttpPost]
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
-        vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
         }
+        vm.AgentId = User.GetId();
 
         Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
         if (result.IsFailure)
@@ -129,16 +123,17 @@ public class AgentController(IPropertyService propertyService
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Update(PropertSaveViewModel vm)
     {
-
+        ModelState.Remove(nameof(vm.Pictures));
         vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
-            return View(vm);
+            return View($"create", vm);
         }
+
         var result = await _propertyService.Update(vm, vm.Id);
         if (!result.IsSuccess)
         {
-            return View(vm);
+            return View("create",vm);
         }
 
 
@@ -148,8 +143,13 @@ public class AgentController(IPropertyService propertyService
         await _propertyUpgradeService.UpdatePropertyUpgradesByPropertyId(proupd, vm.Id);
 
         //update pictures
-        if (vm.Pictures != null && vm.Pictures.Count > 0)
+        if (vm.Pictures != null )
         {
+            if(vm.Pictures.Count > 4)
+            {
+                ModelState.AddModelError(nameof(vm.Pictures), "You can only upload 4 pictures");
+                return View("create", vm);
+            }
             List<PicturesSaveViewModel> pictures = [];
             foreach (var picture in vm.Pictures)
             {
@@ -199,6 +199,6 @@ public class AgentController(IPropertyService propertyService
         vmDto.Picture = vm.PictureUrl!;
         var result = await _userServices.UpdateAgent(vm.Id.ToString(), vmDto);
 
-        return !result.IsSuccess ? View(vm) : Redirect("/Agent/Index");
+        return !result.IsSuccess ? View(vm) : RedirectToAction("Index", "Agent");
     }
 }
