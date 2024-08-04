@@ -78,5 +78,10 @@ namespace RealState.Infrastructure.Persistence.Repositories
                 select p.Id
             ).ToListAsync();
         }
+
+        public async Task<Properties?> GetByCode(string code)
+        {
+            return await _properties.Where(p => p.Code == code).FirstOrDefaultAsync();
+        }
     }
 }
