@@ -53,8 +53,9 @@ namespace RealState.Application.Queries.Agent.GetAll
 
             foreach (var item in agentDto)
             {
-                var count = 0; // _propertyRepository.GetPropertiesCountByAgentId(Guid.Parse(item.Id));
-                item.PropertiesCount = count;
+                Guid guid = Guid.Parse(item.Id);
+                // Perf problem
+                item.PropertiesCount = await _propertyRepository.GetNumberOfPropertiesOfAgent(guid);
             }
 
             return agentDto;

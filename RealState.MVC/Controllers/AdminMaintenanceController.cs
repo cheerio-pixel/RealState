@@ -2,6 +2,7 @@
 
 using AutoMapper;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
@@ -13,6 +14,7 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class AdminMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
     {
         private readonly IUserServices _userServices = userServices;
@@ -23,8 +25,8 @@ namespace RealState.MVC.Controllers
         public IActionResult Index()
         {
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.Admin });
-            var admins = result.Value;
-            ViewData["Admins"] = admins;
+            string userId = User.GetUnparsedId();
+            ViewData["Admins"] = result.Value.Where(a => a.Id != userId);
             return View();
         }
 
@@ -41,7 +43,7 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Admin));
             ViewData["AdminRole"] = role.Value;
             return View();
         }
@@ -49,7 +51,7 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.Admin.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.Admin));
             ViewData["AdminRole"] = role.Value;
 
             if (!ModelState.IsValid)
@@ -71,7 +73,6 @@ namespace RealState.MVC.Controllers
         public async Task<IActionResult> Update(string id)
         {
             var result = await _userServices.GetByIdAsync(id);
-            
             if(result.Value == null) return RedirectPermanent("AdminMaintance/index");
             var user = result.Value;
             var vw = _mapper.Map<UserSaveViewModel>(user);

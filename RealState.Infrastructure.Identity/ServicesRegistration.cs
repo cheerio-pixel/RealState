@@ -182,8 +182,8 @@ namespace RealState.Infrastructure.Identity
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-                options.LoginPath = "/Authentication/Index";
-                options.AccessDeniedPath = "/Authentication/AccessDenied";
+                options.LoginPath = "/Account/SignIn";
+                options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
             #endregion

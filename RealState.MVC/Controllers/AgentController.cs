@@ -2,9 +2,11 @@ using AutoMapper;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.DTOs.User;
+using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
@@ -13,33 +15,31 @@ using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.ActionFilter;
+using RealState.MVC.Helpers;
 
 
 
 namespace RealState.MVC.Controllers;
 
-public class AgentController(IMediator mediator, IPropertyService propertyService
+[Authorize(Roles = nameof(RoleTypes.StateAgent))]
+public class AgentController(IPropertyService propertyService
     , IMapper mapper,
-    IUpgradesService upgradesService,
-    ISalesTypesService salesTypesService,
-    IPropertyTypeService propertyTypeService,
     IPictureService pictureService,
     IPropertyUpgradeService propertyUpgradeService,
-    IUserServices userServices) : Controller
+    IUserServices userServices,
+    ILogger<AgentController> logger) : Controller
 {
-    private readonly IMediator _mediator = mediator;
     private readonly IPropertyService _propertyService = propertyService;
-    private readonly IUpgradesService _upgradesService = upgradesService;
-    private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
-    private readonly ISalesTypesService _salesTypeService = salesTypesService;
     private readonly IPictureService _pictureService = pictureService;
     private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
     private readonly IMapper _mapper = mapper;
     private readonly IUserServices _userServices = userServices;
+    private readonly ILogger<AgentController> _logger = logger;
 
     public async Task<IActionResult> Index()
     {
-        var result = await _propertyService.GetPropertyByAgentId(Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969"));
+        Guid userId = User.GetId();
+        var result = await _propertyService.GetPropertyByAgentId(userId);
         ViewBag.Properties = result.Value;
         return View();
     }
@@ -52,17 +52,16 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
 
     public async Task<IActionResult> Profile()
     {
-        ViewBag.Id = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        var userId = User.GetId();
+        ViewBag.Id = userId;
 
-        var user = await _userServices.GetByIdAsync("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        var user = await _userServices.GetByIdAsync(userId.ToString());
         var userDto = _mapper.Map<AgentSaveViewModel>(user.Value);
         userDto.PictureUrl = user.Value!.Picture;
         return View(userDto);
     }
 
-
     [HttpGet("agent/Update/{id}")]
-
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Update(string id)
     {
@@ -85,35 +84,50 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     [ServiceFilter(typeof(SetAttributesViewBag))]
     public async Task<IActionResult> Create(PropertSaveViewModel vm)
     {
-        List<PicturesSaveViewModel> pictures = [];
-        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
         }
-        PropertyUpgradeSaveViewModel proupd = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
 
         Result<PropertSaveViewModel> result = await _propertyService.Add(vm);
-        if (!result.IsSuccess)
+        if (result.IsFailure)
         {
+            ModelState.AggregateErrors(result.Errors);
+            return View(vm);
+        }
+        PropertSaveViewModel property = result.Value;
+
+        List<PicturesSaveViewModel> pictures = vm.Pictures.ConvertAll(picture =>
+        new PicturesSaveViewModel
+        {
+            Picture = PictureHelper.UploadFile(picture, property.Id.ToString(), "Properties"),
+            PropertyId = property.Id
+        });
+
+        var pictureResult = await _pictureService.AddPictures(pictures);
+        if (pictureResult.IsFailure)
+        {
+            foreach (var e in pictureResult.Errors)
+            {
+                ModelState.AddModelError(nameof(vm.Pictures), e.Message);
+            }
+            await _propertyService.Delete(property.Id);
             return View(vm);
         }
 
-
-
-        foreach (var picture in vm.Pictures)
+        PropertyUpgradeSaveViewModel propertyUpgrade = _mapper.Map<PropertyUpgradeSaveViewModel>(vm);
+        propertyUpgrade.PropertyId = property.Id;
+        Result<PropertyUpgradeSaveViewModel> propertyUpgradeResult = await _propertyUpgradeService.Add(propertyUpgrade);
+        if (propertyUpgradeResult.IsFailure)
         {
-            pictures.Add(new PicturesSaveViewModel
-            {
-                Picture = PictureHelper.UploadFile(picture, result.Value.Id.ToString(), "Properties"),
-                PropertyId = result.Value.Id
-            });
+            ModelState.AggregateErrors(propertyUpgradeResult.Errors);
+            await _propertyService.Delete(property.Id);
+            await _pictureService.DeleteByPropertyId(property.Id);
+            return View(vm);
         }
-        proupd.PropertyId = result.Value.Id;
-        await _propertyUpgradeService.Add(proupd);
-        var pictureResult = await _pictureService.AddPictures(pictures);
 
-        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("index", "AgentController");
+        return RedirectToAction("index", "Agent");
     }
 
     [HttpPost]
@@ -121,7 +135,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
     public async Task<IActionResult> Update(PropertSaveViewModel vm)
     {
 
-        vm.AgentId = Guid.Parse("325c8c63-d4cb-4038-924b-3acde9fdd969");
+        vm.AgentId = User.GetId();
         if (!ModelState.IsValid)
         {
             return View(vm);
@@ -167,7 +181,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            _logger.LogError(ex, "Error when trying to delete property {PropertyId}", id);
             return RedirectToAction("Index");
         }
     }
@@ -184,6 +198,7 @@ public class AgentController(IMediator mediator, IPropertyService propertyServic
         {
             vm.PictureUrl = PictureHelper.UploadFile(vm.Picture, vm.Id.ToString(), "Users");
         }
+
         var vmDto = _mapper.Map<UserSaveViewModel>(vm);
         vmDto.Picture = vm.PictureUrl!;
         var result = await _userServices.UpdateAgent(vm.Id.ToString(), vmDto);

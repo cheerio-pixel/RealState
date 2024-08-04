@@ -2,6 +2,7 @@
 
 using AutoMapper;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
@@ -13,6 +14,7 @@ using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
 {
+    [Authorize(Roles = nameof(RoleTypes.Admin))]
     public class AgentMaintenanceController(IUserServices userServices, IRoleServices roleServices, IAccountServices accountServices, IMapper mapper) : Controller
     {
         private readonly IUserServices _userServices = userServices;
@@ -23,14 +25,13 @@ namespace RealState.MVC.Controllers
         public IActionResult Index()
         {
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.StateAgent });
-            var agents = result.Value;
-            ViewData["Agents"] = agents;
+            ViewData["Agents"] = result.Value;
             return View();
         }
 
         public async Task<IActionResult> Create()
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.StateAgent));
             ViewData["AgentRole"] = role.Value;
             return View();
         }
@@ -38,7 +39,7 @@ namespace RealState.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserSaveViewModel viewModel)
         {
-            var role = await _roleServices.GetByNameAsync(RoleTypes.StateAgent.ToString());
+            var role = await _roleServices.GetByNameAsync(nameof(RoleTypes.StateAgent));
             ViewData["AgentRole"] = role.Value;
 
             if (!ModelState.IsValid)
