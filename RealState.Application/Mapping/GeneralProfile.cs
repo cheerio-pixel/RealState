@@ -41,6 +41,7 @@ namespace RealState.Application.Mapping
             CreateMap<Properties, PropertyDetailsViewModel>()
                 .ForMember(x => x.Upgrade, 
                 opt => opt.MapFrom(src => src.PropertiesUpgrades.Select(x => x.Upgrade).ToList()));
+            CreateMap<PropertyDTO, Properties>().ReverseMap();
             #endregion
 
             #region Picture
