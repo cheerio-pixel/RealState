@@ -61,6 +61,18 @@ namespace RealState.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id)!;
         }
 
+        public async Task<List<Properties>> GetPropertyByAgentIdWithInclude(Guid agentId)
+        {
+            return await _properties
+                .Where(x => x.AgentId == agentId)
+                .Include(x => x.Pictures)
+                .Include(x => x.PropertyTypes)
+                .Include(x => x.SalesTypes)
+                .Include(x => x.PropertiesUpgrades)
+                .ThenInclude(x => x.Upgrade)
+                .ToListAsync();
+        }
+
         public Task<int> GetNumberOfPropertiesOfAgent(Guid agentId)
         {
             return _properties.Where(p => p.AgentId == agentId)

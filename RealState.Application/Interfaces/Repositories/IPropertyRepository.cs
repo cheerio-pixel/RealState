@@ -12,5 +12,6 @@ namespace RealState.Application.Interfaces.Repositories
         Task<List<Properties>> ListProperties(PropertyQueryFilter filter);
         Task<Properties?> GetByIdWithInclude(Guid id);
         Task<int> GetNumberOfPropertiesOfAgent(Guid agentId);
+        Task<List<Properties>> GetPropertyByAgentIdWithInclude(Guid agentId);
     }
 }

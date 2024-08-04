@@ -92,5 +92,11 @@ namespace RealState.Application.Services
             propertyMapper.ApplicationUser = userResult.Value!;
             return propertyMapper;
         }
+        
+        public async Task<Result<List<PropertyViewModel>>> GetPropertyByAgentIdWithInclude(Guid agentId)
+        {
+            var properties = await _propertyRepository.GetPropertyByAgentIdWithInclude(agentId);
+            return _mapper.Map<List<PropertyViewModel>>(properties);
+        }
     }
 }

@@ -15,7 +15,6 @@
         <div class="form">
             <h3 class="mb-3">Search By Agent Name</h3>
             <form method="get" asp-controller="home" asp-action="agents">
-
                 <div class="form-group">
                     <label>Agent Name</label>
                     <input type="text" placeholder="FirstName" name="FirstName" class="form-control">
@@ -32,19 +31,26 @@
         @{
             if (agents != null)
             {
-                foreach (var agent in agents)
-                {
-                    <a href="/Agent/property/" class="container mt-5" style="padding-left:0;">
-                        <div class="card" style="width: 18rem;">
-                            <img class="card-img-top" src="..." alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="container ">
+                    @foreach (var agent in agents)
+                    {
+                        <a href="Agent/@agent.Id" class="container mt-5 agent-card" style="padding-left:0;">
+                            <div class="card" style="width: 18rem;">
+                                <img class="card-img-top" src="@agent.Picture" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">@agent.FirstName  @agent.LastName</h5>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                }
+                        </a>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h1>No Agents Found</h1>
+                </div>
             }
         }
     </div>

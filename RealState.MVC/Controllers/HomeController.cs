@@ -47,12 +47,19 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Agents(UserQueryFilter filter)
         {
-            UserQueryFilter userQueryFilter = filter ?? new()
-            {
-                Role = RoleTypes.StateAgent
-            };
+            filter ??= new UserQueryFilter();
+            filter.Role = RoleTypes.StateAgent;
 
-            ViewBag.Agents = _userServices.GetAll(userQueryFilter);
+            ViewBag.Agents = _userServices.GetAll(filter).Value;
+            return View();
+        }
+
+        [HttpGet("home/agent/{id}")]
+        public async Task<IActionResult> Properties(Guid id)
+        {
+
+            var result = await _propertyService.GetPropertyByAgentIdWithInclude(id);
+            ViewBag.Properties = result.Value;
             return View();
         }
     }

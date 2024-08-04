@@ -11,5 +11,6 @@ namespace RealState.Application.Interfaces.Services
         Task<Result<List<PropertyViewModel>>> GetPropertyByAgentId(Guid agentId);
         Task<Result<List<PropertyViewModel>>> ListPropertiesQueryable(PropertyQueryFilter filter);
         Task<Result<PropertyDetailsViewModel>> GetPropertyDetailsById(Guid id);
+        Task<Result<List<PropertyViewModel>>> GetPropertyByAgentIdWithInclude(Guid agentId);
     }
 }

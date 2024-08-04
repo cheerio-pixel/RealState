@@ -1,0 +1,60 @@
+﻿@{
+    List<PropertyViewModel>? properties = ViewBag.Properties as List<PropertyViewModel>;
+}
+
+
+
+<div class="container m-5">
+    <div class="container mt-5" style="padding-left:0;">
+        @if (properties!.Count > 0)
+        {
+            @foreach (var property in properties)
+            {
+                <a href="/home/details/@property.Id" class="card-house">
+                    <div class="header-house">
+                        <img src="@property.Pictures[0].Picture" alt="house" />
+                    </div>
+                    <div class="description-house">
+                        <div class="title">
+                            <h2>@property.Name</h2>
+                            <p style="margin:0; margin-right:5px;">Code: <strong>@property.Code</strong></p>
+                        </div>
+                        <div class="description">
+                            <p>@property.Description</p>
+                        </div>
+                        <div>
+                            <p><b>Tipo de venta</b></p>
+                            <p>@property.SalesTypes.Name</p>
+                        </div>
+                        <div>
+                            <p><b>Tipo de Propiedad</b></p>
+                            <p>@property.PropertyTypes.Name</p>
+                        </div>
+                        <div class="characteristics">
+                            <div class="tag-house">
+                                <i class="fa-solid fa-bed" style="font-size:15px"></i>
+                                <p>@property.Rooms</p>
+                            </div>
+                            <div class="tag-house">
+                                <i class="fa-solid fa-bath"></i>
+                                <p>@property.Bathrooms</p>
+                            </div>
+                            <div class="tag-house">
+                                <i class="fa-solid fa-ruler"></i>
+                                <p>@property.Meters m2</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="price">
+                            <p>@property.Price.ToString("C")</p>
+                        </div>
+                     
+                    </div>
+                </a>
+            }
+        }
+    </div>
+
+
+    </div>
