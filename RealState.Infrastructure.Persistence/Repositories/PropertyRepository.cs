@@ -61,6 +61,11 @@ namespace RealState.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id)!;
         }
 
-      
+        public Task<int> GetNumberOfPropertiesOfAgent(Guid agentId)
+        {
+            return _properties.Where(p => p.AgentId == agentId)
+                            .Count()
+                            .AsTask();
+        }
     }
 }

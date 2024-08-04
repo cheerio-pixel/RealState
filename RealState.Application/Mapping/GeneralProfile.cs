@@ -13,6 +13,7 @@ using RealState.Application.DTOs.Role;
 using RealState.Application.DTOs.SalesType;
 using RealState.Application.DTOs.User;
 using RealState.Application.ViewModel.Account;
+using RealState.Application.ViewModel.Favorite;
 using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
@@ -22,11 +23,6 @@ using RealState.Application.ViewModel.SalesType;
 using RealState.Application.ViewModel.Upgrades;
 using RealState.Application.ViewModel.User;
 using RealState.Domain.Entities;
-using RealState.Application.ViewModel.Pictures;
-using RealState.Application.ViewModel.SalesType;
-using RealState.Application.ViewModel.Upgrades;
-using RealState.Application.ViewModel.PropertiesUpgrades;
-using System.Security.AccessControl;
 
 namespace RealState.Application.Mapping
 {
@@ -34,6 +30,11 @@ namespace RealState.Application.Mapping
     {
         public GeneralProfile()
         {
+
+            #region Favorite
+            CreateMap<FavoriteSaveViewModel, Favorite>().ReverseMap();
+            CreateMap<FavoriteViewModel, Favorite>().ReverseMap();
+            #endregion
             #region Property
             CreateMap<PropertSaveViewModel, Properties>().ForMember(x => x.Pictures, x => x.Ignore()).ReverseMap();
             CreateMap<PropertyViewModel, Properties>().ReverseMap();

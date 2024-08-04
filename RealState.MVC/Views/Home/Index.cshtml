@@ -1,7 +1,12 @@
-﻿@{
+﻿@using RealState.Application.Enums
+@using RealState.Application.ViewModel.Favorite
+@using RealState.MVC.Helpers
+@{
     ViewData["Title"] = "Home Page";
     List<PropertyViewModel> properties = ViewBag.Properties;
     List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertysTypes;
+    RoleTypes? role = ViewBag.Role as RoleTypes?;
+    List<FavoriteViewModel>? favorites = ViewBag.Favorites as List<FavoriteViewModel>;
 }
 
 <div class="main-body">
@@ -93,9 +98,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="price">
-                        <p>@property.Price.ToString("C")</p>
-                    </div>
+                    <div class="row">
+                            <div class="price">
+                                <p>@property.Price.ToString("C")</p>
+                            </div>
+                            @if (role != null && role == RoleTypes.Client)
+                            {
+                                @if(favorites != null)
+                                {
+                                    bool isFavorite = favorites!.Select(x => x.PropertyId).ToList().Contains(@property.Id);
+                                    <form method="post" asp-controller="Favorite" asp-action=@(isFavorite?"RemoveFavorite":"AddFavorite")>
+                                        <input type="hidden" name="PropertyId" value="@property.Id" />
+                                        <button type="submit" class="btn btn-primary">@(!isFavorite ? "Add to favorites" : "Remove from favorites")</button>
+                                    </form>
+                                }
+                            }
+                        </div>
                 </a>
                 }
             }

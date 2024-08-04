@@ -33,12 +33,21 @@
                 <ul class="navbar-nav ml-auto">
                     <li><a href="/home" class="nav-item nav-link active text-dark">Home</a></li>
                     <li><a href="/home/agents" class="nav-item nav-link text-dark">Agent</a></li>
-                    <li class="dropdown">
-                        <a href="/Account/Register" class="nav-item nav-link text-dark"  data-toggle="dropdown">Meet App</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="/Account/SignIn" class="nav-item nav-link " style="color:black;" data-toggle="dropdown">Login</a>
-                    </li>
+                   
+                  @{
+                      if(User!.Identity!.IsAuthenticated)
+                      {
+                                <li><a href="/Account/LogOut" class="nav-item nav-link text-dark">Logout</a></li>
+                      }
+                      else
+                      {
+                                <li class="dropdown">
+                                    <a href="/Account/Register" class="nav-item nav-link text-dark" data-toggle="dropdown">Meet App</a>
+                                </li>
+                          <li><a href="/Account/Signin" class="nav-item nav-link text-dark">Login</a></li>
+                         
+                      }
+                  }
                    
                 </ul>
             </div>
