@@ -26,7 +26,7 @@ namespace RealState.MVC.Controllers
         {
             var result = _userServices.GetAll(new UserQueryFilter() { Role = RoleTypes.Admin });
             string userId = User.GetUnparsedId();
-            ViewData["Admins"] = result.Value.Where(a => a.Id != userId);
+            ViewData["Admins"] = result.Value.Where(a => a.Id != userId).ToList();
             return View();
         }
 
