@@ -38,9 +38,9 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(Guid id)
         {
-            var test = await _propertyService.GetPropertyDetailsById(Guid.Parse("588BA8F9-614B-4E67-2C61-08DCB3167A35"));
+            var test = await _propertyService.GetPropertyDetailsById(id);
             ViewBag.Property = test.Value;
             return View();
         }

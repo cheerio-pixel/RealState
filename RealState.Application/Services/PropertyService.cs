@@ -12,7 +12,6 @@ namespace RealState.Application.Services
 {
     public class PropertyService(IPropertyRepository propertyRepository, IMapper mapper,
         IPropertyUpgradeService propertyUpgradeService,
-        IUserServices userServices,
         IPictureService pictureService,
         IFavoriteRepository favoriteRepository,
         IUserRepository userRepository) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
@@ -21,7 +20,6 @@ namespace RealState.Application.Services
         private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
         private readonly IPropertyRepository _propertyRepository = propertyRepository;
         private readonly IPictureService _pictureService = pictureService;
-        private readonly IUserServices _userServices = userServices;
         private readonly IFavoriteRepository _favoriteRepository = favoriteRepository;
         private readonly IUserRepository _userRepository = userRepository;
 
