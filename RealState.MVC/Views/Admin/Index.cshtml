@@ -4,13 +4,23 @@
     Layout = "_LayoutMaintance";
     UserStatisticsDto userStatistcs = ViewBag.Statistics;
 
-}
-<div class="container mt-5">
+}<div class="container mt-5">
+        <div class="mb-4">
+            <div class="card card-active">
+                <div class="card-header">Created properties</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@ViewBag.PropertyCount</h2>
+                </div>
+                <div class="card-footer text-end">
+                 
+                </div>
+            </div>
+        </div>
     <div class="row">
-        <!-- Tarjeta para agente activo -->
+        <!-- Card for active agent -->
         <div class="col-md-6 mb-4">
             <div class="card card-active">
-                <div class="card-header">Agente Activo</div>
+                <div class="card-header">Active agents</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.AgentActive</h2>
                 </div>
@@ -19,10 +29,10 @@
                 </div>
             </div>
         </div>
-        <!-- Tarjeta para agente inactivo -->
+        <!-- Card for inactive agent -->
         <div class="col-md-6 mb-4">
             <div class="card card-inactive">
-                <div class="card-header">Admin Inactivo</div>
+                <div class="card-header">Inactive Admin</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.AgentInactive</h2>
                 </div>
@@ -33,10 +43,10 @@
         </div>
     </div>
     <div class="row">
-        <!-- Tarjeta para agente activo -->
+        <!-- Card for active admin -->
         <div class="col-md-6 mb-4">
             <div class="card card-active">
-                <div class="card-header">Admin Activo</div>
+                <div class="card-header">Active Admin</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.AdminActive</h2>
                 </div>
@@ -44,10 +54,10 @@
                 </div>
             </div>
         </div>
-        <!-- Tarjeta para agente inactivo -->
+        <!-- Card for inactive admin -->
         <div class="col-md-6 mb-4">
             <div class="card card-inactive">
-                <div class="card-header">Agente Inactivo</div>
+                <div class="card-header">Inactive Agent</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.AdminInactive</h2>
                 </div>
@@ -57,10 +67,10 @@
         </div>
     </div>
     <div class="row">
-        <!-- Tarjeta para agente activo -->
+        <!-- Card for active developer -->
         <div class="col-md-6 mb-4">
             <div class="card card-active">
-                <div class="card-header">Developer Activo</div>
+                <div class="card-header">Active Developer</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.DeveloperActive</h2>
                 </div>
@@ -68,10 +78,10 @@
                 </div>
             </div>
         </div>
-        <!-- Tarjeta para agente inactivo -->
+        <!-- Card for inactive developer -->
         <div class="col-md-6 mb-4">
             <div class="card card-inactive">
-                <div class="card-header">Developer Inactivo</div>
+                <div class="card-header">Inactive Developer</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.DeveloperInactive</h2>
                 </div>
@@ -81,10 +91,10 @@
         </div>
     </div>
     <div class="row">
-        <!-- Tarjeta para agente activo -->
+        <!-- Card for active client -->
         <div class="col-md-6 mb-4">
             <div class="card card-active">
-                <div class="card-header">Client Activo</div>
+                <div class="card-header">Active Client</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.ClientActive</h2>
                 </div>
@@ -92,10 +102,10 @@
                 </div>
             </div>
         </div>
-        <!-- Tarjeta para agente inactivo -->
+        <!-- Card for inactive client -->
         <div class="col-md-6 mb-4">
             <div class="card card-inactive">
-                <div class="card-header">Client Inactivo</div>
+                <div class="card-header">Inactive Client</div>
                 <div class="card-body">
                     <h2 style="text-align:center">@userStatistcs.ClientInactive</h2>
                 </div>
@@ -103,5 +113,3 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>

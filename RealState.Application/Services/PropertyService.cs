@@ -107,5 +107,10 @@ namespace RealState.Application.Services
             var properties = await _propertyRepository.GetPropertyByAgentIdWithInclude(agentId);
             return _mapper.Map<List<PropertyViewModel>>(properties);
         }
+
+        public async Task<int> GetPropertyCount()
+        {
+            return await _propertyRepository.GetPropertyCount();
+        }
     }
 }

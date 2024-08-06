@@ -20,7 +20,7 @@ namespace RealState.Application.Interfaces.Services
         public Result<List<ApplicationUserDTO>> GetAll(UserQueryFilter? filter);
 
         Task<Result<Unit>> ChangeStatusAsync(string userId, string currentUserId, bool status);
-        Task<Result<Unit>>  UpdateAgent(string userId, UserSaveViewModel userSaveViewModel);
+        Task<Result<Unit>> UpdateAgent(string userId, UserSaveViewModel userSaveViewModel);
         Task<UserStatisticsDto> UserStatisticsDtoAsync();
     }
 }
