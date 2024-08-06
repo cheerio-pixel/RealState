@@ -1,7 +1,8 @@
 ﻿@using RealState.Application.DTOs.User;
 @{
-        ViewBag.Title = "Dashboard";
-    UserStatisticsDto userStatistcs = ViewBag.UserStatistcs;
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    UserStatisticsDto userStatistcs = ViewBag.Statistics;
 
 }
 <div class="container mt-5">
@@ -11,7 +12,7 @@
             <div class="card card-active">
                 <div class="card-header">Agente Activo</div>
                 <div class="card-body">
-                    <h2 style="text-align:center">@userStatistcs</h2>
+                    <h2 style="text-align:center">@userStatistcs.AgentActive</h2>
                 </div>
                 <div class="card-footer text-end">
                  
@@ -21,9 +22,9 @@
         <!-- Tarjeta para agente inactivo -->
         <div class="col-md-6 mb-4">
             <div class="card card-inactive">
-                <div class="card-header">Agente Inactivo</div>
+                <div class="card-header">Admin Inactivo</div>
                 <div class="card-body">
-                   <h2 style="text-align:center">100</h2>
+                    <h2 style="text-align:center">@userStatistcs.AgentInactive</h2>
                 </div>
                 <div class="card-footer text-end">
                   
@@ -35,9 +36,9 @@
         <!-- Tarjeta para agente activo -->
         <div class="col-md-6 mb-4">
             <div class="card card-active">
-                <div class="card-header">Agente Activo</div>
+                <div class="card-header">Admin Activo</div>
                 <div class="card-body">
-                    <h2 style="text-align:center">100</h2>
+                    <h2 style="text-align:center">@userStatistcs.AdminActive</h2>
                 </div>
                 <div class="card-footer text-end">
                 </div>
@@ -48,7 +49,55 @@
             <div class="card card-inactive">
                 <div class="card-header">Agente Inactivo</div>
                 <div class="card-body">
-                    <h2 style="text-align:center">100</h2>
+                    <h2 style="text-align:center">@userStatistcs.AdminInactive</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Tarjeta para agente activo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-active">
+                <div class="card-header">Developer Activo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@userStatistcs.DeveloperActive</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta para agente inactivo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-inactive">
+                <div class="card-header">Developer Inactivo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@userStatistcs.DeveloperInactive</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Tarjeta para agente activo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-active">
+                <div class="card-header">Client Activo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@userStatistcs.ClientActive</h2>
+                </div>
+                <div class="card-footer text-end">
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta para agente inactivo -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-inactive">
+                <div class="card-header">Client Inactivo</div>
+                <div class="card-body">
+                    <h2 style="text-align:center">@userStatistcs.ClientInactive</h2>
                 </div>
                 <div class="card-footer text-end">
                 </div>

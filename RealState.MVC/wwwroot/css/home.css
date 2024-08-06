@@ -108,6 +108,15 @@
         text-decoration: none;
         color: inherit;
     }
+    .agent-card{
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+    }
+.agent-card:hover {
+    text-decoration: none;
+    color: inherit;
+}
 
 .header-house {
     width: 100%;

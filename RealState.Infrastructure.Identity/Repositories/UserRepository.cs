@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 using RealState.Application.DTOs.User;
 using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;

@@ -12,12 +12,15 @@ namespace RealState.Application.Services
 {
     public class PropertyService(IPropertyRepository propertyRepository, IMapper mapper,
         IPropertyUpgradeService propertyUpgradeService,
-        IPictureService pictureService, IUserRepository userRepository) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
+        IPictureService pictureService,
+        IFavoriteRepository favoriteRepository,
+        IUserRepository userRepository) : GenericService<PropertSaveViewModel, PropertyViewModel, Properties>(propertyRepository, mapper), IPropertyService
     {
         private readonly IMapper _mapper = mapper;
         private readonly IPropertyUpgradeService _propertyUpgradeService = propertyUpgradeService;
         private readonly IPropertyRepository _propertyRepository = propertyRepository;
         private readonly IPictureService _pictureService = pictureService;
+        private readonly IFavoriteRepository _favoriteRepository = favoriteRepository;
         private readonly IUserRepository _userRepository = userRepository;
 
         public override async Task<Result<PropertSaveViewModel>> Add(PropertSaveViewModel vm)
@@ -72,6 +75,7 @@ namespace RealState.Application.Services
 
             await _pictureService.DeleteByPropertyId(id);
             await _propertyUpgradeService.DeleteByPropertyId(id);
+            await _favoriteRepository.DeleteByPropertyId(id);
             await base.Delete(id);
         }
 
@@ -96,6 +100,12 @@ namespace RealState.Application.Services
             var userResult = await _userRepository.Get(property!.AgentId.ToString());
             propertyMapper.ApplicationUser = userResult!;
             return propertyMapper;
+        }
+
+        public async Task<Result<List<PropertyViewModel>>> GetPropertyByAgentIdWithInclude(Guid agentId)
+        {
+            var properties = await _propertyRepository.GetPropertyByAgentIdWithInclude(agentId);
+            return _mapper.Map<List<PropertyViewModel>>(properties);
         }
     }
 }

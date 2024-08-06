@@ -144,7 +144,7 @@ namespace RealState.MVC.Controllers
             }
             role = roleT switch
             {
-                RoleTypes.Admin => "AdminMaintenance",
+                RoleTypes.Admin => "Admin",
                 RoleTypes.Client => "home",
                 RoleTypes.StateAgent => "Agent",
                 _ => "Home"

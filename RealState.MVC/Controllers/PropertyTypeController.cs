@@ -13,18 +13,12 @@ using RealState.MVC.Models;
 namespace RealState.MVC.Controllers
 {
     [Authorize(Roles = nameof(RoleTypes.Admin))]
-    public class PropertyTypeController
-    : CrudController<PropertyTypeSaveViewModel, PropertyTypeViewModel, PropertyTypes, Guid, IPropertyTypeService>
+    public class PropertyTypeController(IPropertyTypeService propertyTypeService,
+                                  string controllerName = "PropertyType",
+                                  string managerEndpoint = "Index")
+        : CrudController<PropertyTypeSaveViewModel, PropertyTypeViewModel, PropertyTypes, Guid, IPropertyTypeService>(propertyTypeService, controllerName, managerEndpoint)
     {
-        private readonly IPropertyTypeService _propertyTypeService;
-
-        public PropertyTypeController(IPropertyTypeService propertyTypeService,
-                                      string controllerName = "PropertyType",
-                                      string managerEndpoint = "Index")
-        : base(propertyTypeService, controllerName, managerEndpoint)
-        {
-            _propertyTypeService = propertyTypeService;
-        }
+        private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
 
         public async Task<IActionResult> Index(PropertyTypeQueryFilter? filter)
         {
