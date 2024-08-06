@@ -31,6 +31,10 @@ namespace RealState.MVC.Controllers
                     ViewBag.role = RoleTypes.Client;
                     ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
                 }
+                else
+                {
+                    return RedirectToAction("ChooseRole", "Account");
+                }
 
             }
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
