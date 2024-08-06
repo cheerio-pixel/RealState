@@ -14,7 +14,7 @@ namespace RealState.Application.ViewModel.Property
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; } = null!;
         [Required(ErrorMessage = "Price is required")]
-        [RangeD("0", "79228162514264337593543950335", ErrorMessage = "Must be equal or greater than 0")]
+        [RangeD("0", "79228162514264337593543950335", ErrorMessage = "Must be greater than 0")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "Rooms is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Must equal or greater than 1")]
@@ -24,7 +24,7 @@ namespace RealState.Application.ViewModel.Property
         public int Bathrooms { get; set; }
         public string Code { get; set; } = string.Empty;
         [Required(ErrorMessage = "Meters is required")]
-        [RangeD("0", "79228162514264337593543950335", ErrorMessage = "Must be equal or greater than 0")]
+        [RangeD("0", "79228162514264337593543950335", ErrorMessage = "Must be greater than 0")]
         public decimal Meters { get; set; }
         public List<IFormFile> Pictures { get; set; } = null!;
         [Required(ErrorMessage = "PropertyTypeId is required")]
