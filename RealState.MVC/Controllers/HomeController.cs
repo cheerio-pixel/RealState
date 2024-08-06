@@ -22,9 +22,7 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Index(PropertyQueryFilter? filter)
         {
-            PropertyQueryFilter propertyQueryFilter = filter ?? new();
-            var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
-            if (User.Identities.First().Name != null)
+            if (User.IsLoggedIn())
             {
                 if (User.GetMainRole() == RoleTypes.Client)
                 {
@@ -37,6 +35,8 @@ namespace RealState.MVC.Controllers
                 }
 
             }
+            PropertyQueryFilter propertyQueryFilter = filter ?? new();
+            var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
             return View();
