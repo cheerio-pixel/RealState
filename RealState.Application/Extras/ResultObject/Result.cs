@@ -163,6 +163,20 @@ namespace RealState.Application.Extras.ResultObject
             //    select ele.Append(t);
         }
 
+        public static async Task<U> Match<T, U>(this Task<Result<T>> self,
+                                                Func<T, U> success,
+                                                Func<MultiFailure<T>, U> failure)
+        {
+            return (await self).Match(success, failure);
+        }
+
+        public static async Task Match_<T>(this Task<Result<T>> self,
+                                                Action<T> success,
+                                                Action<MultiFailure<T>> failure)
+        {
+            (await self).Match_(success, failure);
+        }
+
         public static async Task<Result<U>> Map<T, U>(this Task<Result<T>> self, Func<T, U> mapper)
         {
             return (await self).Map(mapper);

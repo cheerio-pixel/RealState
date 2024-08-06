@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.QueryFilters.User;
@@ -22,27 +23,36 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Index(PropertyQueryFilter? filter)
         {
-            PropertyQueryFilter propertyQueryFilter = filter ?? new();
-            var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
-            if(User.Identities.FirstOrDefault()!.Name != null)
+            if (User.IsLoggedIn())
             {
-                if(User.GetMainRole() == RoleTypes.Client)
+                if (User.GetMainRole() == RoleTypes.Client)
                 {
                     ViewBag.role = RoleTypes.Client;
-                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId()) ; 
+                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
+                }
+                else
+                {
+                    return RedirectToAction("ChooseRole", "Account");
                 }
 
             }
+            PropertyQueryFilter propertyQueryFilter = filter ?? new();
+            var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
             return View();
         }
 
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details([FromRoute] Guid id)
         {
-            var test = await _propertyService.GetPropertyDetailsById(Guid.Parse("588BA8F9-614B-4E67-2C61-08DCB3167A35"));
-            ViewBag.Property = test.Value;
-            return View();
+            return await _propertyService.GetPropertyDetailsById(id).Match(
+                success: s =>
+                {
+                    ViewBag.Property = s;
+                    return View();
+                },
+                failure: _ => this.RedirectBack()
+            );
         }
 
         public IActionResult Agents(UserQueryFilter filter)

@@ -95,5 +95,10 @@ namespace RealState.Infrastructure.Persistence.Repositories
         {
             return await _properties.Where(p => p.Code == code).FirstOrDefaultAsync();
         }
+
+        public Task<int> GetPropertyCount()
+        {
+            return _properties.Count().AsTask();
+        }
     }
 }
