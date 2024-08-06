@@ -116,7 +116,7 @@ public class AgentController(IPropertyService propertyService
             return View(vm);
         }
 
-        return !pictureResult.IsSuccess ? View(vm) : RedirectToAction("/Agent/index");
+        return !pictureResult.IsSuccess ? View(vm) : LocalRedirect("/Agent/index");
     }
 
     [HttpPost]
