@@ -24,12 +24,12 @@ namespace RealState.MVC.Controllers
         {
             PropertyQueryFilter propertyQueryFilter = filter ?? new();
             var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
-            if(User.Identities.FirstOrDefault()!.Name != null)
+            if (User.Identities.First().Name != null)
             {
-                if(User.GetMainRole() == RoleTypes.Client)
+                if (User.GetMainRole() == RoleTypes.Client)
                 {
                     ViewBag.role = RoleTypes.Client;
-                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId()) ; 
+                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
                 }
 
             }
