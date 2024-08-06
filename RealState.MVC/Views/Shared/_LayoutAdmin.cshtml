@@ -33,8 +33,7 @@
 
                 <div id="main-nav" class="collapse navbar-collapse text-dark" style="color:black;">
                     <ul class="navbar-nav ml-auto">
-                        <li><a href="/home" class="nav-item nav-link active text-dark">Home</a></li>
-                      
+                        <li><a asp-controller="Admin" asp-action="Index" class="nav-item nav-link active text-dark">Home</a></li>
 
                         @{
                             if (User!.Identity!.IsAuthenticated)
