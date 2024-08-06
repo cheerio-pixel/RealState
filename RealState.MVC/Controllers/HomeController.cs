@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.QueryFilters.User;
@@ -42,11 +43,16 @@ namespace RealState.MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details([FromRoute] Guid id)
         {
-            var test = await _propertyService.GetPropertyDetailsById(Guid.Parse("588BA8F9-614B-4E67-2C61-08DCB3167A35"));
-            ViewBag.Property = test.Value;
-            return View();
+            return await _propertyService.GetPropertyDetailsById(id).Match(
+                success: s =>
+                {
+                    ViewBag.Property = s;
+                    return View();
+                },
+                failure: _ => this.RedirectBack()
+            );
         }
 
         public IActionResult Agents(UserQueryFilter filter)
