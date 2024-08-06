@@ -8,6 +8,7 @@
         <form id="registerForm" asp-controller="Account" asp-action="SignIn" method="post">
             <h2>Sign In</h2>
             <hr />
+            @Html.HiddenFor(m => m.ReturnUrl)
               <div class="form-group">
                 <label asp-for="Account" class="form-label">Username or Email</label>
                 <input asp-for="Account" class="form-control" placeholder="userName or Email" aria-required="true" type="text" />

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using RealState.Application.Enums;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
@@ -15,8 +16,11 @@ namespace RealState.MVC.Controllers
         private readonly IRoleServices _roleServices = roleServices;
         private readonly ILogger<AccountController> _logger = logger;
 
-        public IActionResult SignIn()
-            => View();
+        public IActionResult SignIn(string? returnUrl)
+            => View(new LoginViewModel ()
+            {
+                ReturnUrl = returnUrl
+            });
 
         [HttpPost]
         public async Task<IActionResult> SignIn(LoginViewModel login)
@@ -28,6 +32,10 @@ namespace RealState.MVC.Controllers
             {
                 ModelState.AggregateErrors(result.Errors);
                 return View(login);
+            }
+            if (login.ReturnUrl is not null)
+            {
+                return LocalRedirect(login.ReturnUrl);
             }
             return RedirectToAction(nameof(ChooseRole));
             // return RedirectToAction("Index", "Home");
