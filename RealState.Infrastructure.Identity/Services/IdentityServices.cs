@@ -187,7 +187,7 @@ namespace RealState.Infrastructure.Identity.Services
 
             //verify if user is a manager or not
             var managerRolesName = _roleRepository.GetManagementRoles().Select(x => x.Name).ToList();
-            var isUserManager = saveUser.Roles.Where(x => managerRolesName.Contains(x.Name)).Count() > 0;
+            var isUserManager = saveUser.Roles.Any(x => managerRolesName.Contains(x.Name));
             if (isUserManager)
                 user.EmailConfirmed = true;
             #endregion
