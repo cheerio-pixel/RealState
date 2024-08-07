@@ -68,6 +68,11 @@ namespace RealState.Application.Services
             var result = await _identityServices.AuthenticationAsync(request);
             if (!result.Success)
                 return ErrorType.Conflict.Because(result.Error!);
+            if (result.CurrentUser.Roles.Any(static x => x.Name == nameof(RoleTypes.Developer)))
+            {
+                await SignOutAsync();
+                return "A developer cannot log in to a web app";
+            }
 
             return result.CurrentUser;
         }
