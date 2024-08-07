@@ -26,7 +26,10 @@ namespace RealState.Application.Queries.SalesType.GetAll
 
         public async Task<List<SalesTypeDTO>> Handle(GetAllSalesTypeQuery request, CancellationToken cancellationToken)
         {
-            List<SalesTypes> salesTypes = await _salesTypeRepository.ListSalesTypes(request.Filters);
+            List<SalesTypes> salesTypes = await _salesTypeRepository.ListSalesTypes(new()
+            {
+                Name = request.Name
+            });
             if (salesTypes.Count == 0)
             {
                 HttpStatusCode

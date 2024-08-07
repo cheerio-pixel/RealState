@@ -10,7 +10,7 @@ namespace RealState.Application.Queries.Upgrade.GetAll
     public class GetAllUpgradeQuery
     : IRequest<List<UpgradeDTO>>
     {
-        [SwaggerParameter("Filter to apply to search")]
-        public required UpgradesQueryFilter Filters { get; set; }
+        [SwaggerParameter(Description = "Optional filter by the name of the upgrade.")]
+        public string? Name { get; set; }
     }
 }

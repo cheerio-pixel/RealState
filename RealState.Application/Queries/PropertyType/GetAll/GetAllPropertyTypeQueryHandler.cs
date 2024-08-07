@@ -26,7 +26,10 @@ namespace RealState.Application.Queries.PropertyType.GetAll
 
         public async Task<List<PropertyTypeDTO>> Handle(GetAllPropertyTypeQuery request, CancellationToken cancellationToken)
         {
-            List<PropertyTypes> propertyTypes = await _propertyTypeRepository.ListPropertyTypes(request.Filters);
+            List<PropertyTypes> propertyTypes = await _propertyTypeRepository.ListPropertyTypes(new()
+            {
+                Name = request.Name
+            });
             if (propertyTypes.Count == 0)
             {
                 HttpStatusCode

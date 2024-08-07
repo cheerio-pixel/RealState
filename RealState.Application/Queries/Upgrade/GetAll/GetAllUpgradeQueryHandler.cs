@@ -26,7 +26,10 @@ namespace RealState.Application.Queries.Upgrade.GetAll
 
         public async Task<List<UpgradeDTO>> Handle(GetAllUpgradeQuery request, CancellationToken cancellationToken)
         {
-            List<Upgrades> upgrades = await _upgradeRepository.ListUpgrades(request.Filters);
+            List<Upgrades> upgrades = await _upgradeRepository.ListUpgrades(new()
+            {
+                Name = request.Name
+            });
             if (upgrades.Count == 0)
             {
                 HttpStatusCode
