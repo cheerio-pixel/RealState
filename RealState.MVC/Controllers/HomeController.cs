@@ -1,5 +1,6 @@
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
@@ -34,7 +35,6 @@ namespace RealState.MVC.Controllers
                 {
                     return RedirectToAction("ChooseRole", "Account");
                 }
-
             }
             PropertyQueryFilter propertyQueryFilter = filter ?? new();
             var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
@@ -45,6 +45,10 @@ namespace RealState.MVC.Controllers
 
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
+            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
+            {
+                return RedirectToAction("ChooseRole", "Account");
+            }
             return await _propertyService.GetPropertyDetailsById(id).Match(
                 success: s =>
                 {
@@ -57,6 +61,10 @@ namespace RealState.MVC.Controllers
 
         public IActionResult Agents(UserQueryFilter filter)
         {
+            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
+            {
+                return RedirectToAction("ChooseRole", "Account");
+            }
             filter ??= new UserQueryFilter();
             filter.Role = RoleTypes.StateAgent;
 
@@ -67,7 +75,10 @@ namespace RealState.MVC.Controllers
         [HttpGet("home/agent/{id}")]
         public async Task<IActionResult> Properties(Guid id)
         {
-
+            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
+            {
+                return RedirectToAction("ChooseRole", "Account");
+            }
             var result = await _propertyService.GetPropertyByAgentIdWithInclude(id);
             ViewBag.Properties = result.Value;
             return View();
