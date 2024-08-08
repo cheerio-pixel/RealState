@@ -4,13 +4,14 @@
 # Register
 
 POST :authBase/Register/Developer
+Content-Type: application/json
 {
   "firstName": "John",
   "lastName": "Doe",
   "userName": "DefaultUser",
   "email": "DefaultDeveloper@gmail.com",
   "identifierCard": "ID123456",
-  "phoneNumber": "+1234567890",
+  "phoneNumber": "1234567890",
   "password": "123Pa$$word!"
 }
 
@@ -126,6 +127,34 @@ GET :base/PropertyType/:propertyTypeId
 POST :base/PropertyType
 :headers
 {
-  "name": "string",
-  "description": "string"
+  "name": "property type",
+  "description": "a really helpful one"
 }
+
+# Update
+
+PUT :base/PropertyType
+:headers
+{
+  "id" : "3e46b12a-7d7d-43a0-5011-08dcb7ef4af7",
+  "name": "property type more",
+  "description": "a really helpful one"
+}
+
+# Delete
+
+DELETE :base/PropertyType
+:headers
+"e5453531-e0d4-4057-5012-08dcb7ef4af7"
+
+
+# List
+
+GET :base/PropertyTypes
+:headers
+
+# By id
+
+GET :base/PropertyType/3e46b12a-7d7d-43a0-5011-08dcb7ef4af7
+:headers
+
