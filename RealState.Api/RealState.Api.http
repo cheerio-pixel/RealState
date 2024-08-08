@@ -77,3 +77,55 @@ POST :authBase/Register/Administrator
   "phoneNumber": "9876543210",
   "password": "AdminPa$$word123!"
 }
+
+# Agents
+
+GET :base/Agents
+-> jq-set-var :agentId .[0].id
+:headers
+
+# By Id
+
+GET :base/Agent/:agentId
+:headers
+
+# their properties
+GET :base/Agent/:agentId/Properties
+:headers
+
+# Property
+
+GET :base/Properties
+-> jq-set-var :propertyId .[0].id
+-> jq-set-var :propertyCode .[1].code
+:headers
+
+# By id
+
+GET :base/Property/:propertyId
+:headers
+
+# By code
+
+GET :base/Code/:propertyCode/Property
+:headers
+
+# Property type
+
+GET :base/PropertyTypes
+-> jq-set-var :propertyTypeId .[0].id
+:headers
+
+# By id
+
+GET :base/PropertyType/:propertyTypeId
+:headers
+
+# Create
+
+POST :base/PropertyType
+:headers
+{
+  "name": "string",
+  "description": "string"
+}
