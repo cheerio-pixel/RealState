@@ -17,7 +17,7 @@ namespace RealState.MVC.Controllers
         private readonly ILogger<AccountController> _logger = logger;
 
         public IActionResult SignIn(string? returnUrl)
-            => View(new LoginViewModel ()
+            => View(new LoginViewModel()
             {
                 ReturnUrl = returnUrl
             });
