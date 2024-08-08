@@ -18,7 +18,10 @@ namespace RealState.MVC.ActionFilter
             {
                 context.Result = new RedirectToActionResult("ChooseRole", "Account", new object());
             }
-            await next();
+            else
+            {
+                await next();
+            }
         }
     }
 }
