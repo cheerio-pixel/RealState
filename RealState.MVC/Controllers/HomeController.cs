@@ -35,6 +35,7 @@ namespace RealState.MVC.Controllers
             var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
+            ViewBag.Filter = propertyQueryFilter;
             return View();
         }
 

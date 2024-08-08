@@ -41,6 +41,7 @@ public class AgentController(IPropertyService propertyService
         Result<List<PropertyViewModel>> result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter);
         ViewBag.Properties = result.Value;
         ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
+        ViewBag.Filter = propertyQueryFilter;
         return View();
     }
 
