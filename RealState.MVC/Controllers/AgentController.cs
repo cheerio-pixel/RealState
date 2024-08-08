@@ -72,7 +72,7 @@ public class AgentController(IPropertyService propertyService
         }
 
         var property = await _propertyService.GetByIdSaveViewModel(Guid.Parse(id));
-        return property is null ? Redirect("/Agent/Index") : View("create", property);
+        return property is null ? Redirect("/Agent/Index") : View("Create", property);
     }
 
     [HttpPost]
