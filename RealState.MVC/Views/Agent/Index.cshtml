@@ -9,7 +9,7 @@
 <div>
         <div class="form">
                 <h3 class="mb-3">Search for a building</h3>
-            <form method="get" asp-controller="home" asp-action="index">
+            <form method="get" asp-controller="agent" asp-action="index">
 
                 <div class="form-group">
                     <input type="text" placeholder="Building Code" name="Code" class="form-control"
@@ -42,12 +42,16 @@
                 </div>
                  <div class="form-group">
                     <input value="@(propertyQueryFilter.Bathrooms == 0 ? "" : propertyQueryFilter.Bathrooms)" type="text" placeholder="Bathrooms number" name="Bathrooms" class="form-control">
-                </div>
-              <div class="form-group">
-                  <div class="range">
-                        <input value="@propertyQueryFilter.Price" type="range" min="0" max="1000000" name="Price" value="0" class="slider" id="myRange">
-                      <p style="display:flex; gap:5px;font-family: 'Roboto', sans-serif;">Price: <span id="demo">0</span></p>
-              </div>
+ <!-- Minimum price input -->
+<div class="form-group">
+    <input value="@(propertyQueryFilter.MinPrice == 0 ? "" : propertyQueryFilter.MinPrice)" type="number" placeholder="Minimum Price" name="MinPrice" class="form-control" id="minPrice">
+</div>
+
+<!-- Maximum price input -->
+<div class="form-group">
+    <input value="@(propertyQueryFilter.MaxPrice == 0 ? "" : propertyQueryFilter.MaxPrice)" type="number" placeholder="Maximum Price" name="MaxPrice" class="form-control" id="maxPrice">
+</div>
+                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -116,21 +120,39 @@
 </div>
 
             <script>
-$(document).ready(function() {
-    $('.progress-container').click(function(e) {
-        var offset = $(this).offset();
-        var clickX = e.pageX - offset.left;
-        var totalWidth = $('.progress-container').width();
-        var percent = clickX / totalWidth * 100;
-        $('#progress-bar').css('width', percent + '%');
-    });
+     $(document).ready(function() {
+        var minPriceInput = $('#minPrice');
+        var maxPriceInput = $('#maxPrice');
 
-    $('#myRange').on('input', function() {
-        $('#demo').text($(this).val());
-    });
-});
+        // Store the initial values
+        var previousMinPrice = minPriceInput.val();
+        var previousMaxPrice = maxPriceInput.val();
 
-                function confirmDelete(id){
+        minPriceInput.on('blur', function() {
+            var minPrice = parseFloat(minPriceInput.val());
+            var maxPrice = parseFloat(maxPriceInput.val());
+
+            if (minPrice > maxPrice) {
+                alert('Minimum Price cannot be greater than Maximum Price.');
+                minPriceInput.val(previousMinPrice); // Revert to previous value
+            } else {
+                previousMinPrice = minPrice; // Update the previous value
+            }
+        });
+
+        maxPriceInput.on('blur', function() {
+            var minPrice = parseFloat(minPriceInput.val());
+            var maxPrice = parseFloat(maxPriceInput.val());
+
+            if (maxPrice < minPrice) {
+                alert('Maximum Price cannot be less than Minimum Price.');
+                maxPriceInput.val(previousMaxPrice); // Revert to previous value
+            } else {
+                previousMaxPrice = maxPrice; // Update the previous value
+            }
+        });
+    });
+               function confirmDelete(id){
     Swal.fire({
   title: "Estas seguro?",
   text: "Los cambios no podran revertirse!",
