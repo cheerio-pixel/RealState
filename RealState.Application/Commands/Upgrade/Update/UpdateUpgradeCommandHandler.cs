@@ -26,6 +26,13 @@ namespace RealState.Application.Commands.Upgrade.Update
 
         public async Task<UpdateUpgradeResponse> Handle(UpdateUpgradeCommand request, CancellationToken cancellationToken)
         {
+            if (await _upgradeRepository.DoesUpgradeNameExists(request.Name, request.Id))
+            {
+                HttpStatusCode.Conflict
+               .Because("Upgrade's name already exists.")
+               .On(nameof(request.Name))
+               .Throw();
+            }
             Upgrades propertyToUpdate = _mapper.Map<Upgrades>(request);
             Upgrades? upgrades = await _upgradeRepository.Update(propertyToUpdate);
             if (upgrades is null)

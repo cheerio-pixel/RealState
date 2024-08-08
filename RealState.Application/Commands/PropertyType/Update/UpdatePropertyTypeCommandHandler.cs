@@ -26,6 +26,14 @@ namespace RealState.Application.Commands.PropertyType.Update
 
         public async Task<UpdatePropertyTypeResponse> Handle(UpdatePropertyTypeCommand request, CancellationToken cancellationToken)
         {
+            if (await _propertyTypeRepository.DoesPropertyTypeNameExists(request.Name, request.Id))
+            {
+                HttpStatusCode
+               .Conflict
+               .Because("Property type name already exists.")
+               .On(nameof(request.Name))
+               .Throw();
+            }
             PropertyTypes propertyToUpdate = _mapper.Map<PropertyTypes>(request);
             PropertyTypes? propertyTypes = await _propertyTypeRepository.Update(propertyToUpdate);
             if (propertyTypes is null)
