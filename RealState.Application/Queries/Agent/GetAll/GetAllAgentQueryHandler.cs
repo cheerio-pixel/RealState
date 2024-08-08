@@ -29,17 +29,16 @@ namespace RealState.Application.Queries.Agent.GetAll
         }
         public async Task<List<AgentDTO>> Handle(GetAllAgentQuery request, CancellationToken cancellationToken)
         {
-            var requetsFilter = request.Filter;
-            UserQueryFilter filter = new() 
-            { 
-                FirstName = requetsFilter.FirstName,
-                LastName = requetsFilter.LastName,
-                Email = requetsFilter.Email,
-                Active = requetsFilter.Active,
-                IdentifierCard = requetsFilter.IdentifierCard,
-                PhoneNumber = requetsFilter.PhoneNumber,
+            UserQueryFilter filter = new()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                Active = request.Active,
+                IdentifierCard = request.IdentifierCard,
+                PhoneNumber = request.PhoneNumber,
                 Role = RoleTypes.StateAgent,
-                UserName = requetsFilter.UserName 
+                UserName = request.UserName
             };
 
             var agents = _userRepository.Get(filter).ToList();

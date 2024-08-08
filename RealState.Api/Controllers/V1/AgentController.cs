@@ -73,9 +73,9 @@ namespace RealState.Api.Controllers.V1
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized access")]
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have required role")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "No agents present")]
-        public async Task<IActionResult> Get([FromQuery] AgentQueryFilter filter)
+        public async Task<IActionResult> Get([FromQuery] GetAllAgentQuery filter)
         {
-            List<AgentDTO> result = await _sender.Send(new GetAllAgentQuery() { Filter = filter });
+            List<AgentDTO> result = await _sender.Send(filter);
             return Ok(result);
         }
 
