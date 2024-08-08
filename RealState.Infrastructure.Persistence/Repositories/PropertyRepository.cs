@@ -36,6 +36,10 @@ namespace RealState.Infrastructure.Persistence.Repositories
             {
                 properties = properties.Where(x => x.PropertyTypeId == filter.PropertyTypeId);
             }
+            if(filter.AgentId != null)
+            {
+                properties = properties.Where(x => x.AgentId == filter.AgentId);
+            }
             if (filter.Bathrooms != 0)
             {
                 properties = properties.Where(x => x.Bathrooms == filter.Bathrooms);
