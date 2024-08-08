@@ -6,6 +6,7 @@
         public int Rooms { get; set; }
         public int Bathrooms { get; set; }
         public decimal Price { get; set; }
-        public Guid? PropertyTypeId { get; set; } = null;
+        public Guid? PropertyTypeId { get; set; }
+        public Guid? AgentId { get; set; }
     }
 }

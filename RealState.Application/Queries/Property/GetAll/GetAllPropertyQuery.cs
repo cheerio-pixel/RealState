@@ -35,5 +35,11 @@ namespace RealState.Application.Queries.Property.GetAll
         /// </summary>
         [SwaggerParameter(Description = "Filter by the property type ID")]
         public Guid? PropertyTypeId { get; set; } = null;
+
+        /// <summary>
+        /// Filter by the agent ID.
+        /// </summary>
+        [SwaggerParameter(Description = "Filter by the owner agent")]
+        public Guid? AgentId { get; set; }
     }
 }
