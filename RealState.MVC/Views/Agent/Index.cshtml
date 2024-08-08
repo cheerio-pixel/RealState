@@ -6,7 +6,7 @@
     List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertysTypes;
     PropertyQueryFilter propertyQueryFilter = ViewBag.Filter;
 }
-<div class="body">
+<div>
         <div class="form">
                 <h3 class="mb-3">Search for a building</h3>
             <form method="get" asp-controller="home" asp-action="index">
@@ -54,7 +54,6 @@
             </form>
         </div>
         </div>
-</div>
 
 <div class="property-container">
 
@@ -114,8 +113,23 @@
         }
         }
 </div>
+</div>
 
             <script>
+$(document).ready(function() {
+    $('.progress-container').click(function(e) {
+        var offset = $(this).offset();
+        var clickX = e.pageX - offset.left;
+        var totalWidth = $('.progress-container').width();
+        var percent = clickX / totalWidth * 100;
+        $('#progress-bar').css('width', percent + '%');
+    });
+
+    $('#myRange').on('input', function() {
+        $('#demo').text($(this).val());
+    });
+});
+
                 function confirmDelete(id){
     Swal.fire({
   title: "Estas seguro?",
@@ -139,3 +153,4 @@
 });
 }
             </script>
+
