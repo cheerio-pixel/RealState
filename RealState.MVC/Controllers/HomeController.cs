@@ -8,6 +8,7 @@ using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.QueryFilters.User;
+using RealState.MVC.ActionFilter;
 using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
@@ -19,36 +20,28 @@ namespace RealState.MVC.Controllers
     {
         private readonly IPropertyService _propertyService = propertyService;
         private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
-        public readonly IUserServices _userServices = userServices;
-        public readonly IFavoriteService _favoriteService = favoriteService;
+        private readonly IUserServices _userServices = userServices;
+        private readonly IFavoriteService _favoriteService = favoriteService;
 
+        [HomeGuard]
         public async Task<IActionResult> Index(PropertyQueryFilter? filter)
         {
-            if (User.IsLoggedIn())
+            if (User.IsLoggedIn() && User.GetMainRole() == RoleTypes.Client)
             {
-                if (User.GetMainRole() == RoleTypes.Client)
-                {
-                    ViewBag.role = RoleTypes.Client;
-                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
-                }
-                else
-                {
-                    return RedirectToAction("ChooseRole", "Account");
-                }
+                ViewBag.role = RoleTypes.Client;
+                ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
             }
             PropertyQueryFilter propertyQueryFilter = filter ?? new();
             var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
+            ViewBag.Filter = propertyQueryFilter;
             return View();
         }
 
+        [HomeGuard]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
-            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
-            {
-                return RedirectToAction("ChooseRole", "Account");
-            }
             return await _propertyService.GetPropertyDetailsById(id).Match(
                 success: s =>
                 {
@@ -59,12 +52,9 @@ namespace RealState.MVC.Controllers
             );
         }
 
+        [HomeGuard]
         public IActionResult Agents(UserQueryFilter filter)
         {
-            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
-            {
-                return RedirectToAction("ChooseRole", "Account");
-            }
             filter ??= new UserQueryFilter();
             filter.Role = RoleTypes.StateAgent;
 
@@ -73,12 +63,9 @@ namespace RealState.MVC.Controllers
         }
 
         [HttpGet("home/agent/{id}")]
+        [HomeGuard]
         public async Task<IActionResult> Properties(Guid id)
         {
-            if (User.IsLoggedIn() && User.GetMainRole() != RoleTypes.Client)
-            {
-                return RedirectToAction("ChooseRole", "Account");
-            }
             var result = await _propertyService.GetPropertyByAgentIdWithInclude(id);
             ViewBag.Properties = result.Value;
             return View();

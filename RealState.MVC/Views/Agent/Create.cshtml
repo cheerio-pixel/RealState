@@ -35,10 +35,14 @@
                 <div class="group">
                     <label for="saleType">Sale Type</label>
                     <select id="SalesTypeId" asp-for="SalesTypeId">
-                        <option selected>Choose...</option>
                         @{
                             if (salesTypes != null)
                             {
+
+                               if (salesTypes.Count != 0)
+                                {
+                        <option selected disabled>Choose...</option>
+                        }
                                 foreach (var item in salesTypes)
                                 {
                                     if (item.Id == Model.SalesTypeId)
@@ -53,6 +57,10 @@
                             }
                         }
                     </select>
+                    @if (salesTypes.Count == 0)
+                    {
+                    <span class="text-danger">There are no avalible sales types. You cannot create a property</span>
+                    }
                     <span asp-validation-for="SalesTypeId" class="text-danger"></span>
                 </div>
                 <div class="group">
@@ -87,10 +95,14 @@
                 <div class="group">
                     <label>Property Type</label>
                     <select id="PropertyTypeId" asp-for="PropertyTypeId">
-                        <option selected>Choose...</option>
                         @{
                             if (propertyTypes != null)
                             {
+                                if (propertyTypes.Count != 0)
+                        {
+
+                        <option selected disabled>Choose...</option>
+                        }
                                 foreach (var item in propertyTypes)
                                 {
                                     if (item.Id == Model.PropertyTypeId)
@@ -105,16 +117,24 @@
                             }
                         }
                     </select>
+                    @if (propertyTypes.Count == 0)
+                        {
+                    <span class="text-danger">There are no avalible property types. You cannot create a property</span>
+                        }
                     <span asp-validation-for="PropertyTypeId" class="text-danger"></span>
                 </div>
                 <div class="upgrades-container">
                     <div class="group">
                         <label for="Updagre">Upgrade Type</label>
                         <select id="UpgradeId" asp-for="UpgradeId" multiple>
-                            <option value="" disabled selected>Choose...</option>
                             @{
                                 if (upgrades != null)
                                 {
+                                    if (upgrades.Count != 0)
+                                    {
+                                        
+                            <option value="" disabled selected>Choose...</option>
+                                        }
                                     foreach (var item in upgrades)
                                     {
                                         if (Model.UpgradeId.Any(x => x == item.Id))
@@ -131,6 +151,10 @@
                             }
                         </select>
                     </div>
+                    @if (upgrades.Count == 0)
+                    {
+                    <span class="text-danger">There are no avalible upgrades. You cannot create a property</span>
+                                            }
                     <span asp-validation-for="UpgradeId" class="text-danger"></span>
                 </div>
                 <div class="file-container">

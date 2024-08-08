@@ -10,6 +10,7 @@ using RealState.Application.DTOs.Account.RegisterResponse;
 using RealState.Application.DTOs.User;
 using RealState.Application.Exceptions;
 using RealState.Application.Extras;
+using RealState.Application.Helper;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Application.Interfaces.Services;
 
@@ -32,6 +33,7 @@ namespace RealState.Application.Commands.Authentication.Register
         public async Task<ApplicationUserDTO> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             SaveApplicationUserDTO saveApplicationUserDTO = _mapper.Map<SaveApplicationUserDTO>(request);
+            saveApplicationUserDTO.Picture = PictureHelper.GetDefaultUserImage();
             saveApplicationUserDTO.Roles = [await _roleRepository.GetByNameAsync(request.Role.ToString())];
             RegisterResponseDTO registerResponseDTO
                 = await _identityServices.RegisterAsync(saveApplicationUserDTO);

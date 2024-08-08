@@ -25,15 +25,27 @@ namespace RealState.Application.Queries.Property.GetAll
         public int Bathrooms { get; set; }
 
         /// <summary>
-        /// Filter by the price of the property.
+        /// Filter by the mininum price to have
         /// </summary>
-        [SwaggerParameter(Description = "Filter by the price of the property")]
-        public decimal Price { get; set; }
+        [SwaggerParameter(Description = "Filter by the mininum price to have")]
+        public decimal MinPrice { get; set; }
+
+        /// <summary>
+        /// Filter by the maximum price to have
+        /// </summary>
+        [SwaggerParameter(Description = "Filter by the maximum price to have")]
+        public decimal MaxPrice { get; set; }
 
         /// <summary>
         /// Filter by the property type ID.
         /// </summary>
         [SwaggerParameter(Description = "Filter by the property type ID")]
         public Guid? PropertyTypeId { get; set; } = null;
+
+        /// <summary>
+        /// Filter by the agent ID.
+        /// </summary>
+        [SwaggerParameter(Description = "Filter by the owner agent")]
+        public Guid? AgentId { get; set; }
     }
 }

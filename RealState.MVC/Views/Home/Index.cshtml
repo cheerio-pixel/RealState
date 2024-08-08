@@ -1,12 +1,14 @@
 ﻿@using RealState.Application.Enums
 @using RealState.Application.ViewModel.Favorite
 @using RealState.MVC.Helpers
+@using RealState.Application.QueryFilters
 @{
     ViewData["Title"] = "Home Page";
     List<PropertyViewModel> properties = ViewBag.Properties;
     List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertysTypes;
     RoleTypes? role = ViewBag.Role as RoleTypes?;
     List<FavoriteViewModel>? favorites = ViewBag.Favorites as List<FavoriteViewModel>;
+    PropertyQueryFilter propertyQueryFilter = ViewBag.Filter;
 }
 
 <div class="main-body">
@@ -24,7 +26,8 @@
             <form method="get" asp-controller="home" asp-action="index">
 
                 <div class="form-group">
-                    <input type="text" placeholder="Building Code" name="Code" class="form-control">
+                    <input type="text" placeholder="Building Code" name="Code" class="form-control"
+                    value="@propertyQueryFilter.Code">
                 </div>
                 <div class="form-group row">
                     <select id="inputState" name="PropertyTypeId" class="form-control">
@@ -34,29 +37,40 @@
                                {
                                    foreach(var propertyType in propertyTypes)
                                    {
+                                       if (propertyQueryFilter.PropertyTypeId == @propertyType.Id)
+                                       {
+                                            <option selected value="@propertyType.Id">@propertyType.Name</option>
+                                       }
+                                       else
+                                       {
                                        <option value="@propertyType.Id">@propertyType.Name</option>
+                                       }
                                    }
                                }
                            }
                         </select>
                     </div>
                     <!--Average price searching-->
-                   
                     <div class="form-group">
-                    <input type="text" placeholder="Bedrooms number" name="Rooms" class="form-control">
+                    <input value="@(propertyQueryFilter.Rooms == 0 ? "" : propertyQueryFilter.Rooms)" type="text" placeholder="Bedrooms number" name="Rooms" class="form-control">
                 </div>
                  <div class="form-group">
-                    <input type="text" placeholder="Bathrooms number" name="Bathrooms" class="form-control">
-                </div>
-              <div class="form-group">
-                  <div class="range">
-                        <input type="range" min="0" max="1000000" name="Price" value="0" class="slider" id="myRange">
-                      <p style="display:flex; gap:5px;font-family: 'Roboto', sans-serif;">Price: <span id="demo">0</span></p>
-              </div>
+                    <input value="@(propertyQueryFilter.Bathrooms == 0 ? "" : propertyQueryFilter.Bathrooms)" type="text" placeholder="Bathrooms number" name="Bathrooms" class="form-control">
+ <!-- Minimum price input -->
+<div class="form-group">
+    <input value="@(propertyQueryFilter.MinPrice == 0 ? "" : propertyQueryFilter.MinPrice)" type="number" placeholder="Minimum Price" name="MinPrice" class="form-control" id="minPrice">
+</div>
+
+<!-- Maximum price input -->
+<div class="form-group">
+    <input value="@(propertyQueryFilter.MaxPrice == 0 ? "" : propertyQueryFilter.MaxPrice)" type="number" placeholder="Maximum Price" name="MaxPrice" class="form-control" id="maxPrice">
+</div>
+                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
+        </div>
         </div>
         <div class="container mt-5" style="padding-left:0;">
             @if (properties.Count > 0)
@@ -111,7 +125,7 @@
                                         @if(isFavorite)
                                         {
                                             <input type="hidden" name="favoriteId" value="@favorites!.FirstOrDefault(x => x.PropertyId == @property.Id)!.Id" />
-                                        })
+                                        }
                                         <input type="hidden" name="PropertyId" value="@property.Id" />
                                         <button type="submit" class="btn btn-primary">@(!isFavorite ? "Add to favorites" : "Remove from favorites")</button>
                                     </form>
@@ -126,19 +140,38 @@
 </div>
 
                             <script>
-$(document).ready(function() {
-    $('.progress-container').click(function(e) {
-        var offset = $(this).offset();
-        var clickX = e.pageX - offset.left;
-        var totalWidth = $('.progress-container').width();
-        var percent = clickX / totalWidth * 100;
-        $('#progress-bar').css('width', percent + '%');
-    });
+     $(document).ready(function() {
+        var minPriceInput = $('#minPrice');
+        var maxPriceInput = $('#maxPrice');
 
-    $('#myRange').on('input', function() {
-        $('#demo').text($(this).val());
+        // Store the initial values
+        var previousMinPrice = minPriceInput.val();
+        var previousMaxPrice = maxPriceInput.val();
+
+        minPriceInput.on('blur', function() {
+            var minPrice = parseFloat(minPriceInput.val());
+            var maxPrice = parseFloat(maxPriceInput.val());
+
+            if (minPrice > maxPrice) {
+                alert('Minimum Price cannot be greater than Maximum Price.');
+                minPriceInput.val(previousMinPrice); // Revert to previous value
+            } else {
+                previousMinPrice = minPrice; // Update the previous value
+            }
+        });
+
+        maxPriceInput.on('blur', function() {
+            var minPrice = parseFloat(minPriceInput.val());
+            var maxPrice = parseFloat(maxPriceInput.val());
+
+            if (maxPrice < minPrice) {
+                alert('Maximum Price cannot be less than Minimum Price.');
+                maxPriceInput.val(previousMaxPrice); // Revert to previous value
+            } else {
+                previousMaxPrice = maxPrice; // Update the previous value
+            }
+        });
     });
-});
 
 
 

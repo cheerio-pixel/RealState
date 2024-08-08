@@ -33,8 +33,10 @@ namespace RealState.Application.Queries.Property.GetAll
                 Code = request.Code,
                 Rooms = request.Rooms,
                 Bathrooms = request.Bathrooms,
-                Price = request.Price,
-                PropertyTypeId = request.PropertyTypeId
+                PropertyTypeId = request.PropertyTypeId,
+                AgentId = request.AgentId,
+                MaxPrice = request.MaxPrice,
+                MinPrice = request.MinPrice
             });
             if (properties.Count == 0)
             {

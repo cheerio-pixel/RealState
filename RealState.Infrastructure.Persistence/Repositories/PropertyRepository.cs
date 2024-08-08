@@ -36,6 +36,10 @@ namespace RealState.Infrastructure.Persistence.Repositories
             {
                 properties = properties.Where(x => x.PropertyTypeId == filter.PropertyTypeId);
             }
+            if(filter.AgentId != null)
+            {
+                properties = properties.Where(x => x.AgentId == filter.AgentId);
+            }
             if (filter.Bathrooms != 0)
             {
                 properties = properties.Where(x => x.Bathrooms == filter.Bathrooms);
@@ -44,9 +48,13 @@ namespace RealState.Infrastructure.Persistence.Repositories
             {
                 properties = properties.Where(x => x.Rooms == filter.Rooms);
             }
-            if (filter.Price != 0)
+            if (filter.MinPrice != 0)
             {
-                properties = properties.Where(x => x.Price >= filter.Price);
+                properties = properties.Where(x => x.Price >= filter.MinPrice);
+            }
+            if (filter.MaxPrice != 0)
+            {
+                properties = properties.Where(x => x.Price <= filter.MaxPrice);
             }
 
             return await properties.Include(x => x.Pictures).Include(x => x.PropertyTypes).Include(x => x.SalesTypes).ToListAsync();

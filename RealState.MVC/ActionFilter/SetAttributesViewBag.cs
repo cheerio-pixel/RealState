@@ -8,11 +8,9 @@ namespace RealState.MVC.ActionFilter
         private readonly ISalesTypesService _salesTypeService = salesTypeService;
         private readonly IUpgradesService _upgradesService = upgradesService;
 
-      
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var controller = context.Controller as Microsoft.AspNetCore.Mvc.Controller;
-            if (controller != null)
+            if (context.Controller is Microsoft.AspNetCore.Mvc.Controller controller)
             {
                 controller.ViewBag.PropertyTypes = await _propertyTypeService.GetAllViewModel();
                 controller.ViewBag.SalesTypes = await _salesTypeService.GetAllViewModel();

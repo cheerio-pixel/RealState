@@ -1,6 +1,131 @@
-@RealState.Api_HostAddress = http://localhost:5217
+:base = https://localhost:7032/api/v1
+:authBase = https://localhost:7032/api/Authentication
 
-GET {{RealState.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+# Register
 
-###
+POST :authBase/Register/Developer
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "userName": "DefaultUser",
+  "email": "DefaultDeveloper@gmail.com",
+  "identifierCard": "ID123456",
+  "phoneNumber": "+1234567890",
+  "password": "123Pa$$word!"
+}
+
+# Auth
+
+POST :authBase/Login
+-> jq-set-var :auth-token .jwToken
+-> jq-set-var :userId .currentUser.id
+Content-Type: application/json
+{
+  "emailOrUsername": "DefaultAdmin@gmail.com",
+  "password": "123Pa$$word!"
+}
+
+#
+
+POST :authBase/Login
+-> jq-set-var :auth-token .jwToken
+-> jq-set-var :userId .currentUser.id
+Content-Type: application/json
+{
+  "emailOrUsername": "DefaultStatusAgent@gmail.com",
+  "password": "123Pa$$word!"
+}
+
+#
+
+POST :authBase/Login
+-> jq-set-var :auth-token .jwToken
+-> jq-set-var :userId .currentUser.id
+Content-Type: application/json
+{
+  "emailOrUsername": "DefaultDeveloper@gmail.com",
+  "password": "123Pa$$word!"
+}
+
+#
+
+POST :authBase/Login
+-> jq-set-var :auth-token .jwToken
+-> jq-set-var :userId .currentUser.id
+Content-Type: application/json
+{
+  "emailOrUsername": "AdminEmail@example.com",
+  "password": "AdminPa$$word123!"
+}
+
+# General headers
+
+:headers = <<
+Content-Type: application/json
+Authorization: Bearer :auth-token
+
+# Register admin
+
+POST :authBase/Register/Administrator
+:headers
+{
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "userName": "AdminUser",
+  "email": "AdminEmail@example.com",
+  "identifierCard": "AdminID987654",
+  "phoneNumber": "9876543210",
+  "password": "AdminPa$$word123!"
+}
+
+# Agents
+
+GET :base/Agents
+-> jq-set-var :agentId .[0].id
+:headers
+
+# By Id
+
+GET :base/Agent/:agentId
+:headers
+
+# their properties
+GET :base/Agent/:agentId/Properties
+:headers
+
+# Property
+
+GET :base/Properties
+-> jq-set-var :propertyId .[0].id
+-> jq-set-var :propertyCode .[1].code
+:headers
+
+# By id
+
+GET :base/Property/:propertyId
+:headers
+
+# By code
+
+GET :base/Code/:propertyCode/Property
+:headers
+
+# Property type
+
+GET :base/PropertyTypes
+-> jq-set-var :propertyTypeId .[0].id
+:headers
+
+# By id
+
+GET :base/PropertyType/:propertyTypeId
+:headers
+
+# Create
+
+POST :base/PropertyType
+:headers
+{
+  "name": "string",
+  "description": "string"
+}
