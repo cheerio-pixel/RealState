@@ -2,13 +2,53 @@
 @{
     Layout = "~/Views/Shared/_Layoutproperty.cshtml";
     List<PropertyViewModel> properties = ViewBag.Properties;
+    List<PropertyTypeViewModel> propertyTypes = ViewBag.PropertysTypes;
 }
 
+        <div class="form">
+                <h3 class="mb-3">Search for a building</h3>
+            <form method="get" asp-controller="agent" asp-action="index">
+
+                <div class="form-group">
+                    <input type="text" placeholder="Building Code" name="Code" class="form-control">
+                </div>
+                <div class="form-group row">
+                    <select id="inputState" name="PropertyTypeId" class="form-control">
+                            <option selected>Choose building type...</option>
+                           @{
+                               if(propertyTypes.Count > 0)
+                               {
+                                   foreach(var propertyType in propertyTypes)
+                                   {
+                                       <option value="@propertyType.Id">@propertyType.Name</option>
+                                   }
+                               }
+                           }
+                        </select>
+                    </div>
+                    <!--Average price searching-->
+                   
+                    <div class="form-group">
+                    <input type="text" placeholder="Bedrooms number" name="Rooms" class="form-control">
+                </div>
+                 <div class="form-group">
+                    <input type="text" placeholder="Bathrooms number" name="Bathrooms" class="form-control">
+                </div>
+              <div class="form-group">
+                  <div class="range">
+                        <input type="range" min="0" max="1000000" name="Price" value="0" class="slider" id="myRange">
+                      <p style="display:flex; gap:5px;font-family: 'Roboto', sans-serif;">Price: <span id="demo">0</span></p>
+              </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
 
 <div class="property-container">
 
     <a href="/agent/Create" class="create-card">
-        <i class="fa fa-plus"></i> 
+        <i class="fa fa-plus"></i>
     </a>
     @{
         @if (properties.Count > 0)

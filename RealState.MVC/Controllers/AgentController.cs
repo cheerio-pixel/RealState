@@ -1,18 +1,19 @@
 using AutoMapper;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using RealState.Application.Enums;
 using RealState.Application.Extras.ResultObject;
 using RealState.Application.Helper;
 using RealState.Application.Interfaces.Services;
+using RealState.Application.QueryFilters;
 using RealState.Application.ViewModel.Pictures;
 using RealState.Application.ViewModel.PropertiesUpgrades;
 using RealState.Application.ViewModel.Property;
 using RealState.Application.ViewModel.User;
 using RealState.MVC.ActionFilter;
 using RealState.MVC.Helpers;
-
-
 
 namespace RealState.MVC.Controllers;
 
@@ -21,6 +22,7 @@ public class AgentController(IPropertyService propertyService
     , IMapper mapper,
     IPictureService pictureService,
     IPropertyUpgradeService propertyUpgradeService,
+    IPropertyTypeService propertyTypeService,
     IUserServices userServices,
     ILogger<AgentController> logger) : Controller
 {
@@ -30,12 +32,15 @@ public class AgentController(IPropertyService propertyService
     private readonly IMapper _mapper = mapper;
     private readonly IUserServices _userServices = userServices;
     private readonly ILogger<AgentController> _logger = logger;
+    private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(PropertyQueryFilter? filter)
     {
-        Guid userId = User.GetId();
-        var result = await _propertyService.GetPropertyByAgentId(userId);
+        PropertyQueryFilter propertyQueryFilter = filter ?? new();
+        propertyQueryFilter.AgentId = User.GetId();
+        Result<List<PropertyViewModel>> result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter);
         ViewBag.Properties = result.Value;
+        ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
         return View();
     }
 
@@ -65,7 +70,6 @@ public class AgentController(IPropertyService propertyService
             return Redirect("/Agent/Index");
         }
 
-      
         var property = await _propertyService.GetByIdSaveViewModel(Guid.Parse(id));
         return property is null ? Redirect("/Agent/Index") : View("create", property);
     }
@@ -133,7 +137,7 @@ public class AgentController(IPropertyService propertyService
         var result = await _propertyService.Update(vm, vm.Id);
         if (!result.IsSuccess)
         {
-            return View("create",vm);
+            return View("create", vm);
         }
 
 
@@ -143,9 +147,9 @@ public class AgentController(IPropertyService propertyService
         await _propertyUpgradeService.UpdatePropertyUpgradesByPropertyId(proupd, vm.Id);
 
         //update pictures
-        if (vm.Pictures != null )
+        if (vm.Pictures != null)
         {
-            if(vm.Pictures.Count > 4)
+            if (vm.Pictures.Count > 4)
             {
                 ModelState.AddModelError(nameof(vm.Pictures), "You can only upload 4 pictures");
                 return View("create", vm);

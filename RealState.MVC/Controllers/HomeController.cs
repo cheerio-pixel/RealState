@@ -20,8 +20,8 @@ namespace RealState.MVC.Controllers
     {
         private readonly IPropertyService _propertyService = propertyService;
         private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
-        public readonly IUserServices _userServices = userServices;
-        public readonly IFavoriteService _favoriteService = favoriteService;
+        private readonly IUserServices _userServices = userServices;
+        private readonly IFavoriteService _favoriteService = favoriteService;
 
         [HomeGuard]
         public async Task<IActionResult> Index(PropertyQueryFilter? filter)
