@@ -1,11 +1,14 @@
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RealState.Application.Enums;
+using RealState.Application.Extras.ResultObject;
 using RealState.Application.Interfaces.Services;
 using RealState.Application.QueryFilters;
 using RealState.Application.QueryFilters.User;
+using RealState.MVC.ActionFilter;
 using RealState.MVC.Helpers;
 
 namespace RealState.MVC.Controllers
@@ -17,34 +20,39 @@ namespace RealState.MVC.Controllers
     {
         private readonly IPropertyService _propertyService = propertyService;
         private readonly IPropertyTypeService _propertyTypeService = propertyTypeService;
-        public readonly IUserServices _userServices = userServices;
-        public readonly IFavoriteService _favoriteService = favoriteService;
+        private readonly IUserServices _userServices = userServices;
+        private readonly IFavoriteService _favoriteService = favoriteService;
 
+        [HomeGuard]
         public async Task<IActionResult> Index(PropertyQueryFilter? filter)
         {
+            if (User.IsLoggedIn() && User.GetMainRole() == RoleTypes.Client)
+            {
+                ViewBag.role = RoleTypes.Client;
+                ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId());
+            }
             PropertyQueryFilter propertyQueryFilter = filter ?? new();
             var result = await _propertyService.ListPropertiesQueryable(propertyQueryFilter!);
-            if(User.Identities.FirstOrDefault()!.Name != null)
-            {
-                if(User.GetMainRole() == RoleTypes.Client)
-                {
-                    ViewBag.role = RoleTypes.Client;
-                    ViewBag.Favorites = await _favoriteService.GetAllFavoriteByUserId(User.GetId()) ; 
-                }
-
-            }
             ViewBag.PropertysTypes = await _propertyTypeService.GetAllViewModel();
             ViewBag.Properties = result.Value;
+            ViewBag.Filter = propertyQueryFilter;
             return View();
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        [HomeGuard]
+        public async Task<IActionResult> Details([FromRoute] Guid id)
         {
-            var test = await _propertyService.GetPropertyDetailsById(id);
-            ViewBag.Property = test.Value;
-            return View();
+            return await _propertyService.GetPropertyDetailsById(id).Match(
+                success: s =>
+                {
+                    ViewBag.Property = s;
+                    return View();
+                },
+                failure: _ => this.RedirectBack()
+            );
         }
 
+        [HomeGuard]
         public IActionResult Agents(UserQueryFilter filter)
         {
             filter ??= new UserQueryFilter();
@@ -55,9 +63,9 @@ namespace RealState.MVC.Controllers
         }
 
         [HttpGet("home/agent/{id}")]
+        [HomeGuard]
         public async Task<IActionResult> Properties(Guid id)
         {
-
             var result = await _propertyService.GetPropertyByAgentIdWithInclude(id);
             ViewBag.Properties = result.Value;
             return View();

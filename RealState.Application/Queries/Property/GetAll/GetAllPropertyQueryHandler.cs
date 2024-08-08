@@ -9,6 +9,7 @@ using RealState.Application.DTOs.Property;
 using RealState.Application.Exceptions;
 using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
+using RealState.Application.QueryFilters;
 using RealState.Domain.Entities;
 
 namespace RealState.Application.Queries.Property.GetAll
@@ -27,7 +28,16 @@ namespace RealState.Application.Queries.Property.GetAll
 
         public async Task<List<PropertyDTO>> Handle(GetAllPropertyQuery request, CancellationToken cancellationToken)
         {
-            List<Properties> properties = await _propertyRepository.ListProperties(request.Filter);
+            List<Properties> properties = await _propertyRepository.ListProperties(new PropertyQueryFilter()
+            {
+                Code = request.Code,
+                Rooms = request.Rooms,
+                Bathrooms = request.Bathrooms,
+                PropertyTypeId = request.PropertyTypeId,
+                AgentId = request.AgentId,
+                MaxPrice = request.MaxPrice,
+                MinPrice = request.MinPrice
+            });
             if (properties.Count == 0)
             {
                 HttpStatusCode

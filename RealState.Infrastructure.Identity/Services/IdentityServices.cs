@@ -66,11 +66,22 @@ namespace RealState.Infrastructure.Identity.Services
                 };
 
             if (!user.EmailConfirmed)
+            {
+                string msg;
+                if (await _userManager.IsInRoleAsync(user, nameof(RoleTypes.Client)))
+                {
+                    msg = "Your account hasn't been confirmed. Check your email.";
+                }
+                else
+                {
+                    msg = "Your account is currently unactive, get in contact with an administrator.";
+                }
                 return new()
                 {
                     Success = false,
-                    Error = "You need to confirm your account to log in."
+                    Error = msg
                 };
+            }
             #endregion
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
@@ -187,7 +198,7 @@ namespace RealState.Infrastructure.Identity.Services
 
             //verify if user is a manager or not
             var managerRolesName = _roleRepository.GetManagementRoles().Select(x => x.Name).ToList();
-            var isUserManager = saveUser.Roles.Where(x => managerRolesName.Contains(x.Name)).Count() > 0;
+            var isUserManager = saveUser.Roles.Any(x => managerRolesName.Contains(x.Name));
             if (isUserManager)
                 user.EmailConfirmed = true;
             #endregion

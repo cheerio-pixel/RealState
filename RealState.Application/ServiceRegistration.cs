@@ -31,10 +31,10 @@ namespace RealState.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceRegistration).Assembly));
 
             #region CommandValidators
+            services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
             #endregion
             services.AddAutoMapper([typeof(ServiceRegistration).Assembly]);
-            services.AddValidatorsFromAssemblies([typeof(ServiceRegistration).Assembly]);
 
             services.AddTransient(typeof(IGenericService<,,,>), typeof(GenericService<,,,>))
                     .AddTransient<IPropertyTypeService, PropertyTypeService>()

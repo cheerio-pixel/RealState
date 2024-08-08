@@ -49,5 +49,10 @@ namespace RealState.MVC.Helpers
             ArgumentException.ThrowIfNullOrEmpty(role);
             return role;
         }
+
+        public static bool IsLoggedIn(this ClaimsPrincipal self)
+        {
+            return self.Identities.First().Name != null;
+        }
     }
 }
