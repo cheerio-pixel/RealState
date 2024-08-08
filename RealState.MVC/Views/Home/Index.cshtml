@@ -125,7 +125,7 @@
                                         @if(isFavorite)
                                         {
                                             <input type="hidden" name="favoriteId" value="@favorites!.FirstOrDefault(x => x.PropertyId == @property.Id)!.Id" />
-                                        })
+                                        }
                                         <input type="hidden" name="PropertyId" value="@property.Id" />
                                         <button type="submit" class="btn btn-primary">@(!isFavorite ? "Add to favorites" : "Remove from favorites")</button>
                                     </form>
