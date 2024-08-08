@@ -1,8 +1,12 @@
 
+using System.Net;
+
 using AutoMapper;
 
 using MediatR;
 
+using RealState.Application.Exceptions;
+using RealState.Application.Extras;
 using RealState.Application.Interfaces.Repositories;
 using RealState.Domain.Entities;
 
@@ -22,6 +26,13 @@ namespace RealState.Application.Commands.SalesType.Create
 
         public async Task<Unit> Handle(CreateSalesTypeCommand request, CancellationToken cancellationToken)
         {
+            if (await _salesTypeRepository.DoesSalesTypeNameExists(request.Name, Guid.Empty))
+            {
+                HttpStatusCode.Conflict
+               .Because("Sales type's name already exists.")
+               .On(nameof(request.Name))
+               .Throw();
+            }
             SalesTypes salesTypes = _mapper.Map<SalesTypes>(request);
             await _salesTypeRepository.Create(salesTypes);
             return Unit.Value;

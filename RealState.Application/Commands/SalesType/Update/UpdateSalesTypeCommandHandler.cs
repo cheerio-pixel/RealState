@@ -26,6 +26,13 @@ namespace RealState.Application.Commands.SalesType.Update
 
         public async Task<UpdateSalesTypeResponse> Handle(UpdateSalesTypeCommand request, CancellationToken cancellationToken)
         {
+            if (await _salesTypeRepository.DoesSalesTypeNameExists(request.Name, request.Id))
+            {
+                HttpStatusCode.Conflict
+               .Because("Sales type's name already exists.")
+               .On(nameof(request.Name))
+               .Throw();
+            }
             SalesTypes propertyToUpdate = _mapper.Map<SalesTypes>(request);
             SalesTypes? salesTypes = await _salesTypeRepository.Update(propertyToUpdate);
             if (salesTypes is null)
